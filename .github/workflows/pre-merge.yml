@@ -3,7 +3,7 @@ name: PREPARE PULL REQUEST
 on:
   pull_request:
     branches:
-      - development
+      - dev
 
 jobs:
   pre_merge:
