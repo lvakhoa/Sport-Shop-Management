@@ -1,0 +1,44 @@
+name: PREPARE PULL REQUEST
+
+on:
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  pre_merge:
+    strategy:
+      matrix:
+        version: [20.x.x]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check code
+        uses: actions/checkout@v4
+
+      - name: Use Nodejs ${{matrix.version}}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.version}}
+
+      - name: Install package use NPM
+        run: |
+          echo "We are using NPM to install package!"
+          rm -rf yarn.lock
+          npm install
+
+      - name: Add .env
+        run: |
+          touch .env
+          cat .env
+
+      - name: Check format
+        run: |
+          npm run format
+
+      - name: Check eslint
+        run: |
+          npm run lint
+
+      - name: Build nextjs
+        run: |
+          npm run build
