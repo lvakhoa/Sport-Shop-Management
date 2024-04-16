@@ -3,6 +3,7 @@
   "style": "default",
   "rsc": true,
   "tsx": true,
+
   "tailwind": {
     "config": "tailwind.config.ts",
     "css": "src/app/globals.css",
@@ -12,6 +13,7 @@
   },
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils"
+    "utils": "@/lib/utils",
+    "ui": "@/components/shared"
   }
 }
