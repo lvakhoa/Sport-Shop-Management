@@ -1,0 +1,11 @@
+.nav {
+  height: var(--header-height);
+}
+
+.navbutton {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  justify-content: center;
+  background-color: #fef5f3;
+}
