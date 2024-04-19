@@ -1,0 +1,26 @@
+.nav a {
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5px 2.5px;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  padding: 0.375rem 0.375rem;
+}
+
+.nav button {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5px 2.5px;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  padding: 0.375rem 0.375rem;
+}
+
+.nav button:hover {
+  background-color: var(--blue-50);
+}
+
+.nav a:hover {
+  background-color: var(--blue-50);
+}
