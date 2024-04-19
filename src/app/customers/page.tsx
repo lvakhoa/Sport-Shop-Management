@@ -1,13 +1,15 @@
+'use client'
+
 import { GENDER } from '@/configs/enum'
 import { columns, ICustomer } from './components'
 import { DataTable } from '@/components/shared/data-table'
-import { ActionButton } from '@/components/shared'
 import { actions } from '@/configs'
 import { Label } from '@/components/shared/label'
 import { Input } from '@/components/shared/input'
 import { ComboBox } from '@/components/shared/ComboBox'
+import { useBrowser } from '@/hooks'
 
-async function getData(): Promise<ICustomer[]> {
+function getData(): ICustomer[] {
   // Fetch data from your API here.
   return [
     {
@@ -64,17 +66,20 @@ const addContentSidebarElement = (
   </div>
 )
 
-export default async function CustomersManagementPage() {
-  const data = await getData()
+export default function CustomersManagementPage() {
+  const data = getData()
+  const { isBrowser } = useBrowser()
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable
-        columns={columns}
-        data={data}
-        title="Customers"
-        addContentSidebar={addContentSidebarElement}
-      />
+      {!!isBrowser && (
+        <DataTable
+          columns={columns}
+          data={data}
+          title="Customers"
+          addContentSidebar={addContentSidebarElement}
+        />
+      )}
     </div>
   )
 }

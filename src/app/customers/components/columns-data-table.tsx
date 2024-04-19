@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { FILTER_INPUT_TYPE, GENDER } from '@/configs/enum'
 import { actions } from '@/configs'
-import { ActionButton } from '@/components/shared'
+import { default as ActionButton } from '@/components/shared/ActionButton'
 import { TABLE_ACTION_TYPE } from '@/configs/enum'
 import { Label } from '@/components/shared/label'
 import { Input } from '@/components/shared/input'
@@ -12,7 +12,7 @@ import { ComboBox } from '@/components/shared/ComboBox'
 import { Button } from '@/components/shared/button'
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react'
 import { Checkbox } from '@/components/shared/checkbox'
-import useWindowSize from '@/hooks/usewindowSize'
+import useWindowSize from '@/hooks/useWindowSize'
 import { ActionButtonShow } from '@/components/shared/ActionButtonShow'
 
 export interface ICustomer {

@@ -1,12 +1,13 @@
 import { useWindowSize } from '@/hooks'
 import { actions } from '@/configs'
-import { ActionButton } from '@/components/shared/'
+import { default as ActionButton } from '@/components/shared/ActionButton'
 import { Label } from './label'
 import { Input } from './input'
 import { ComboBox } from './ComboBox'
 import { GENDER } from '@/configs/enum'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
 import { Button } from '@/components/shared/button'
+import { useBrowser } from '@/hooks/useBrowser'
 
 const genders: string[] = [GENDER.MALE, GENDER.FEMALE]
 

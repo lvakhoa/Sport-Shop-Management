@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
             <SidebarEdit title={`Add ${addingBtnTitle}`} description="" content={addContentSidebar}>
               <Button className="bg-[#648EEF] hover:bg-[#739AF4] flex gap-[5px] duration-300">
                 <Image width={20} height={20} src="/icons/plus_circle.svg" alt="" />
-                <span className="text-[15px] font-normal">Add {addingBtnTitle}</span>
+                <span className="text-[15px] font-normal text-[#FFFFFF]">Add {addingBtnTitle}</span>
               </Button>
             </SidebarEdit>
           </div>
