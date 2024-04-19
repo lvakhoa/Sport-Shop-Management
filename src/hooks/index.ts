@@ -1,1 +1,0 @@
-export { useBrowser } from './useBrowser'
