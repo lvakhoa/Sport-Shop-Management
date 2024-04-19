@@ -17,10 +17,6 @@ const config = {
         sm: '2.25rem',
       },
       screens: {
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1280px',
         '2xl': '1536px',
       },
     },
@@ -78,11 +74,11 @@ const config = {
         },
       },
       width: {
-        'sidebar-compact': '244px',
+        'sidebar-compact': '220px',
         'sidebar-default': '304px',
       },
       margin: {
-        'sidebar-compact': '244px',
+        'sidebar-compact': '220px',
         'sidebar-default': '304px',
       },
       borderRadius: {

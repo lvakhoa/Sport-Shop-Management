@@ -8,10 +8,10 @@
 }
 /* Handle */
 .scrollbar::-webkit-scrollbar-thumb {
-  background: #f23e14;
+  background: var(--blue-100);
 }
 
 /* Handle on hover */
 .scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #f23e14;
+  background: var(--blue-100);
 }

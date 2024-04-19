@@ -1,6 +1,7 @@
 import React, { MouseEventHandler } from 'react'
 import styles from './InfoDropdown.module.css'
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
 
 export default function InfoDropdown({ closeDropdown }: { closeDropdown: MouseEventHandler }) {
   return (
@@ -20,13 +21,13 @@ export default function InfoDropdown({ closeDropdown }: { closeDropdown: MouseEv
           <span className="text-sm text-gray-400">Admin</span>
         </div>
       </div>
-      <div className={styles.nav}>
+      <div className={cn(styles.nav, 'flex flex-col gap-[5px]')}>
         <a
           onClick={closeDropdown}
           href="#admin/pos"
           className="w-full min-[468px]:hidden max-[468px]:flex"
         >
-          <Image src="/assets/icons/pos.svg" alt="pos" width={24} height={24} />
+          <Image src="/assets/icons/pos2.svg" alt="pos" width={24} height={24} />
           <span>POS</span>
         </a>
         <a onClick={closeDropdown} href="#admin/profile/edit-profile" className="w-full flex">
