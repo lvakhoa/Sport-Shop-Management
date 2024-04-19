@@ -1,11 +1,11 @@
-import * as React from 'react'
+'use client'
 
+import React, { useState } from 'react'
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/shared/select'
@@ -14,12 +14,22 @@ interface IComboBox {
   placeholder: string
   items: string[]
   className?: string
+  onValueChange?: (selectedValue: string | undefined) => void
 }
 
-export function ComboBox({ placeholder, items, className }: IComboBox) {
+export function ComboBox({ placeholder, items, className, onValueChange }: IComboBox) {
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(undefined)
+
+  const handleSelectChange = (value: string) => {
+    setSelectedValue(value)
+    if (onValueChange) {
+      onValueChange(value)
+    }
+  }
+
   return (
     <div className={className}>
-      <Select>
+      <Select value={selectedValue} onValueChange={(e) => handleSelectChange(e)}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder={<span className="text-muted-foreground">{placeholder}</span>} />
         </SelectTrigger>

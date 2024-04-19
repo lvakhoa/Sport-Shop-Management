@@ -16,7 +16,18 @@ async function getData(): Promise<ICustomer[]> {
       phone: '087696969',
       gender: GENDER.MALE,
     },
-    // ...
+    {
+      name: 'Khoi',
+      email: 'anhkhoi@gmail.com',
+      phone: '09091111',
+      gender: GENDER.FEMALE,
+    },
+    {
+      name: 'Khoi',
+      email: 'anhkhoi@gmail.com',
+      phone: '09091111',
+      gender: GENDER.FEMALE,
+    },
   ]
 }
 

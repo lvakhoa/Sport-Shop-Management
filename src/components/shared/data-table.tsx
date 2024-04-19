@@ -1,6 +1,17 @@
 'use client'
 
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
 import Image from 'next/image'
 import {
   Table,
@@ -28,6 +39,10 @@ interface DataTableProps<TData, TValue> {
   addContentSidebar?: ReactElement
 }
 
+interface InputValues {
+  [key: string]: string
+}
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -35,6 +50,21 @@ export function DataTable<TData, TValue>({
   addContentSidebar,
 }: DataTableProps<TData, TValue>) {
   const [isOpened, setIsOpened] = useState(false)
+
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [rowSelection, setRowSelection] = useState({})
+
+  const [inputValues, setInputValues] = useState<InputValues>({})
+  const [comboBoxValue, setComboBoxValue] = useState<string | undefined>(undefined)
+
+  const handleInputChange = (key: any, value: string) => {
+    setInputValues({ ...inputValues, [key]: value })
+  }
+
+  const handleClear = () => {
+    setInputValues({})
+  }
 
   const exports: string[] = ['XSL', 'Print']
 
@@ -51,8 +81,20 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      rowSelection,
+    },
   })
+
   const handleOpenFilter = () => {
     setIsOpened(!isOpened)
   }
@@ -105,19 +147,31 @@ export function DataTable<TData, TValue>({
                     key={item.key}
                     placeholder={`Select ${item.title.toLowerCase()}`}
                     items={item.dropdownItems}
+                    onValueChange={(e) => {
+                      table.getColumn(item.key)?.setFilterValue(e)
+                    }}
                   />
                 )
-              return <Input key={item.key} placeholder={item.title} />
+              return (
+                <Input
+                  key={item.key}
+                  placeholder={item.title}
+                  value={inputValues[item.key] || ''}
+                  onChange={(e) => {
+                    table.getColumn(item.key)?.setFilterValue(e.target.value)
+                    handleInputChange(item.key, e.target.value)
+                  }}
+                />
+              )
             })}
-          </div>
-          <div className="flex gap-[15px]">
-            <Button className="bg-[#648EEF] hover:bg-[#739AF4] flex gap-[5px] duration-300">
-              <Image alt="" src="./icons/search.svg" width={20} height={20} />
-              <span className="text-[15px] font-normal">Search</span>
-            </Button>
-            <Button className="bg-white hover:bg-[#EBF1FF] flex gap-[5px] border border-[#648EEF] rounded-[5px] px-2 py-1 duration-300">
-              <Image alt="" src="./icons/clear.svg" width={20} height={20} />
-              <span className="text-[15px] font-normal text-[#648EEF]">Clear</span>
+            <Button
+              className="bg-white hover:bg-[#EBF1FF] flex gap-[5px] border border-[#648EEF] rounded-[5px] px-2 py-1 duration-300"
+              onClick={(e) => {
+                table.resetColumnFilters()
+                handleClear()
+              }}
+            >
+              <Image width={100} height={100} alt="" src="./icons/clear.svg" />
             </Button>
           </div>
         </motion.div>
