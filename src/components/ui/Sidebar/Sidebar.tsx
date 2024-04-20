@@ -4,7 +4,7 @@ import { Item } from './components'
 import { sidebarItems } from '@/configs/sidebarItems'
 import styles from './Sidebar.module.css'
 import { cn } from '@/lib/utils'
-import { useBrowser } from '@/hooks'
+import { useWindowSize } from '@/hooks'
 
 function Sidebar({
   isSidebarVisible,
@@ -13,18 +13,7 @@ function Sidebar({
   isSidebarVisible: boolean
   openSidebar: Dispatch<SetStateAction<boolean>>
 }) {
-  const [windowSize, setWindowSize] = useState<number>(window.innerWidth)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize(window.innerWidth)
-    }
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     openSidebar(windowSize > 1024)
