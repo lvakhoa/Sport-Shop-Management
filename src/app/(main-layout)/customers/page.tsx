@@ -13,18 +13,21 @@ function getData(): ICustomer[] {
   // Fetch data from your API here.
   return [
     {
+      id: '1',
       name: 'Kien',
       email: 'kien@gmail.com',
       phone: '087696969',
       gender: GENDER.MALE,
     },
     {
+      id: '2',
       name: 'Khoi',
       email: 'anhkhoi@gmail.com',
       phone: '09091111',
       gender: GENDER.FEMALE,
     },
     {
+      id: '3',
       name: 'Khoi',
       email: 'anhkhoi@gmail.com',
       phone: '09091111',

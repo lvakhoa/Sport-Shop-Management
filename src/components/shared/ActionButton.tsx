@@ -3,12 +3,12 @@ import Image from 'next/image'
 import React, { ReactElement } from 'react'
 import { Button } from './button'
 import { useRouter } from 'next/navigation'
-import { PATH_NAME } from '@/configs'
 import { TABLE_ACTION_TYPE } from '@/configs/enum'
 import { AlertPopup } from '@/components/shared/AlertPopup'
 import { SidebarEdit } from './SidebarEdit'
 import { Label } from './label'
 import { Input } from './input'
+import { PATH_NAME } from '@/configs'
 
 interface IActionButton {
   background: string
@@ -17,6 +17,7 @@ interface IActionButton {
   alt: string
   type: TABLE_ACTION_TYPE
   id: string
+  path?: string
   editContentElement?: ReactElement
 }
 
@@ -26,15 +27,15 @@ function ActionButton({
   icon,
   alt,
   type,
+  path,
   id,
   editContentElement,
 }: IActionButton) {
   const router = useRouter()
-
   const selectButtonAction = () => {
     switch (type) {
       case 'VIEW':
-        return () => router.push(`${PATH_NAME.CUSTOMER}/${id}`)
+        return () => router.push(`${path}/${id}`)
       case 'EDIT':
         return () => console.log('Sidebar opened')
       case 'DELETE':

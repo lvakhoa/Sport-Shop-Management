@@ -1,3 +1,5 @@
+import { PATH_NAME } from './pathName'
+
 export const sidebarItems = [
   {
     title: 'Main',
@@ -45,12 +47,12 @@ export const sidebarItems = [
       {
         icon: 'assets/icons/Customers.svg',
         describe: 'Customers',
-        link: '/customers',
+        link: PATH_NAME.CUSTOMER,
       },
       {
         icon: 'assets/icons/Employees.svg',
         describe: 'Employees',
-        link: '/employees',
+        link: PATH_NAME.EMPLOYEE,
       },
     ],
   },
