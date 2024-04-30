@@ -34,7 +34,7 @@ export function SidebarEdit({ title, description, children, content }: ISidebarE
           <SheetClose asChild>
             <Button
               type="submit"
-              className="bg-[#648EEF] hover:bg-[#739AF4] flex gap-[5px] duration-300"
+              className="flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]"
             >
               {title.toLocaleLowerCase().includes('add') ? (
                 <span className="text-[15px] font-normal text-[#FFFFFF]">{title}</span>

@@ -26,44 +26,44 @@ export default function Navbar({
   }
 
   return (
-    <header className={cn('fixed z-50 w-full top-0 left-0 bg-white-100 shadow-md')}>
+    <header className={cn('fixed left-0 top-0 z-50 w-full bg-white-100 shadow-md')}>
       <nav className={cn(styles.nav, 'nav-wrapper container')}>
-        <div className={cn(styles.nav, 'flex justify-between items-center')}>
+        <div className={cn(styles.nav, 'flex items-center justify-between')}>
           <Link href="#/home" className="block">
             <Image width={128} height={40} src="/assets/images/logo.png" alt="logo" />
           </Link>
-          <div className="flex items-center max-[320px]:gap-2 gap-4 transition relative">
-            <a className={cn('max-[468px]:hidden flex', styles.navbutton)}>
+          <div className="relative flex items-center gap-4 transition max-[320px]:gap-2">
+            <a className={cn('flex max-[468px]:hidden', styles.navbutton)}>
               <Image src="/assets/icons/pos.svg" alt="pos" width={24} height={24} />
             </a>
             <a
               onClick={() => openSidebar((prev) => !prev)}
-              className={cn('cursor-pointer flex', styles.navbutton)}
+              className={cn('flex cursor-pointer', styles.navbutton)}
             >
               <Image src="/assets/icons/sidebar.svg" alt="sidebar" width={20} height={20} />
             </a>
             <div
               onClick={toggleInfoDropdown}
-              className="included-node cursor-pointer flex items-center rounded-lg gap-2"
+              className="included-node flex cursor-pointer items-center gap-2 rounded-lg"
             >
               <Image
-                className="flex-shrink-0 object-cover rounded-lg"
+                className="shrink-0 rounded-lg object-cover"
                 src="/assets/images/user.png"
                 alt="user"
                 width={40}
                 height={40}
               />
 
-              <div className="max-[468px]:hidden flex flex-col gap-[3px]">
-                <span className="whitespace-nowrap text-sm capitalize text-left leading-none">
+              <div className="flex flex-col gap-[3px] max-[468px]:hidden">
+                <span className="whitespace-nowrap text-left text-sm capitalize leading-none">
                   Hello
                 </span>
-                <span className="font-bold text-black-100 leading-none">John Cena</span>
+                <span className="font-bold leading-none text-black-100">John Cena</span>
               </div>
             </div>
 
             {isInfoOpen && (
-              <div className="absolute max-[468px]:right-[-24px] right-0 top-[71px]">
+              <div className="absolute right-0 top-[71px] max-[468px]:right-[-24px]">
                 <OutsideDisappear
                   isForceClose={isInfoClicked}
                   setIsForceClose={setIsInfoClicked}
