@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({
   const dropdownTrigger = (
     <div className="flex gap-[5px]">
       <Image src="/icons/export.svg" alt="" width={20} height={20} />
-      <span className="text-[15px] text-[#648EEF]">Export</span>
+      <span className="text-[15px] text-secondary">Export</span>
       <Image src="/icons/down_arrow.svg" alt="" width={20} height={20} />
     </div>
   )
@@ -100,11 +100,11 @@ export function DataTable<TData, TValue>({
   }
   return (
     <div className="rounded-md border">
-      <div className={cn('bg-white px-[21px] py-[25px] rounded-md flex flex-col gap-10')}>
+      <div className={cn('bg-white flex flex-col gap-10 rounded-md px-[21px] py-[25px]')}>
         <motion.div
           animate={isOpened ? { marginBottom: 0 } : {}}
           transition={{ duration: 0.3 }}
-          className={'flex justify-between items-center -mb-10'}
+          className={'-mb-10 flex items-center justify-between'}
         >
           <div>
             <span className="text-2xl font-semibold">{title}</span>
@@ -112,20 +112,20 @@ export function DataTable<TData, TValue>({
           <div className="flex gap-[15px]">
             <Button
               onClick={handleOpenFilter}
-              className="bg-white hover:bg-[#EBF1FF] flex gap-[5px] border border-[#648EEF] rounded-[5px] px-2 py-1 duration-300"
+              className="bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]"
             >
               <Image width={20} height={20} src="/icons/filter.svg" alt="" />
-              <span className="text-[15px] font-normal text-[#648EEF]">Filter</span>
+              <span className="text-[15px] font-normal text-secondary">Filter</span>
               <Image width={20} height={20} src="icons/down_arrow.svg" alt="" />
             </Button>
             <Dropdown
-              className="border border-[#648EEF] hover:bg-[#EBF1FF] rounded-[5px] px-2 py-1 duration-300"
+              className="rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]"
               trigger={dropdownTrigger}
               items={exports}
             />
 
             <SidebarEdit title={`Add ${addingBtnTitle}`} description="" content={addContentSidebar}>
-              <Button className="bg-[#648EEF] hover:bg-[#739AF4] flex gap-[5px] duration-300">
+              <Button className="flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]">
                 <Image width={20} height={20} src="/icons/plus_circle.svg" alt="" />
                 <span className="text-[15px] font-normal text-[#FFFFFF]">Add {addingBtnTitle}</span>
               </Button>
@@ -136,7 +136,7 @@ export function DataTable<TData, TValue>({
         <motion.div
           animate={isOpened ? { height: 'auto' } : {}}
           transition={{ duration: 0.3 }}
-          className={cn('flex flex-col h-0 gap-8 overflow-hidden')}
+          className={cn('flex h-0 flex-col gap-8 overflow-hidden')}
         >
           <div className="flex w-full gap-5">
             {filterInput.map((item) => {
@@ -165,7 +165,7 @@ export function DataTable<TData, TValue>({
               )
             })}
             <Button
-              className="bg-white hover:bg-[#EBF1FF] flex gap-[5px] border border-[#648EEF] rounded-[5px] px-2 py-1 duration-300"
+              className="bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]"
               onClick={(e) => {
                 table.resetColumnFilters()
                 handleClear()

@@ -28,7 +28,7 @@ export function AlertPopup({ title, description, children }: IAlertPopup) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-[#648EEF] hover:bg-[#739AF4] flex gap-[5px] duration-300">
+          <AlertDialogAction className="flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]">
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

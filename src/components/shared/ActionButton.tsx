@@ -49,7 +49,7 @@ function ActionButton({
       return (
         <AlertPopup title="Delete?" description="Are you sure?">
           <Button
-            className={cn('w-[30px] h-[30px] rounded-[3px] p-[5px]')}
+            className={cn('h-[30px] w-[30px] rounded-[3px] p-[5px]')}
             style={{ backgroundColor: background }}
             onClick={selectButtonAction()}
           >
@@ -65,7 +65,7 @@ function ActionButton({
           content={editContentElement}
         >
           <Button
-            className={cn('w-[30px] h-[30px] rounded-[3px] p-[5px]')}
+            className={cn('h-[30px] w-[30px] rounded-[3px] p-[5px]')}
             style={{ backgroundColor: background }}
             onClick={selectButtonAction()}
           >
@@ -76,7 +76,7 @@ function ActionButton({
   }
   return (
     <Button
-      className={cn('w-[30px] h-[30px] rounded-[3px] p-[5px]')}
+      className={cn('h-[30px] w-[30px] rounded-[3px] p-[5px]')}
       style={{ backgroundColor: background }}
       onClick={selectButtonAction()}
     >
