@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
   const dropdownTrigger = (
     <div className="flex gap-[5px]">
       <Image src="/icons/export.svg" alt="" width={20} height={20} />
-      <span className="text-[15px] text-secondary">Export</span>
+      <span className="max-[666px]:hidden text-[15px] text-secondary">Export</span>
       <Image src="/icons/down_arrow.svg" alt="" width={20} height={20} />
     </div>
   )
@@ -103,9 +103,11 @@ export function DataTable<TData, TValue>({
         <motion.div
           animate={isOpened ? { marginBottom: 0 } : {}}
           transition={{ duration: 0.3 }}
-          className={'-mb-10 flex items-center justify-between'}
+          className={
+            'flex max-[468px]:flex-col max-[468px]:gap-[10px] justify-between items-center -mb-10'
+          }
         >
-          <div>
+          <div className="mb-2">
             <span className="text-2xl font-semibold">{title}</span>
           </div>
           <div className="flex gap-[15px]">
@@ -114,7 +116,9 @@ export function DataTable<TData, TValue>({
               className="bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]"
             >
               <Image width={20} height={20} src="/icons/filter.svg" alt="" />
-              <span className="text-[15px] font-normal text-secondary">Filter</span>
+              <span className="max-[666px]:hidden text-[15px] font-normal text-secondary">
+                Filter
+              </span>
               <Image width={20} height={20} src="icons/down_arrow.svg" alt="" />
             </Button>
             <Dropdown
@@ -126,7 +130,9 @@ export function DataTable<TData, TValue>({
             <SidebarEdit title={`Add ${addingBtnTitle}`} description="" content={addContentSidebar}>
               <Button className="flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]">
                 <Image width={20} height={20} src="/icons/plus_circle.svg" alt="" />
-                <span className="text-[15px] font-normal text-[#FFFFFF]">Add {addingBtnTitle}</span>
+                <span className="max-[666px]:hidden text-[15px] font-normal text-[#FFFFFF]">
+                  Add {addingBtnTitle}
+                </span>
               </Button>
             </SidebarEdit>
           </div>
