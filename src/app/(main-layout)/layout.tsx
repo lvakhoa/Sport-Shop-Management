@@ -20,7 +20,7 @@ function MainLayout({ children, info }: { children: React.ReactNode; info: React
         )}
         <div
           className={cn(
-            'pt-[10px] bg-gray-50 w-full h-screen',
+            'h-screen w-full bg-gray-50 pt-[10px]',
 
             openSidebar ? 'ml-sidebar-compact sm:ml-sidebar-default' : 'ml-0 flex justify-center',
           )}

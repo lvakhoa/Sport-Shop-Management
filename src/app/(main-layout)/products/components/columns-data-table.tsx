@@ -91,7 +91,7 @@ export const columns: ColumnDef<IProduct>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       )
     },
@@ -114,7 +114,7 @@ export const columns: ColumnDef<IProduct>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Buying Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       )
     },
@@ -143,7 +143,7 @@ export const columns: ColumnDef<IProduct>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Selling Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       )
     },

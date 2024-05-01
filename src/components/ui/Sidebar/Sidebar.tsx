@@ -21,8 +21,8 @@ function Sidebar({
     <div
       className={cn(
         'scrollbar',
-        'bg-white-100 overflow-hidden hover:overflow-auto max-h-[calc(100vh-var(--header-height))] shadow-md',
-        isSidebarVisible ? 'w-sidebar-compact sm:w-sidebar-default px-[21px]' : 'w-0 px-0',
+        'max-h-[calc(100vh-var(--header-height))] overflow-hidden bg-white-100 shadow-md hover:overflow-auto',
+        isSidebarVisible ? 'w-sidebar-compact px-[21px] sm:w-sidebar-default' : 'w-0 px-0',
       )}
     >
       <div className="flex flex-col gap-[10px]">
