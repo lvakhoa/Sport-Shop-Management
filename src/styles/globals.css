@@ -41,6 +41,23 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+    .scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    .scrollbar::-webkit-scrollbar-track {
+      background: none;
+    }
+    /* Handle */
+    .scrollbar::-webkit-scrollbar-thumb {
+      background: var(--blue-100);
+    }
+
+    /* Handle on hover */
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+      background: var(--blue-100);
+    }
   }
 
   .dark {

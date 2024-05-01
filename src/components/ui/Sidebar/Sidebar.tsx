@@ -2,10 +2,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Item } from './components'
 import { sidebarItems } from '@/configs/sidebarItems'
-import styles from './Sidebar.module.css'
 import { cn } from '@/lib/utils'
 import { useWindowSize } from '@/hooks'
-
 function Sidebar({
   isSidebarVisible,
   openSidebar,
@@ -22,8 +20,8 @@ function Sidebar({
   return (
     <div
       className={cn(
-        styles.scrollbar,
-        'h-screen overflow-hidden bg-white-100 shadow-md hover:overflow-auto',
+        'scrollbar',
+        'max-h-[calc(100vh-var(--header-height))] overflow-hidden bg-white-100 shadow-md hover:overflow-auto',
         isSidebarVisible ? 'w-sidebar-compact px-[21px] sm:w-sidebar-default' : 'w-0 px-0',
       )}
     >

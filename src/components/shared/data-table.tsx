@@ -4,7 +4,6 @@ import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -24,8 +23,8 @@ import {
 import { Button } from './button'
 import { default as Dropdown } from '@/components/shared/DropdownMenu'
 import { Input } from './input'
-import { filterInput } from '@/app/customers/components/columns-data-table'
-import { Select } from './select'
+import { filterInput } from '@/app/(main-layout)/customers/components/columns-data-table'
+import { productFilterInput } from '@/app/(main-layout)/products/components/columns-data-table'
 import { ComboBox } from './ComboBox'
 import { cn } from '@/lib/utils'
 import { ReactElement, useState } from 'react'
@@ -73,7 +72,7 @@ export function DataTable<TData, TValue>({
   const dropdownTrigger = (
     <div className="flex gap-[5px]">
       <Image src="/icons/export.svg" alt="" width={20} height={20} />
-      <span className="text-[15px] text-secondary">Export</span>
+      <span className="text-[15px] text-secondary max-[666px]:hidden">Export</span>
       <Image src="/icons/down_arrow.svg" alt="" width={20} height={20} />
     </div>
   )
@@ -104,9 +103,11 @@ export function DataTable<TData, TValue>({
         <motion.div
           animate={isOpened ? { marginBottom: 0 } : {}}
           transition={{ duration: 0.3 }}
-          className={'-mb-10 flex items-center justify-between'}
+          className={
+            '-mb-10 flex items-center justify-between max-[468px]:flex-col max-[468px]:gap-[10px]'
+          }
         >
-          <div>
+          <div className="mb-2">
             <span className="text-2xl font-semibold">{title}</span>
           </div>
           <div className="flex gap-[15px]">
@@ -115,7 +116,9 @@ export function DataTable<TData, TValue>({
               className="bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]"
             >
               <Image width={20} height={20} src="/icons/filter.svg" alt="" />
-              <span className="text-[15px] font-normal text-secondary">Filter</span>
+              <span className="text-[15px] font-normal text-secondary max-[666px]:hidden">
+                Filter
+              </span>
               <Image width={20} height={20} src="icons/down_arrow.svg" alt="" />
             </Button>
             <Dropdown
@@ -127,7 +130,9 @@ export function DataTable<TData, TValue>({
             <SidebarEdit title={`Add ${addingBtnTitle}`} description="" content={addContentSidebar}>
               <Button className="flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]">
                 <Image width={20} height={20} src="/icons/plus_circle.svg" alt="" />
-                <span className="text-[15px] font-normal text-[#FFFFFF]">Add {addingBtnTitle}</span>
+                <span className="text-[15px] font-normal text-[#FFFFFF] max-[666px]:hidden">
+                  Add {addingBtnTitle}
+                </span>
               </Button>
             </SidebarEdit>
           </div>
@@ -139,31 +144,58 @@ export function DataTable<TData, TValue>({
           className={cn('flex h-0 flex-col gap-8 overflow-hidden')}
         >
           <div className="flex w-full gap-5">
-            {filterInput.map((item) => {
-              if (!!item.dropdownItems)
+            {title !== 'Products' &&
+              filterInput.map((item) => {
+                if (!!item.dropdownItems)
+                  return (
+                    <ComboBox
+                      className="w-full"
+                      key={item.key}
+                      placeholder={`Select ${item.title.toLowerCase()}`}
+                      items={item.dropdownItems}
+                      onValueChange={(e) => {
+                        table.getColumn(item.key)?.setFilterValue(e)
+                      }}
+                    />
+                  )
                 return (
-                  <ComboBox
-                    className="w-full"
+                  <Input
                     key={item.key}
-                    placeholder={`Select ${item.title.toLowerCase()}`}
-                    items={item.dropdownItems}
-                    onValueChange={(e) => {
-                      table.getColumn(item.key)?.setFilterValue(e)
+                    placeholder={item.title}
+                    value={inputValues[item.key] || ''}
+                    onChange={(e) => {
+                      table.getColumn(item.key)?.setFilterValue(e.target.value)
+                      handleInputChange(item.key, e.target.value)
                     }}
                   />
                 )
-              return (
-                <Input
-                  key={item.key}
-                  placeholder={item.title}
-                  value={inputValues[item.key] || ''}
-                  onChange={(e) => {
-                    table.getColumn(item.key)?.setFilterValue(e.target.value)
-                    handleInputChange(item.key, e.target.value)
-                  }}
-                />
-              )
-            })}
+              })}
+            {title === 'Products' &&
+              productFilterInput.map((item) => {
+                if (!!item.dropdownItems)
+                  return (
+                    <ComboBox
+                      className="w-full"
+                      key={item.key}
+                      placeholder={`Select ${item.title.toLowerCase()}`}
+                      items={item.dropdownItems}
+                      onValueChange={(e) => {
+                        table.getColumn(item.key)?.setFilterValue(e)
+                      }}
+                    />
+                  )
+                return (
+                  <Input
+                    key={item.key}
+                    placeholder={item.title}
+                    value={inputValues[item.key] || ''}
+                    onChange={(e) => {
+                      table.getColumn(item.key)?.setFilterValue(e.target.value)
+                      handleInputChange(item.key, e.target.value)
+                    }}
+                  />
+                )
+              })}
             <Button
               className="bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]"
               onClick={(e) => {
@@ -181,15 +213,17 @@ export function DataTable<TData, TValue>({
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} className="text-black font-bold">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                )
-              })}
+              {headerGroup.headers
+                .filter((item) => !item.id.includes('id'))
+                .map((header) => {
+                  return (
+                    <TableHead key={header.id} className="text-black font-bold">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  )
+                })}
             </TableRow>
           ))}
         </TableHeader>
@@ -197,11 +231,14 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-[#424242]">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row
+                  .getVisibleCells()
+                  .filter((item) => !item.id.includes('id'))
+                  .map((cell) => (
+                    <TableCell key={cell.id} className="text-[#424242]">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
               </TableRow>
             ))
           ) : (

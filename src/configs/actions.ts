@@ -20,3 +20,4 @@ export const actions = [
     type: TABLE_ACTION_TYPE.DELETE,
   },
 ]
+export const pageTag = [{ tag: 'customers' }, { tag: 'employees' }]

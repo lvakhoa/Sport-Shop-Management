@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { FILTER_INPUT_TYPE, GENDER } from '@/configs/enum'
-import { actions } from '@/configs'
+import { actions, PATH_NAME } from '@/configs'
 import { default as ActionButton } from '@/components/shared/ActionButton'
 import { TABLE_ACTION_TYPE } from '@/configs/enum'
 import { Label } from '@/components/shared/label'
@@ -16,11 +16,11 @@ import useWindowSize from '@/hooks/useWindowSize'
 import { ActionButtonShow } from '@/components/shared/ActionButtonShow'
 
 export interface ICustomer {
+  id: string
   name: string
   email: string
   phone: string
   gender: GENDER
-  // action: React.JSX.Element[]
 }
 
 export interface IFilterInput {
@@ -56,45 +56,12 @@ export const filterInput: IFilterInput[] = [
 
 const gender: string[] = [GENDER.FEMALE, GENDER.MALE]
 
-const addContentElement = (
-  <div className="grid gap-4 py-4">
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="name" className="text-right">
-        Name
-      </Label>
-      <Input id="name" value="Pedro Duarte" className="col-span-3" />
-    </div>
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="email" className="text-right">
-        Email
-      </Label>
-      <Input id="email" value="@peduarte" className="col-span-3" />
-    </div>
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="phone" className="text-right">
-        Phone
-      </Label>
-      <Input id="phone" value="@peduarte" className="col-span-3" />
-    </div>
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="gender" className="text-right">
-        Gender
-      </Label>
-      <div className="col-span-3">
-        <ComboBox key="gender" placeholder="Gender" items={gender} />
-      </div>
-    </div>
-  </div>
-)
-
 export const columns: ColumnDef<ICustomer>[] = [
   {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
+        checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
@@ -110,11 +77,18 @@ export const columns: ColumnDef<ICustomer>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: 'id',
+    header: 'ID',
+    enableHiding: true,
+  },
+  {
     accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
+          className="pl-0"
           variant="ghost"
+          style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Name
@@ -129,7 +103,9 @@ export const columns: ColumnDef<ICustomer>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className="pl-0"
           variant="ghost"
+          style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Email
@@ -141,18 +117,26 @@ export const columns: ColumnDef<ICustomer>[] = [
   },
   {
     accessorKey: 'phone',
-    header: 'Phone',
+    header: () => {
+      return <div className="font-medium">Phone</div>
+    },
   },
   {
     accessorKey: 'gender',
-    header: 'Gender',
+    header: () => {
+      return <div className="font-medium">Gender</div>
+    },
     filterFn: 'equalsString',
   },
   {
     id: 'actions',
-    header: 'Action',
-    cell: () => {
-      return <ActionButtonShow />
+    header: () => {
+      return <div className="font-medium">Action</div>
+    },
+
+    cell: ({ row, table }) => {
+      const customerId = row.getValue('id') as string
+      return <ActionButtonShow path={PATH_NAME.CUSTOMER} id={customerId} />
     },
   },
 ]

@@ -3,6 +3,11 @@ export enum GENDER {
   FEMALE = 'Female',
 }
 
+export enum STATUS {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
+}
+
 export enum TABLE_ACTION_TYPE {
   VIEW = 'VIEW',
   EDIT = 'EDIT',
