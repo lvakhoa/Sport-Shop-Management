@@ -4,8 +4,20 @@ import '../styles/globals.css'
 import Navbar from '@/components/ui/Navbar/Navbar'
 import Sidebar from '@/components/ui/Sidebar/Sidebar'
 import { cn } from '@/lib/utils'
+import { ToastContainer } from 'react-toastify'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const inter = Inter({ subsets: ['latin'] })
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000,
+      retry: false,
+    },
+  },
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,8 +30,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={cn(inter.className, 'scrollbar')}>{children}</body>
+    <html lang='en'>
+      <body className={cn(inter.className, 'scrollbar')}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <ToastContainer position='top-right' autoClose={5000} hideProgressBar theme='light' />
+        </QueryClientProvider>
+      </body>
     </html>
   )
 }

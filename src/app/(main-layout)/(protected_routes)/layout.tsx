@@ -1,20 +1,29 @@
 'use client'
 
 import { Navbar, Sidebar } from '@/components/ui'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
-import { useBrowser } from '@/hooks'
+import { useAuth, useBrowser } from '@/hooks'
+import { redirect } from 'next/navigation'
+import { PATH_NAME } from '@/configs'
 
-function MainLayout({ children, info }: { children: React.ReactNode; info: React.ReactNode }) {
+function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const [openSidebar, setOpenSidebar] = useState(true)
   const { isBrowser } = useBrowser()
+  const { accessToken } = useAuth()
+
+  useEffect(() => {
+    if (!accessToken) {
+      return redirect(PATH_NAME.LOGIN)
+    }
+  }, [accessToken])
 
   return (
     <div>
       <Navbar openSidebar={setOpenSidebar} />
-      <div className="mt-[--header-height] flex">
+      <div className='mt-[--header-height] flex'>
         {!!isBrowser && (
-          <div className="fixed">
+          <div className='fixed'>
             <Sidebar isSidebarVisible={openSidebar} openSidebar={setOpenSidebar} />
           </div>
         )}
@@ -32,4 +41,4 @@ function MainLayout({ children, info }: { children: React.ReactNode; info: React
   )
 }
 
-export default MainLayout
+export default ProtectedLayout
