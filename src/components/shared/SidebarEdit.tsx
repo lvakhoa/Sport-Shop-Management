@@ -33,13 +33,13 @@ export function SidebarEdit({ title, description, children, content }: ISidebarE
         <SheetFooter>
           <SheetClose asChild>
             <Button
-              type="submit"
-              className="flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]"
+              type='submit'
+              className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
             >
               {title.toLocaleLowerCase().includes('add') ? (
-                <span className="text-[15px] font-normal text-[#FFFFFF]">{title}</span>
+                <span className='text-[15px] font-normal text-[#FFFFFF]'>{title}</span>
               ) : (
-                <span className="text-[15px] font-normal text-[#FFFFFF]">Save changes</span>
+                <span className='text-[15px] font-normal text-[#FFFFFF]'>Save changes</span>
               )}
             </Button>
           </SheetClose>

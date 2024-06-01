@@ -18,7 +18,7 @@ function Dropdown({ trigger, items, className }: IDropdownButton) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={className}>{trigger}</DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align='end'>
         {items.map((item, index) => (
           <DropdownMenuItem key={item}>{item}</DropdownMenuItem>
         ))}

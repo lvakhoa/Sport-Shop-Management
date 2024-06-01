@@ -48,7 +48,7 @@ function ActionButton({
   switch (type) {
     case 'DELETE':
       return (
-        <AlertPopup title="Delete?" description="Are you sure?">
+        <AlertPopup title='Delete?' description='Are you sure?'>
           <Button
             className={cn('h-[30px] w-[30px] rounded-[3px] p-[5px]')}
             style={{ backgroundColor: background }}
@@ -61,8 +61,8 @@ function ActionButton({
     case 'EDIT':
       return (
         <SidebarEdit
-          title="Edit Profile"
-          description="Make changes to profile here. Click save when you are done."
+          title='Edit Profile'
+          description='Make changes to profile here. Click save when you are done.'
           content={editContentElement}
         >
           <Button

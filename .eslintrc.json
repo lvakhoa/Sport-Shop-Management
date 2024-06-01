@@ -10,7 +10,8 @@
       },
       "parserOptions": {
         "project": "./tsconfig.json"
-      }
+      },
+      "excludedFiles": ["*.config.js"]
     }
   ]
 }

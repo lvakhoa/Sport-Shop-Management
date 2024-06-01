@@ -12,8 +12,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "format": "prettier ./src/**/*.tsx --check",
-    "format:fix": "next lint --fix && prettier ./src/**/*.tsx --write",
+    "format:fix": "prettier ./src/**/*.tsx --write",
     "prepare": "husky install"
   },
   "dependencies": {

@@ -30,8 +30,8 @@ export function ComboBox({ placeholder, items, className, onValueChange }: IComb
   return (
     <div className={className}>
       <Select value={selectedValue} onValueChange={(e) => handleSelectChange(e)}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder={<span className="text-muted-foreground">{placeholder}</span>} />
+        <SelectTrigger className='w-full'>
+          <SelectValue placeholder={<span className='text-muted-foreground'>{placeholder}</span>} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
