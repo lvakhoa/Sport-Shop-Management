@@ -1,6 +1,4 @@
-type Props = {}
-
-function SignUpPage({}: Props) {
+function SignUpPage() {
   return <div>SignUpPage</div>
 }
 

@@ -2,20 +2,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../../styles/globals.css'
 import { cn } from '@/lib/utils'
-import { ToastContainer } from 'react-toastify'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import Providers from '@/components/providers'
 
 const inter = Inter({ subsets: ['latin'] })
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000,
-      retry: false,
-    },
-  },
-})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -30,10 +19,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={cn(inter.className, 'scrollbar')}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <ToastContainer position='top-right' autoClose={5000} hideProgressBar theme='light' />
-        </QueryClientProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
