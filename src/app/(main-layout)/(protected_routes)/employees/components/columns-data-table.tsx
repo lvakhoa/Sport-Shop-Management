@@ -2,20 +2,13 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { FILTER_INPUT_TYPE, GENDER } from '@/configs/enum'
-import { actions, PATH_NAME } from '@/configs'
-import { default as ActionButton } from '@/components/shared/ActionButton'
-import { TABLE_ACTION_TYPE } from '@/configs/enum'
-import { Label } from '@/components/shared/label'
-import { Input } from '@/components/shared/input'
-import { Select } from '@/components/shared/select'
-import { ComboBox } from '@/components/shared/ComboBox'
+import { PATH_NAME } from '@/configs'
 import { Button } from '@/components/shared/button'
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import { Checkbox } from '@/components/shared/checkbox'
-import useWindowSize from '@/hooks/useWindowSize'
 import { ActionButtonShow } from '@/components/shared/ActionButtonShow'
 
-export interface ICustomer {
+export interface IEmployee {
   id: string
   name: string
   email: string
@@ -56,21 +49,21 @@ export const filterInput: IFilterInput[] = [
 
 const gender: string[] = [GENDER.FEMALE, GENDER.MALE]
 
-export const columns: ColumnDef<ICustomer>[] = [
+export const columns: ColumnDef<IEmployee>[] = [
   {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label='Select all'
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label='Select row'
       />
     ),
     enableSorting: false,
@@ -78,7 +71,6 @@ export const columns: ColumnDef<ICustomer>[] = [
   },
   {
     accessorKey: 'id',
-    header: 'ID',
     enableHiding: true,
   },
   {
@@ -86,13 +78,13 @@ export const columns: ColumnDef<ICustomer>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="pl-0"
-          variant="ghost"
+          className='pl-0'
+          variant='ghost'
           style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Name
-          <ArrowUpDown className="ml-2 size-4" />
+          <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
     },
@@ -103,40 +95,40 @@ export const columns: ColumnDef<ICustomer>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="pl-0"
-          variant="ghost"
+          className='pl-0'
+          variant='ghost'
           style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Email
-          <ArrowUpDown className="ml-2 size-4" />
+          <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
+    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
   },
   {
     accessorKey: 'phone',
     header: () => {
-      return <div className="font-medium">Phone</div>
+      return <div className='font-medium'>Phone</div>
     },
   },
   {
     accessorKey: 'gender',
     header: () => {
-      return <div className="font-medium">Gender</div>
+      return <div className='font-medium'>Gender</div>
     },
     filterFn: 'equalsString',
   },
   {
     id: 'actions',
     header: () => {
-      return <div className="font-medium">Action</div>
+      return <div className='font-medium'>Action</div>
     },
 
     cell: ({ row, table }) => {
-      const customerId = row.getValue('id') as string
-      return <ActionButtonShow path={PATH_NAME.CUSTOMER} id={customerId} />
+      const employeeId = row.getValue('id') as string
+      return <ActionButtonShow path={PATH_NAME.EMPLOYEE} id={employeeId} />
     },
   },
 ]

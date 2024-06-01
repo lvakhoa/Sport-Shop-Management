@@ -62,14 +62,14 @@ export const columns: ColumnDef<IProduct>[] = [
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label='Select all'
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label='Select row'
       />
     ),
     enableSorting: false,
@@ -85,13 +85,13 @@ export const columns: ColumnDef<IProduct>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="pl-0"
-          variant="ghost"
+          className='pl-0'
+          variant='ghost'
           style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Name
-          <ArrowUpDown className="ml-2 size-4" />
+          <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
     },
@@ -100,7 +100,7 @@ export const columns: ColumnDef<IProduct>[] = [
   {
     accessorKey: 'category',
     header: () => {
-      return <div className="font-medium">Category</div>
+      return <div className='font-medium'>Category</div>
     },
   },
   {
@@ -108,13 +108,13 @@ export const columns: ColumnDef<IProduct>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="pl-0"
-          variant="ghost"
+          className='pl-0'
+          variant='ghost'
           style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Buying Price
-          <ArrowUpDown className="ml-2 size-4" />
+          <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
     },
@@ -137,13 +137,13 @@ export const columns: ColumnDef<IProduct>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="pl-0"
-          variant="ghost"
+          className='pl-0'
+          variant='ghost'
           style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Selling Price
-          <ArrowUpDown className="ml-2 size-4" />
+          <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
     },
@@ -164,13 +164,13 @@ export const columns: ColumnDef<IProduct>[] = [
   {
     accessorKey: 'status',
     header: () => {
-      return <div className="font-medium">Status</div>
+      return <div className='font-medium'>Status</div>
     },
   },
   {
     id: 'actions',
     header: () => {
-      return <div className="font-medium">Actions</div>
+      return <div className='font-medium'>Actions</div>
     },
 
     cell: ({ row }) => {

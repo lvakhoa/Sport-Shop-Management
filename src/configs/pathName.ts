@@ -3,4 +3,5 @@ export const PATH_NAME = {
   CUSTOMER: '/customers',
   EMPLOYEE: '/employees',
   PRODUCT: '/products',
+  LOGIN: '/log-in',
 }
