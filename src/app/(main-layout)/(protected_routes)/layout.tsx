@@ -12,11 +12,11 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { isBrowser } = useBrowser()
   const { accessToken } = useAuth()
 
-  useEffect(() => {
-    if (!accessToken) {
-      return redirect(PATH_NAME.LOGIN)
-    }
-  }, [accessToken])
+  // useEffect(() => {
+  //   if (!accessToken) {
+  //     return redirect(PATH_NAME.LOGIN)
+  //   }
+  // }, [accessToken])
 
   return (
     <div>

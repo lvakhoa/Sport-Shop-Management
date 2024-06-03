@@ -8,8 +8,8 @@ interface ISuccessfulMessage {
 
 export function SuccessfulMessage({ message }: ISuccessfulMessage) {
   return (
-    <div className="bg-[#D9EEE1] rounded-[5px] p-[15px] flex gap-[15px] items-start">
-      <Image alt="" src="./icons/success.svg" width={24} height={24} />
+    <div className='flex items-start gap-[15px] rounded-[5px] bg-[#D9EEE1] p-[15px]'>
+      <Image alt='' src='./icons/success.svg' width={24} height={24} />
       <span>{message}</span>
     </div>
   )

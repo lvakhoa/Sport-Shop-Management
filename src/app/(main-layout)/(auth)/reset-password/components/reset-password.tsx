@@ -28,11 +28,11 @@ const formSchema = z
     path: ['confirm'],
   })
 
-interface INewPasswordForm {
+interface IResetPasswordForm {
   className?: string
 }
 
-export function NewPasswordForm({ className }: INewPasswordForm) {
+export function ResetPasswordForm({ className }: IResetPasswordForm) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,63 +46,63 @@ export function NewPasswordForm({ className }: INewPasswordForm) {
   return (
     <Form {...form}>
       <form
-        method="post"
+        method='post'
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('space-y-3', className)}
       >
         <FormField
           control={form.control}
-          name="password"
+          name='password'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="relative w-full flex items-center">
+                <div className='relative flex w-full items-center'>
                   <Input
-                    className="pl-[45px] text-[20px] h-[55px] w-full"
-                    placeholder="New password"
+                    className='h-[55px] w-full pl-[45px] text-[20px]'
+                    placeholder='New password'
                     {...field}
-                    type="password"
+                    type='password'
                   />
                   <Image
-                    className="absolute text-muted-foreground m-3"
-                    alt=""
-                    src="/icons/lock.svg"
+                    className='absolute m-3 text-muted-foreground'
+                    alt=''
+                    src='/icons/lock.svg'
                     width={24}
                     height={24}
                   />
                 </div>
               </FormControl>
-              <FormMessage className="text-[20px] font-normal" />
+              <FormMessage className='text-[20px] font-normal' />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="confirm"
+          name='confirm'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="relative w-full flex items-center">
+                <div className='relative flex w-full items-center'>
                   <Input
-                    className="pl-[45px] text-[20px] h-[55px] w-full"
-                    placeholder="Confirm new password"
+                    className='h-[55px] w-full pl-[45px] text-[20px]'
+                    placeholder='Confirm new password'
                     {...field}
-                    type="password"
+                    type='password'
                   />
                   <Image
-                    className="absolute text-muted-foreground m-3"
-                    alt=""
-                    src="/icons/lock.svg"
+                    className='absolute m-3 text-muted-foreground'
+                    alt=''
+                    src='/icons/lock.svg'
                     width={24}
                     height={24}
                   />
                 </div>
               </FormControl>
-              <FormMessage className="text-[20px] font-normal" />
+              <FormMessage className='text-[20px] font-normal' />
             </FormItem>
           )}
         />
-        <Button type="submit" className="flex w-full h-[50px] text-[20px]">
+        <Button type='submit' className='flex h-[50px] w-full text-[20px]'>
           Submit Password
         </Button>
       </form>

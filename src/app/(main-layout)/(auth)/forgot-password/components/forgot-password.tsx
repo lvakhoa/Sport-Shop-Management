@@ -45,7 +45,7 @@ export function ForgotPasswordForm({ className }: IForgotPasswordForm) {
   }, [secondsLeft])
 
   const handleClick = () => {
-    setSecondsLeft(5)
+    setSecondsLeft(60)
     setSendState(true)
   }
 
@@ -63,40 +63,40 @@ export function ForgotPasswordForm({ className }: IForgotPasswordForm) {
   return (
     <Form {...form}>
       <form
-        method="post"
+        method='post'
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('space-y-3', className)}
       >
         <FormField
           control={form.control}
-          name="username"
+          name='username'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="relative w-full flex items-center">
+                <div className='relative flex w-full items-center'>
                   <Input
-                    className="pl-[45px] text-[20px] h-[55px] w-full"
-                    placeholder="Username"
+                    className='h-[55px] w-full pl-[45px] text-[20px]'
+                    placeholder='Username'
                     {...field}
                   />
                   <Image
-                    className="absolute text-muted-foreground m-3"
-                    alt=""
-                    src="/icons/user.svg"
+                    className='absolute m-3 text-muted-foreground'
+                    alt=''
+                    src='/icons/user.svg'
                     width={24}
                     height={24}
                   />
                 </div>
               </FormControl>
-              <FormMessage className="text-[20px] font-normal" />
+              <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
         />
         {sendState && <SuccessfulSendMessage />}
         <Button
-          type="submit"
+          type='submit'
           disabled={secondsLeft > 0}
-          className="flex w-full h-[50px] text-[20px]"
+          className='flex h-[50px] w-full text-[20px]'
         >
           {secondsLeft == 0 ? 'Send email' : `Resend after ${secondsLeft}s`}
         </Button>

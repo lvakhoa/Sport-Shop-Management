@@ -15,8 +15,7 @@ import { Input } from '@/components/shared/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { SuccessfulMessage } from './alert/successful-message'
-import { ExpiredMessage } from './alert/expired-message'
+import Link from 'next/link'
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -43,63 +42,65 @@ export function LoginForm({ className }: LoginForm) {
   return (
     <Form {...form}>
       <form
-        method="post"
+        method='post'
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('space-y-3', className)}
       >
         <FormField
           control={form.control}
-          name="username"
+          name='username'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="relative w-full flex items-center">
+                <div className='relative flex w-full items-center'>
                   <Input
-                    className="pl-[45px] text-[20px] h-[55px] w-full"
-                    placeholder="Username"
+                    className='h-[55px] w-full pl-[45px] text-[20px]'
+                    placeholder='Username'
                     {...field}
                   />
                   <Image
-                    className="absolute text-muted-foreground m-3"
-                    alt=""
-                    src="/icons/user.svg"
+                    className='absolute m-3 text-muted-foreground'
+                    alt=''
+                    src='/icons/user.svg'
                     width={24}
                     height={24}
                   />
                 </div>
               </FormControl>
-              <FormMessage className="text-[20px] font-normal" />
+              <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="password"
+          name='password'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="relative w-full flex items-center">
+                <div className='relative flex w-full items-center'>
                   <Input
-                    className="pl-[45px] text-[20px] h-[55px] w-full"
-                    placeholder="Password"
-                    type="password"
+                    className='h-[55px] w-full pl-[45px] text-[20px]'
+                    placeholder='Password'
+                    type='password'
                     {...field}
                   />
                   <Image
-                    alt=""
-                    src="/icons/lock.svg"
-                    className="absolute m-3 text-muted-foreground"
+                    alt=''
+                    src='/icons/lock.svg'
+                    className='absolute m-3 text-muted-foreground'
                     width={24}
                     height={24}
                   />
                 </div>
               </FormControl>
-              <FormMessage className="text-[20px] font-normal" />
+              <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
         />
-        <span className="flex justify-end text-[16px]">Forgot password?</span>
-        <Button type="submit" className="flex w-full h-[50px] text-[20px]">
+        <Link className='flex cursor-pointer justify-end' href='/forgot-password'>
+          <span className='text-[16px]'>Forgot password?</span>
+        </Link>
+        <Button type='submit' className='flex h-[50px] w-full text-[20px]'>
           Login
         </Button>
       </form>
