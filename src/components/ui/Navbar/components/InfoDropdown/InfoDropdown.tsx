@@ -1,9 +1,32 @@
+'use client'
+
 import React, { MouseEventHandler } from 'react'
 import styles from './InfoDropdown.module.css'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/shared'
+import { useMutation } from '@tanstack/react-query'
+import { authApi } from '@/apis'
+import { useAuthStore } from '@/stores'
+import { toast } from 'react-toastify'
+import { useAuth } from '@/hooks'
 
-export default function InfoDropdown({ closeDropdown }: { closeDropdown: MouseEventHandler }) {
+export default function InfoDropdown({
+  isLoading,
+  name,
+  closeDropdown,
+}: {
+  isLoading: boolean
+  name: string
+  closeDropdown: () => void
+}) {
+  const { logOut } = useAuth()
+
+  const handleLogout = () => {
+    closeDropdown()
+    logOut()
+  }
+
   return (
     <div className='z-10 rounded-lg border border-gray-200 bg-white-100 p-2 shadow-xl max-[468px]:h-screen max-[468px]:w-screen sm:w-[250px] lg:w-[300px]'>
       <div className='my-10'>
@@ -17,7 +40,11 @@ export default function InfoDropdown({ closeDropdown }: { closeDropdown: MouseEv
           />
         </div>
         <div className='flex flex-col items-center'>
-          <span className='text-lg font-bold'>John Cena</span>
+          {isLoading ? (
+            <Skeleton className='my-1 h-[24px] w-[93px] rounded-full' />
+          ) : (
+            <span className='text-lg font-bold'>{name}</span>
+          )}
           <span className='text-sm text-gray-400'>Admin</span>
         </div>
       </div>
@@ -38,7 +65,7 @@ export default function InfoDropdown({ closeDropdown }: { closeDropdown: MouseEv
           <Image src='/assets/icons/password.svg' alt='password' width={24} height={24} />
           <span>Change Password</span>
         </a>
-        <button onClick={closeDropdown} className='flex w-full'>
+        <button onClick={handleLogout} className='flex w-full'>
           <Image src='/assets/icons/logout.svg' alt='logout' width={24} height={24} />
           <span>Logout</span>
         </button>

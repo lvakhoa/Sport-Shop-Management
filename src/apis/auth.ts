@@ -1,5 +1,5 @@
 import { handleResponse } from '@/helpers'
-import { IPerson, ITokenResponse } from '@/interfaces'
+import { IInfo, IPerson, ITokenResponse } from '@/interfaces'
 import { handleError, httpClient } from '@/services'
 
 class AuthApi {
@@ -58,11 +58,24 @@ class AuthApi {
     }
   }
 
+  async updateInfo(info: IInfo) {
+    const data = await handleResponse<{ message: string }>(() =>
+      httpClient.patch<{ message: string }>('/auth/update-info', info),
+    )
+    return data?.message
+  }
+
   async refreshToken(refreshToken: string) {
     const data = await handleResponse<ITokenResponse>(() =>
-      httpClient.post<ITokenResponse>('/auth/refresh-token', {
-        refresh_token: refreshToken,
-      }),
+      httpClient.post<ITokenResponse>(
+        '/auth/refresh-token',
+        {
+          refresh_token: refreshToken,
+        },
+        {
+          validateStatus: null,
+        },
+      ),
     )
     return { accessToken: data?.access_token, refreshToken: data?.refresh_token }
   }
@@ -71,8 +84,9 @@ class AuthApi {
     const data = await handleResponse<{ message: string }>(() =>
       httpClient.delete<{ message: string }>('/auth/log-out', {
         headers: {
-          Cookie: `refresh_token=${refreshToken}`, 
-        }
+          Cookie: `refresh_token=${refreshToken}`,
+        },
+        validateStatus: null,
       }),
     )
     return data?.message

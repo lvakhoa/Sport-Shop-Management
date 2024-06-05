@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../../styles/globals.css'
+import 'react-toastify/dist/ReactToastify.css'
 import { cn } from '@/lib/utils'
 import Providers from '@/components/providers'
 

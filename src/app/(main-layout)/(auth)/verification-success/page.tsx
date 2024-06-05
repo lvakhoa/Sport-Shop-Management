@@ -1,5 +1,6 @@
 'use client'
 
+import { PATH_NAME } from '@/configs'
 import AuthForm from '../components/AuthForm'
 import { SuccessfulMessage } from '../components/alert/successful-message'
 import { Button } from '@/components/shared'
@@ -9,7 +10,7 @@ function VerificationSuccessPage() {
   const router = useRouter()
 
   const handleLoginClick = () => {
-    router.push('/log-in')
+    router.push(PATH_NAME.LOGIN)
   }
 
   const verificationSuccessElement = (

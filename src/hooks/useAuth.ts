@@ -60,17 +60,18 @@ const useAuth = () => {
           setAccessToken(accessToken)
           setRefreshToken(refreshToken)
         },
-        onError: (errorMessage) => {
-          toast.error(errorMessage)
+        onError: () => {
+          toast.error('Your log in session has expired, please log in again')
           logOut()
-          redirect(PATH_NAME.LOGIN)
         },
       })
     }
   }, [accessToken, setAccessToken, setRefreshToken, logOut])
 
   return {
+    isLoggedIn: accessToken === null || !!accessToken,
     logIn,
+    logOut,
     accessToken,
     refreshToken,
     setAccessToken,

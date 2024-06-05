@@ -16,12 +16,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import Link from 'next/link'
+import { useAuth } from '@/hooks'
+import { PATH_NAME } from '@/configs'
+import AuthButton from '../../components/AuthButton'
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
+  email: z.string().email({
+    message: 'Please enter a valid email address',
   }),
-  password: z.string(),
+  password: z.string().min(1, {
+    message: 'Password is required',
+  }),
 })
 
 interface LoginForm {
@@ -29,33 +34,33 @@ interface LoginForm {
 }
 
 export function LoginForm({ className }: LoginForm) {
+  const { logIn } = useAuth()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {}
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    logIn.mutate({ email: data.email, password: data.password })
+  }
 
   return (
     <Form {...form}>
-      <form
-        method='post'
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('space-y-3', className)}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-3', className)}>
         <FormField
           control={form.control}
-          name='username'
+          name='email'
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <div className='relative flex w-full items-center'>
                   <Input
                     className='h-[55px] w-full pl-[45px] text-[20px]'
-                    placeholder='Username'
+                    placeholder='Email'
                     {...field}
                   />
                   <Image
@@ -97,12 +102,10 @@ export function LoginForm({ className }: LoginForm) {
             </FormItem>
           )}
         />
-        <Link className='flex cursor-pointer justify-end' href='/forgot-password'>
-          <span className='text-[16px]'>Forgot password?</span>
+        <Link className='flex cursor-pointer justify-end' href={PATH_NAME.FORGOT_PASSWORD}>
+          <span className='text-[16px] hover:underline'>Forgot password?</span>
         </Link>
-        <Button type='submit' className='flex h-[50px] w-full text-[20px]'>
-          Login
-        </Button>
+        <AuthButton isLoading={logIn.isPending} text='Login' />
       </form>
     </Form>
   )
