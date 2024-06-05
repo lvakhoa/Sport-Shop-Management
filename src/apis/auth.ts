@@ -67,9 +67,15 @@ class AuthApi {
 
   async refreshToken(refreshToken: string) {
     const data = await handleResponse<ITokenResponse>(() =>
-      httpClient.post<ITokenResponse>('/auth/refresh-token', {
-        refresh_token: refreshToken,
-      }),
+      httpClient.post<ITokenResponse>(
+        '/auth/refresh-token',
+        {
+          refresh_token: refreshToken,
+        },
+        {
+          validateStatus: null,
+        },
+      ),
     )
     return { accessToken: data?.access_token, refreshToken: data?.refresh_token }
   }
@@ -80,6 +86,7 @@ class AuthApi {
         headers: {
           Cookie: `refresh_token=${refreshToken}`,
         },
+        validateStatus: null,
       }),
     )
     return data?.message

@@ -55,7 +55,7 @@ class HttpClient {
     onError,
   }: {
     onSuccess: (accessToken: string, refreshToken: string) => void
-    onError: (errorMessage: string) => void
+    onError: () => void
   }) {
     this.instance.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
@@ -86,7 +86,7 @@ class HttpClient {
             return this.instance(originalRequest)
           }
         } catch (error: any) {
-          onError(error.message)
+          onError()
         }
         return Promise.reject(error)
       },

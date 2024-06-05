@@ -4,19 +4,21 @@ import { Navbar, Sidebar } from '@/components/ui'
 import React, { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useAuth, useBrowser } from '@/hooks'
-import { redirect } from 'next/navigation'
+import { redirect, usePathname, useRouter } from 'next/navigation'
 import { PATH_NAME } from '@/configs'
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const [openSidebar, setOpenSidebar] = useState(true)
   const { isBrowser } = useBrowser()
-  const { accessToken } = useAuth()
+  const { isLoggedIn } = useAuth()
+  const router = useRouter()
+  const pathname = usePathname()
 
-  // useEffect(() => {
-  //   if (!accessToken) {
-  //     return redirect(PATH_NAME.LOGIN)
-  //   }
-  // }, [accessToken])
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return router.replace(PATH_NAME.LOGIN + '?redirect=' + pathname)
+    }
+  }, [isLoggedIn, router, pathname])
 
   return (
     <div>

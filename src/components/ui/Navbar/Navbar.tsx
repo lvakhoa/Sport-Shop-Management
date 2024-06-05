@@ -5,8 +5,9 @@ import Link from 'next/link'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import styles from './Navbar.module.css'
 import { cn } from '@/lib/utils'
-import { OutsideDisappear } from '@/components/shared'
+import { OutsideDisappear, Skeleton } from '@/components/shared'
 import { InfoDropdown } from './components'
+import { useProfile } from '@/hooks'
 
 export default function Navbar({
   openSidebar,
@@ -15,6 +16,7 @@ export default function Navbar({
 }) {
   const [isInfoOpen, setIsInfoOpen] = useState(false)
   const [isInfoClicked, setIsInfoClicked] = useState(false)
+  const profile = useProfile()
 
   function toggleInfoDropdown() {
     setIsInfoOpen(!isInfoOpen)
@@ -58,7 +60,13 @@ export default function Navbar({
                 <span className='whitespace-nowrap text-left text-sm capitalize leading-none'>
                   Hello
                 </span>
-                <span className='font-bold leading-none text-black-100'>John Cena</span>
+                {profile.isLoading ? (
+                  <Skeleton className='h-[16px] w-[83px] rounded-full' />
+                ) : (
+                  <span className='font-bold leading-none text-black-100'>
+                    {profile.data?.fullname}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -69,7 +77,11 @@ export default function Navbar({
                   setIsForceClose={setIsInfoClicked}
                   stateChanger={toggleInfoDropdown}
                 >
-                  <InfoDropdown closeDropdown={closeInfoDropdown} />
+                  <InfoDropdown
+                    isLoading={profile.isLoading}
+                    name={profile.data?.fullname ?? ''}
+                    closeDropdown={closeInfoDropdown}
+                  />
                 </OutsideDisappear>
               </div>
             )}

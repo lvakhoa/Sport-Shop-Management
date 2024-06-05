@@ -17,11 +17,21 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useState, useEffect } from 'react'
 import { SuccessfulSendMessage } from '../../forgot-password/components/successful-send-email'
+import { useMutation } from '@tanstack/react-query'
+import { authApi } from '@/apis'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { PATH_NAME } from '@/configs'
+import { toast } from 'react-toastify'
+import AuthButton from '../../components/AuthButton'
 
 const formSchema = z
   .object({
-    password: z.string(),
-    confirm: z.string(),
+    password: z.string().min(1, {
+      message: 'This is required',
+    }),
+    confirm: z.string().min(1, {
+      message: 'This is required',
+    }),
   })
   .refine((data) => data.password === data.confirm, {
     message: 'Password did not match',
@@ -33,6 +43,10 @@ interface IResetPasswordForm {
 }
 
 export function ResetPasswordForm({ className }: IResetPasswordForm) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,15 +55,23 @@ export function ResetPasswordForm({ className }: IResetPasswordForm) {
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {}
+  const resetPassword = useMutation({
+    mutationFn: (newPassword: string) => authApi.resetPassword(token ?? '', newPassword),
+    onSuccess: () => {
+      toast.success('Password reset successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    resetPassword.mutate(data.password)
+  }
 
   return (
     <Form {...form}>
-      <form
-        method='post'
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('space-y-3', className)}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-3', className)}>
         <FormField
           control={form.control}
           name='password'
@@ -72,7 +94,7 @@ export function ResetPasswordForm({ className }: IResetPasswordForm) {
                   />
                 </div>
               </FormControl>
-              <FormMessage className='text-[20px] font-normal' />
+              <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
         />
@@ -98,13 +120,11 @@ export function ResetPasswordForm({ className }: IResetPasswordForm) {
                   />
                 </div>
               </FormControl>
-              <FormMessage className='text-[20px] font-normal' />
+              <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
         />
-        <Button type='submit' className='flex h-[50px] w-full text-[20px]'>
-          Submit Password
-        </Button>
+        <AuthButton isLoading={resetPassword.isPending} text='Submit Password' />
       </form>
     </Form>
   )
