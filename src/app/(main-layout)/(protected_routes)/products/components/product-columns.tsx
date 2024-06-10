@@ -3,57 +3,23 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
-import { Button } from '@/components/shared/button'
+import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
-import { Checkbox } from '@/components/shared/checkbox'
-import { ActionButtonShow } from '@/components/shared/ActionButtonShow'
+import { IFilterInput } from '@/interfaces'
+import { productApi } from '@/apis'
+import EditProductForm from './edit-product'
 
 export interface IProduct {
   id: string
   name: string
   category: string
-  buyingPrice: string
+  listPrice: string
   sellingPrice: string
   status: STATUS
+  total: number
 }
 
-export interface IProductFilterInput {
-  key: string
-  title: string
-  type: FILTER_INPUT_TYPE
-  dropdownItems?: STATUS[]
-}
-
-export const productFilterInput: IProductFilterInput[] = [
-  {
-    key: 'name',
-    title: 'Name',
-    type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'category',
-    title: 'Category',
-    type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'buyingPrice',
-    title: 'Buying Price',
-    type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'sellingPrice',
-    title: 'Selling Price',
-    type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'status',
-    title: 'Status',
-    type: FILTER_INPUT_TYPE.DROPDOWN,
-    dropdownItems: [STATUS.ACTIVE, STATUS.INACTIVE],
-  },
-]
-
-const status: string[] = [STATUS.ACTIVE, STATUS.INACTIVE]
+// const status: string[] = [STATUS.ACTIVE, STATUS.INACTIVE]
 
 export const columns: ColumnDef<IProduct>[] = [
   {
@@ -99,12 +65,22 @@ export const columns: ColumnDef<IProduct>[] = [
   },
   {
     accessorKey: 'category',
-    header: () => {
-      return <div className='font-medium'>Category</div>
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Category
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
     },
   },
   {
-    accessorKey: 'buyingPrice',
+    accessorKey: 'listPrice',
     header: ({ column }) => {
       return (
         <Button
@@ -118,10 +94,10 @@ export const columns: ColumnDef<IProduct>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('buyingPrice')}</div>,
+    cell: ({ row }) => <div>{row.getValue('listPrice')}</div>,
     sortingFn: (rowA, rowB) => {
-      const valueA = parseFloat((rowA.getValue('buyingPrice') as string).slice(0, -4))
-      const valueB = parseFloat((rowB.getValue('buyingPrice') as string).slice(0, -4))
+      const valueA = parseFloat((rowA.getValue('listPrice') as string).slice(0, -4))
+      const valueB = parseFloat((rowB.getValue('listPrice') as string).slice(0, -4))
 
       if (valueA < valueB) {
         return -1
@@ -175,7 +151,15 @@ export const columns: ColumnDef<IProduct>[] = [
 
     cell: ({ row }) => {
       const productId = row.getValue('id') as string
-      return <ActionButtonShow path={PATH_NAME.PRODUCT} id={productId} />
+      return (
+        <ActionButtonShow
+          path={PATH_NAME.PRODUCT}
+          id={productId}
+          editContentElement={<EditProductForm productId={productId} />}
+          tableKey='products'
+          deleteMethod={() => productApi.deleteProductById(productId)}
+        />
+      )
     },
   },
 ]

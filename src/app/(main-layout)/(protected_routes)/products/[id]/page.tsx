@@ -7,8 +7,8 @@ import React from 'react'
 type Props = {}
 
 function ProductDetail({}: Props) {
-  const { id: userId } = useParams()
-  return <div>{userId}</div>
+  const { id: productId } = useParams()
+  return <div>{productId}</div>
 }
 
 export default ProductDetail

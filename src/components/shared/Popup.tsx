@@ -17,7 +17,7 @@ interface IPopup {
   icon: string
 }
 
-export function Popup({ header, content, icon }: IPopup) {
+export default function Popup({ header, content, icon }: IPopup) {
   return (
     <Dialog>
       <DialogTrigger asChild>

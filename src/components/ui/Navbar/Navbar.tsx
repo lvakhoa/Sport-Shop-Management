@@ -18,6 +18,13 @@ export default function Navbar({
   const [isInfoClicked, setIsInfoClicked] = useState(false)
   const profile = useProfile()
 
+  const fullName = profile.data?.fullname
+  const lastSpaceIndex = fullName?.lastIndexOf(' ') ?? 0
+  const middleSpaceIndex = fullName?.substring(0, lastSpaceIndex).lastIndexOf(' ') ?? 0
+  const displayName = !!fullName
+    ? `${fullName?.substring(middleSpaceIndex, lastSpaceIndex)} ${fullName?.substring(lastSpaceIndex + 1)}`
+    : undefined
+
   function toggleInfoDropdown() {
     setIsInfoOpen(!isInfoOpen)
   }
@@ -60,12 +67,10 @@ export default function Navbar({
                 <span className='whitespace-nowrap text-left text-sm capitalize leading-none'>
                   Hello
                 </span>
-                {profile.isLoading ? (
-                  <Skeleton className='h-[16px] w-[83px] rounded-full' />
+                {profile.isLoading || !displayName ? (
+                  <Skeleton className='h-[16px] w-[80px] rounded-full' />
                 ) : (
-                  <span className='font-bold leading-none text-black-100'>
-                    {profile.data?.fullname}
-                  </span>
+                  <span className='font-bold leading-none text-black-100'>{displayName}</span>
                 )}
               </div>
             </div>

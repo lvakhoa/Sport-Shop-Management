@@ -1,4 +1,4 @@
-import { GENDER } from '@/configs/enum'
+import { GENDER, POSITION_TITLE } from '@/configs/enum'
 
 export interface IEmployeeRequest {
   account_id?: string
@@ -6,8 +6,8 @@ export interface IEmployeeRequest {
   fullname?: string
   phone?: string
   email?: string
-  gender?: GENDER
-  started_date?: Date
+  gender?: 'MALE' | 'FEMALE'
+  started_date?: string
   salary?: number
 }
 
@@ -21,4 +21,8 @@ export interface IEmployeeResponse {
   gender: GENDER
   started_date: Date
   salary: string
+  total: number
+  position?: {
+    title: POSITION_TITLE
+  }
 }

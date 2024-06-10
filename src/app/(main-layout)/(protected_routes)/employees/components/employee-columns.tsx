@@ -1,36 +1,27 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { FILTER_INPUT_TYPE, GENDER } from '@/configs/enum'
-import { actions, PATH_NAME } from '@/configs'
-import { default as ActionButton } from '@/components/shared/ActionButton'
-import { TABLE_ACTION_TYPE } from '@/configs/enum'
-import { Label } from '@/components/shared/label'
-import { Input } from '@/components/shared/input'
-import { Select } from '@/components/shared/select'
-import { ComboBox } from '@/components/shared/ComboBox'
-import { Button } from '@/components/shared/button'
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react'
-import { Checkbox } from '@/components/shared/checkbox'
-import useWindowSize from '@/hooks/useWindowSize'
-import { ActionButtonShow } from '@/components/shared/ActionButtonShow'
+import { FILTER_INPUT_TYPE, GENDER, POSITION_TITLE } from '@/configs/enum'
+import { PATH_NAME } from '@/configs'
+import { Button, ActionButtonShow, Checkbox } from '@/components/shared'
+import { ArrowUpDown } from 'lucide-react'
+import { IFilterInput } from '@/interfaces'
+import { employeeApi } from '@/apis'
+import EditEmployeeForm from './edit-employee'
 
-export interface ICustomer {
+export interface IEmployee {
   id: string
   name: string
   email: string
   phone: string
   gender: GENDER
+  startedDate: string
+  salary: string
+  position: POSITION_TITLE | ''
+  total: number
 }
 
-export interface IFilterInput {
-  key: string
-  title: string
-  type: FILTER_INPUT_TYPE
-  dropdownItems?: GENDER[]
-}
-
-export const filterInput: IFilterInput[] = [
+export const employeeFilterInput: IFilterInput[] = [
   {
     key: 'name',
     title: 'Name',
@@ -52,11 +43,21 @@ export const filterInput: IFilterInput[] = [
     type: FILTER_INPUT_TYPE.DROPDOWN,
     dropdownItems: [GENDER.MALE, GENDER.FEMALE],
   },
+  // {
+  //   key: 'startedDate',
+  //   title: 'Started Date',
+  //   type: FILTER_INPUT_TYPE.TEXTBOX,
+  //   // thêm filter date
+  // },
+  {
+    key: 'position',
+    title: 'Position',
+    type: FILTER_INPUT_TYPE.DROPDOWN,
+    dropdownItems: [POSITION_TITLE.MANAGER, POSITION_TITLE.EMPLOYEE],
+  },
 ]
 
-const gender: string[] = [GENDER.FEMALE, GENDER.MALE]
-
-export const columns: ColumnDef<ICustomer>[] = [
+export const columns: ColumnDef<IEmployee>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -78,7 +79,6 @@ export const columns: ColumnDef<ICustomer>[] = [
   },
   {
     accessorKey: 'id',
-    header: 'ID',
     enableHiding: true,
   },
   {
@@ -129,14 +129,61 @@ export const columns: ColumnDef<ICustomer>[] = [
     filterFn: 'equalsString',
   },
   {
+    accessorKey: 'startedDate',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Started Date
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: 'salary',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Salary
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: 'position',
+    header: () => {
+      return <div className='font-medium'>Position</div>
+    },
+    filterFn: 'equalsString',
+  },
+  {
     id: 'actions',
     header: () => {
       return <div className='font-medium'>Action</div>
     },
 
     cell: ({ row, table }) => {
-      const customerId = row.getValue('id') as string
-      return <ActionButtonShow path={PATH_NAME.CUSTOMER} id={customerId} />
+      const employeeId = row.getValue('id') as string
+      return (
+        <ActionButtonShow
+          path={PATH_NAME.EMPLOYEE}
+          id={employeeId}
+          tableKey='employees'
+          editContentElement={<EditEmployeeForm employeeId={employeeId} />}
+          deleteMethod={() => employeeApi.deleteEmployeeById(employeeId)}
+        />
+      )
     },
   },
 ]

@@ -5,6 +5,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios'
+import _createAuthRefreshInterceptor, { AxiosAuthRefreshRequestConfig } from 'axios-auth-refresh'
 
 class HttpClient {
   private baseUrl: string
@@ -15,6 +16,10 @@ class HttpClient {
     this.instance = axios.create({
       baseURL: this.baseUrl,
       withCredentials: true,
+      headers: {
+        'access-control-allow-credentials': true,
+        'access-control-expose-headers': 'set-cookie',
+      },
     })
   }
 
@@ -22,22 +27,22 @@ class HttpClient {
     return this.baseUrl + endpoint
   }
 
-  async get<T>(endpoint: string, config?: AxiosRequestConfig) {
+  async get<T>(endpoint: string, config?: AxiosAuthRefreshRequestConfig) {
     const response = await this.instance.get<T>(this.getUrl(endpoint), config)
     return response.data
   }
 
-  async post<T>(endpoint: string, data: object, config?: AxiosRequestConfig) {
+  async post<T>(endpoint: string, data: object, config?: AxiosAuthRefreshRequestConfig) {
     const response = await this.instance.post<T>(this.getUrl(endpoint), data, config)
     return response.data
   }
 
-  async patch<T>(endpoint: string, data: object, config?: AxiosRequestConfig) {
+  async patch<T>(endpoint: string, data: object, config?: AxiosAuthRefreshRequestConfig) {
     const response = await this.instance.patch<T>(this.getUrl(endpoint), data, config)
     return response.data
   }
 
-  async delete<T>(endpoint: string, config?: AxiosRequestConfig) {
+  async delete<T>(endpoint: string, config?: AxiosAuthRefreshRequestConfig) {
     const response = await this.instance.delete<T>(this.getUrl(endpoint), config)
     return response.data
   }
@@ -50,6 +55,49 @@ class HttpClient {
     delete this.instance.defaults.headers.common.Authorization
   }
 
+  // createAuthInterceptor({
+  //   onSuccess,
+  //   onError,
+  // }: {
+  //   onSuccess: (accessToken: string, refreshToken: string) => void
+  //   onError: () => void
+  // }) {
+  //   // this.instance.interceptors.request.use(
+  //   //   async (config: InternalAxiosRequestConfig) => {
+  //   //     const accessToken = localStorage.getItem('access_token') || ''
+  //   //     config.headers.Authorization = `Bearer ${accessToken}`
+  //   //     return config
+  //   //   },
+  //   //   (error) => {
+  //   //     Promise.reject(error)
+  //   //   },
+  //   // )
+
+  //   this.instance.interceptors.response.use(
+  //     (response: AxiosResponse) => {
+  //       return response
+  //     },
+  //     async (error) => {
+  //       try {
+  //         const originalRequest = error.config
+  //         if (error.response.status === 401 && !originalRequest._retry) {
+  //           originalRequest._retry = true
+  //           const refreshToken = localStorage.getItem('refresh_token')
+  //           const data = await authApi.refreshToken(refreshToken ?? '')
+  //           if (!!data.accessToken && !!data.refreshToken) {
+  //             axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`
+  //             onSuccess(data.accessToken, data.refreshToken)
+  //           }
+  //           return this.instance(originalRequest)
+  //         }
+  //       } catch (error: any) {
+  //         onError()
+  //       }
+  //       return Promise.reject(error)
+  //     },
+  //   )
+  // }
+
   createAuthInterceptor({
     onSuccess,
     onError,
@@ -57,38 +105,39 @@ class HttpClient {
     onSuccess: (accessToken: string, refreshToken: string) => void
     onError: () => void
   }) {
-    this.instance.interceptors.request.use(
-      async (config: InternalAxiosRequestConfig) => {
-        const accessToken = localStorage.getItem('access_token') || ''
-        config.headers.Authorization = `Bearer ${accessToken}`
-        return config
-      },
-      (error) => {
-        Promise.reject(error)
-      },
-    )
+    // this.instance.interceptors.request.use(
+    //   async (config: InternalAxiosRequestConfig) => {
+    //     const accessToken = localStorage.getItem('access_token') || ''
+    //     if (!!config && !!config.headers) {
+    //       config.headers.Authorization = `Bearer ${accessToken}`
+    //     }
+    //     return config
+    //   },
+    //   (error) => {
+    //     Promise.reject(error)
+    //   },
+    // )
 
-    this.instance.interceptors.response.use(
-      (response: AxiosResponse) => {
-        return response
-      },
-      async (error) => {
+    _createAuthRefreshInterceptor(
+      this.instance,
+      async (failedRequest) => {
         try {
-          const originalRequest = error.config
-          if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true
-            const refreshToken = localStorage.getItem('refresh_token')
-            const data = await authApi.refreshToken(refreshToken ?? '')
-            if (!!data.accessToken && !!data.refreshToken) {
-              axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`
-              onSuccess(data.accessToken, data.refreshToken)
-            }
-            return this.instance(originalRequest)
+          const refreshToken = localStorage.getItem('refresh_token')
+          const data = await authApi.refreshToken(refreshToken ?? '')
+          if (!!data.accessToken && !!data.refreshToken) {
+            failedRequest.response.config.headers['Authorization'] = 'Bearer ' + data.accessToken
+            onSuccess(data.accessToken, data.refreshToken)
           }
-        } catch (error: any) {
+
+          return Promise.resolve()
+        } catch (error) {
           onError()
+          return Promise.reject(error)
         }
-        return Promise.reject(error)
+      },
+      {
+        pauseInstanceWhileRefreshing: true,
+        statusCodes: [401],
       },
     )
   }

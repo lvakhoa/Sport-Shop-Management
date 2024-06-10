@@ -1,2 +1,3 @@
-export { columns } from './columns-data-table'
-export type { ICustomer } from './columns-data-table'
+export { columns } from './customer-columns'
+export type { ICustomer } from './customer-columns'
+export { customerFilterInput } from './customer-columns'

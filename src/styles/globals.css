@@ -43,6 +43,7 @@
     --radius: 0.5rem;
     .scrollbar::-webkit-scrollbar {
       width: 5px;
+      height: 5px;
     }
 
     /* Track */
@@ -98,4 +99,9 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* React day picker */
+.rdp-vhidden {
+  @apply hidden;
 }

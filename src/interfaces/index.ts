@@ -1,3 +1,5 @@
+import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
+
 export interface IPerson {
   id: string
   fullname: string
@@ -17,4 +19,11 @@ export interface IInfo {
   fullname?: string
   phone?: string
   gender?: 'MALE' | 'FEMALE'
+}
+
+export interface IFilterInput {
+  key: string
+  title: string
+  type: FILTER_INPUT_TYPE
+  dropdownItems?: string[]
 }

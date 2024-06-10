@@ -9,9 +9,12 @@ export default class BaseApi {
   }
 
   async getAll<T>(count?: number, page?: number) {
-    const data = await handleResponse<T[]>(() =>
-      httpClient.get<T[]>(`${this.route}?count=${count}&page=${page}`),
-    )
+    const data = await handleResponse<T[]>(() => {
+      const countQuery = !!count ? `?count=${count}` : ''
+      const pageQuery = !!page ? (!!count ? `&page=${page}` : `?page=${page}`) : ''
+      const url = this.route + countQuery + pageQuery
+      return httpClient.get<T[]>(url)
+    })
     return data
   }
 
@@ -22,26 +25,14 @@ export default class BaseApi {
 
   async create<T>(requestBody: T, options?: object) {
     const data = await handleResponse<{ message: string }>(() =>
-      httpClient.post<{ message: string }>(
-        this.route,
-        {
-          requestBody,
-        },
-        options,
-      ),
+      httpClient.post<{ message: string }>(this.route, requestBody as object, options),
     )
     return data?.message
   }
 
   async update<T>(requestBody: T, id: string, options?: object) {
     const data = await handleResponse<{ message: string }>(() =>
-      httpClient.patch<{ message: string }>(
-        `${this.route}/${id}`,
-        {
-          requestBody,
-        },
-        options,
-      ),
+      httpClient.patch<{ message: string }>(`${this.route}/${id}`, requestBody as object, options),
     )
     return data?.message
   }

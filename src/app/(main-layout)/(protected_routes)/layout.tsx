@@ -31,8 +31,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
         )}
         <div
           className={cn(
-            'h-screen w-full bg-gray-50 pt-[10px]',
-
+            'h-auto w-full bg-gray-50 pt-[10px]',
             openSidebar ? 'ml-sidebar-compact sm:ml-sidebar-default' : 'ml-0 flex justify-center',
           )}
         >

@@ -4,11 +4,9 @@ import React, { ReactElement } from 'react'
 import { Button } from './button'
 import { useRouter } from 'next/navigation'
 import { TABLE_ACTION_TYPE } from '@/configs/enum'
-import { AlertPopup } from '@/components/shared/AlertPopup'
-import { SidebarEdit } from './SidebarEdit'
-import { Label } from './label'
-import { Input } from './input'
-import { PATH_NAME } from '@/configs'
+import AlertPopup from './AlertPopup'
+import SidebarEdit from './SidebarEdit'
+import { UseMutateFunction } from '@tanstack/react-query'
 
 interface IActionButton {
   background: string
@@ -19,6 +17,7 @@ interface IActionButton {
   id: string
   path?: string
   editContentElement?: ReactElement
+  deleteMethod: UseMutateFunction<string | undefined, Error, void, unknown>
 }
 
 function ActionButton({
@@ -30,29 +29,17 @@ function ActionButton({
   path,
   id,
   editContentElement,
+  deleteMethod,
 }: IActionButton) {
   const router = useRouter()
-  const selectButtonAction = () => {
-    switch (type) {
-      case 'VIEW':
-        return () => router.push(`${path}/${id}`)
-      case 'EDIT':
-        return () => console.log('Sidebar opened')
-      case 'DELETE':
-        return () => console.log('Delete popup')
-      default:
-        break
-    }
-  }
 
   switch (type) {
     case 'DELETE':
       return (
-        <AlertPopup title='Delete?' description='Are you sure?'>
+        <AlertPopup title='Delete?' description='Are you sure?' action={deleteMethod}>
           <Button
             className={cn('h-[30px] w-[30px] rounded-[3px] p-[5px]')}
             style={{ backgroundColor: background }}
-            onClick={selectButtonAction()}
           >
             <Image width={20} height={20} src={icon} alt={alt} style={{ color }} />
           </Button>
@@ -68,7 +55,6 @@ function ActionButton({
           <Button
             className={cn('h-[30px] w-[30px] rounded-[3px] p-[5px]')}
             style={{ backgroundColor: background }}
-            onClick={selectButtonAction()}
           >
             <Image width={20} height={20} src={icon} alt={alt} style={{ color }} />
           </Button>
@@ -79,7 +65,7 @@ function ActionButton({
     <Button
       className={cn('h-[30px] w-[30px] rounded-[3px] p-[5px]')}
       style={{ backgroundColor: background }}
-      onClick={selectButtonAction()}
+      onClick={() => router.push(`${path}/${id}`)}
     >
       <Image width={20} height={20} src={icon} alt={alt} style={{ color }} />
     </Button>

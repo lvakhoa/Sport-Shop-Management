@@ -73,7 +73,7 @@ class AuthApi {
           refresh_token: refreshToken,
         },
         {
-          validateStatus: null,
+          skipAuthRefresh: true,
         },
       ),
     )
@@ -83,10 +83,7 @@ class AuthApi {
   async logOut(refreshToken: string) {
     const data = await handleResponse<{ message: string }>(() =>
       httpClient.delete<{ message: string }>('/auth/log-out', {
-        headers: {
-          Cookie: `refresh_token=${refreshToken}`,
-        },
-        validateStatus: null,
+        skipAuthRefresh: true,
       }),
     )
     return data?.message

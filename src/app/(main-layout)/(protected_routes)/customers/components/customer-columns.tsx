@@ -3,12 +3,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { FILTER_INPUT_TYPE, GENDER } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
-import { Button } from '@/components/shared/button'
+import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
-import { Checkbox } from '@/components/shared/checkbox'
-import { ActionButtonShow } from '@/components/shared/ActionButtonShow'
+import { IFilterInput } from '@/interfaces'
+import { customerApi } from '@/apis'
 
-export interface IEmployee {
+export interface ICustomer {
   id: string
   name: string
   email: string
@@ -16,14 +16,7 @@ export interface IEmployee {
   gender: GENDER
 }
 
-export interface IFilterInput {
-  key: string
-  title: string
-  type: FILTER_INPUT_TYPE
-  dropdownItems?: GENDER[]
-}
-
-export const filterInput: IFilterInput[] = [
+export const customerFilterInput: IFilterInput[] = [
   {
     key: 'name',
     title: 'Name',
@@ -49,7 +42,7 @@ export const filterInput: IFilterInput[] = [
 
 const gender: string[] = [GENDER.FEMALE, GENDER.MALE]
 
-export const columns: ColumnDef<IEmployee>[] = [
+export const columns: ColumnDef<ICustomer>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -71,6 +64,7 @@ export const columns: ColumnDef<IEmployee>[] = [
   },
   {
     accessorKey: 'id',
+    header: 'ID',
     enableHiding: true,
   },
   {
@@ -127,8 +121,15 @@ export const columns: ColumnDef<IEmployee>[] = [
     },
 
     cell: ({ row, table }) => {
-      const employeeId = row.getValue('id') as string
-      return <ActionButtonShow path={PATH_NAME.EMPLOYEE} id={employeeId} />
+      const customerId = row.getValue('id') as string
+      return (
+        <ActionButtonShow
+          path={PATH_NAME.CUSTOMER}
+          id={customerId}
+          tableKey='customers'
+          deleteMethod={() => customerApi.deleteCustomerById(customerId)}
+        />
+      )
     },
   },
 ]

@@ -1,13 +1,11 @@
 'use client'
 
 import { GENDER } from '@/configs/enum'
-import { columns, ICustomer } from './components'
-import { DataTable } from '@/components/shared/data-table'
-import { actions } from '@/configs'
-import { Label } from '@/components/shared/label'
-import { Input } from '@/components/shared/input'
-import { ComboBox } from '@/components/shared/ComboBox'
+import { columns, customerFilterInput, ICustomer } from './components'
+import { DataTable, ComboBox, Label, Input } from '@/components/shared'
 import { useBrowser } from '@/hooks'
+import { useState } from 'react'
+import { PaginationState } from '@tanstack/react-table'
 
 function getData(): ICustomer[] {
   // Fetch data from your API here.
@@ -72,6 +70,10 @@ const addContentSidebarElement = (
 export default function CustomersManagementPage() {
   const data = getData()
   const { isBrowser } = useBrowser()
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
 
   return (
     <div className='container mx-auto py-10'>
@@ -81,6 +83,9 @@ export default function CustomersManagementPage() {
           data={data}
           title='Customers'
           addContentSidebar={addContentSidebarElement}
+          pagination={pagination}
+          setPagination={setPagination}
+          filterInput={customerFilterInput}
         />
       )}
     </div>
