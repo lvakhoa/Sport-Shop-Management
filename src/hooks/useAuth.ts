@@ -53,20 +53,25 @@ const useAuth = () => {
   useEffect(() => {
     if (!!accessToken) {
       httpClient.setAuthHeader(accessToken)
-      httpClient.createAuthInterceptor({
-        onSuccess: (accessToken, refreshToken) => {
-          localStorage.setItem('access_token', accessToken)
-          localStorage.setItem('refresh_token', refreshToken)
-          setAccessToken(accessToken)
-          setRefreshToken(refreshToken)
-        },
-        onError: () => {
-          toast.error('Your log in session has expired, please log in again')
-          logOut()
-        },
-      })
+      localStorage.setItem('access_token', accessToken)
     }
-  }, [accessToken, setAccessToken, setRefreshToken, logOut])
+  }, [accessToken])
+
+  useEffect(() => {
+    httpClient.createAuthInterceptor({
+      onSuccess: (accessToken, refreshToken) => {
+        httpClient.setAuthHeader(accessToken)
+        localStorage.setItem('access_token', accessToken)
+        localStorage.setItem('refresh_token', refreshToken)
+        setAccessToken(accessToken)
+        setRefreshToken(refreshToken)
+      },
+      onError: () => {
+        toast.error('Your log in session has expired, please log in again')
+        logOut()
+      },
+    })
+  }, [setAccessToken, setRefreshToken, logOut])
 
   return {
     isLoggedIn: accessToken === null || !!accessToken,

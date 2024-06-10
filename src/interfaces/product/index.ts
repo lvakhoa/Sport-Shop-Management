@@ -19,6 +19,7 @@ export interface IProductResponse {
   status: boolean
   list_price: string
   selling_price: string
+  total: number
   stocks: {
     media?: {
       url: string
@@ -34,5 +35,5 @@ export interface IProductResponse {
       id: string
       name: string
     }
-  }
+  }[]
 }

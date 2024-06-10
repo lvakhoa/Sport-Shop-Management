@@ -1,83 +1,69 @@
 'use client'
 
-import { STATUS } from '@/configs/enum'
-import { columns, IProduct } from './components'
-import { DataTable } from '@/components/shared/data-table'
-import { Label } from '@/components/shared/label'
-import { Input } from '@/components/shared/input'
-import { ComboBox } from '@/components/shared/ComboBox'
+import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
+import { columns, CreateProductForm, IProduct } from './components'
+import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { queryKeys } from '@/configs'
+import { productApi } from '@/apis'
+import { IFilterInput } from '@/interfaces'
+import { PaginationState } from '@tanstack/react-table'
 
-function getData(): IProduct[] {
-  // Fetch data from your API here.
-  return [
-    {
-      id: '1',
-      name: 'Sechtoy',
-      category: 'Toy',
-      buyingPrice: '69.000 VND',
-      sellingPrice: '99.000 VND',
-      status: STATUS.ACTIVE,
-    },
-    {
-      id: '2',
-      name: 'Aodu',
-      category: 'Underwears',
-      buyingPrice: '169.000 VND',
-      sellingPrice: '199.000 VND',
-      status: STATUS.ACTIVE,
-    },
-    {
-      id: '3',
-      name: 'Quanxi',
-      category: 'Underwears',
-      buyingPrice: '269.000 VND',
-      sellingPrice: '299.000 VND',
-      status: STATUS.ACTIVE,
-    },
-  ]
-}
+const productFilterInput: IFilterInput[] = [
+  {
+    key: 'name',
+    title: 'Name',
+    type: FILTER_INPUT_TYPE.TEXTBOX,
+  },
+  {
+    key: 'category',
+    title: 'Category',
+    type: FILTER_INPUT_TYPE.TEXTBOX,
+  },
+  {
+    key: 'listPrice',
+    title: 'Buying Price',
+    type: FILTER_INPUT_TYPE.TEXTBOX,
+  },
+  {
+    key: 'sellingPrice',
+    title: 'Selling Price',
+    type: FILTER_INPUT_TYPE.TEXTBOX,
+  },
+  {
+    key: 'status',
+    title: 'Status',
+    type: FILTER_INPUT_TYPE.DROPDOWN,
+    dropdownItems: [STATUS.ACTIVE, STATUS.INACTIVE],
+  },
+]
 
-const status: string[] = [STATUS.ACTIVE, STATUS.INACTIVE]
-
-const addContentSidebarElement = (
-  <div className='grid gap-4 py-4'>
-    <div className='grid grid-cols-4 items-center gap-4'>
-      <Label htmlFor='name' className='text-right'>
-        Name
-      </Label>
-      <Input id='name' value='Pedro Duarte' className='col-span-3' />
-    </div>
-    <div className='grid grid-cols-4 items-center gap-4'>
-      <Label htmlFor='category' className='text-right'>
-        Category
-      </Label>
-      <Input id='category' value='Kobiet' className='col-span-3' />
-    </div>
-    <div className='grid grid-cols-4 items-center gap-4'>
-      <Label htmlFor='buyingPrice' className='text-right'>
-        B.Price
-      </Label>
-      <Input id='buyingPrice' value='100.000' className='col-span-3' />
-    </div>
-    <div className='grid grid-cols-4 items-center gap-4'>
-      <Label htmlFor='sellingPrice' className='text-right'>
-        S.Price
-      </Label>
-      <Input id='sellingPrice' value='200.000' className='col-span-3' />
-    </div>
-    <div className='grid grid-cols-4 items-center gap-4'>
-      <Label htmlFor='status' className='text-right'></Label>
-      <div className='col-span-3'>
-        <ComboBox key='status' placeholder='Status' items={status} />
-      </div>
-    </div>
-  </div>
-)
-
-export default function EmployeesManagementPage() {
-  const data = getData()
+export default function ProductsManagementPage() {
   const { isBrowser } = useBrowser()
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+  const { isPending, data: queryData } = useQuery({
+    queryKey: queryKeys.products.gen(pagination.pageIndex),
+    queryFn: () => productApi.getAllProduct(pagination.pageSize, pagination.pageIndex + 1),
+    placeholderData: (previousData) => previousData,
+  })
+
+  const data: IProduct[] =
+    queryData?.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        category: item.category_list.length > 0 ? item.category_list[0].category.name : '',
+        listPrice: item.list_price,
+        sellingPrice: item.selling_price,
+        status: item.status ? STATUS.ACTIVE : STATUS.INACTIVE,
+        total: item.total,
+      }
+    }) ?? []
 
   return (
     <div className='container mx-auto py-10'>
@@ -86,7 +72,12 @@ export default function EmployeesManagementPage() {
           columns={columns}
           data={data}
           title='Products'
-          addContentSidebar={addContentSidebarElement}
+          addContentSidebar={<CreateProductForm />}
+          pagination={pagination}
+          setPagination={setPagination}
+          filterInput={productFilterInput}
+          isPending={isPending}
+          pageCount={data.length > 0 ? data[0].total / pagination.pageSize : 0}
         />
       )}
     </div>

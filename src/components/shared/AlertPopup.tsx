@@ -9,15 +9,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/shared/alert-dialog'
-import { Button } from '@/components/shared/button'
 
 interface IAlertPopup {
   title: string
   description: string
   children?: React.ReactNode
+  action: () => void
 }
 
-export function AlertPopup({ title, description, children }: IAlertPopup) {
+export default function AlertPopup({ title, description, children, action }: IAlertPopup) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -28,7 +28,10 @@ export function AlertPopup({ title, description, children }: IAlertPopup) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'>
+          <AlertDialogAction
+            onClick={action}
+            className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
+          >
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -66,6 +66,11 @@ export enum STATUS {
   INACTIVE = 'Inactive',
 }
 
+export enum POSITION_TITLE {
+  MANAGER = 'Manager',
+  EMPLOYEE = 'Employee',
+}
+
 export enum TABLE_ACTION_TYPE {
   VIEW = 'VIEW',
   EDIT = 'EDIT',

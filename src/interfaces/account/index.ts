@@ -10,6 +10,14 @@ export interface IAccountResponse {
     id: string
     title: string
   }
+  employee?: {
+    id: string
+    fullname: string
+  }
+  customer?: {
+    id: string
+    fullname: string
+  }
 }
 
 export interface IEmployeeAccountRequest {

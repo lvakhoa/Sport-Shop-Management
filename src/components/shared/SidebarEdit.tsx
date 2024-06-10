@@ -1,6 +1,4 @@
 import { Button } from '@/components/shared/button'
-import { Input } from '@/components/shared/input'
-import { Label } from '@/components/shared/label'
 import {
   Sheet,
   SheetClose,
@@ -20,7 +18,7 @@ interface ISidebarEdit {
   content?: ReactElement
 }
 
-export function SidebarEdit({ title, description, children, content }: ISidebarEdit) {
+export default function SidebarEdit({ title, description, children, content }: ISidebarEdit) {
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -31,7 +29,7 @@ export function SidebarEdit({ title, description, children, content }: ISidebarE
         </SheetHeader>
         {content}
         <SheetFooter>
-          <SheetClose asChild>
+          {/* <SheetClose asChild>
             <Button
               type='submit'
               className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
@@ -42,7 +40,7 @@ export function SidebarEdit({ title, description, children, content }: ISidebarE
                 <span className='text-[15px] font-normal text-[#FFFFFF]'>Save changes</span>
               )}
             </Button>
-          </SheetClose>
+          </SheetClose> */}
         </SheetFooter>
       </SheetContent>
     </Sheet>
