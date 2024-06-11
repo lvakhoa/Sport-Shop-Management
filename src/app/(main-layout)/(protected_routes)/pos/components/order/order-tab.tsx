@@ -6,8 +6,8 @@ import { ArchiveX, Trash } from 'lucide-react'
 import Image from 'next/image'
 import { Button } from '@/components/shared'
 import { useEffect, useState } from 'react'
-import { NumericStepper } from '@anatoliygatt/numeric-stepper'
 import { set } from 'zod'
+import InputNumber from '@/components/shared/InputNumber'
 
 export function PosTab({
   productList,
@@ -61,21 +61,19 @@ export function PosTab({
                   </div>
                   <span className='text-[16px] font-semibold'>{product.price} đ</span>
                   <div className='flex flex-row items-center justify-between'>
-                    <div style={{ width: '74px', height: '30px', display: 'inline-block' }}>
-                      <div style={{ transform: 'scale(0.4)', transformOrigin: 'top left' }}>
-                        <NumericStepper
-                          size='sm'
-                          minimumValue={1}
-                          initialValue={product.quantity}
-                          onChange={(value) => {
-                            if (productList) {
-                              const newProductList = [...productList]
-                              newProductList[index].quantity = value
-                              setNewProductList(newProductList)
-                            }
-                          }}
-                        />
-                      </div>
+                    <div style={{ transform: 'scale(0.85)' }}>
+                      <InputNumber
+                        min={1}
+                        max={100}
+                        initialValue={product.quantity}
+                        onChange={(value) => {
+                          if (productList) {
+                            const newProductList = [...productList]
+                            newProductList[index].quantity = value
+                            setNewProductList(newProductList)
+                          }
+                        }}
+                      />
                     </div>
                     <div>
                       <Button

@@ -1,9 +1,9 @@
 import React from 'react'
 import Modal from 'react-modal'
+import { SIZE } from '@/configs/enum'
 import { IProductItem1 } from '../../page'
 import { CircleX, ReceiptText } from 'lucide-react'
 import Image from 'next/image'
-import { NumericStepper } from '@anatoliygatt/numeric-stepper'
 import { useState, useEffect } from 'react'
 import {
   Carousel,
@@ -16,6 +16,7 @@ import {
 
 import { ToggleGroup, ToggleGroupItem } from '@/components/shared/toggle-group'
 import { Button } from '@/components/shared'
+import InputNumber from '@/components/shared/InputNumber'
 
 const customStyles = {
   content: {
@@ -38,10 +39,18 @@ export function ProductModal({
   product: IProductItem1
   onAddToReceipt: (color: string, size: string, quantity: number) => void
 }) {
+  const colors = Array.from(
+    new Set(product.stocks?.map((stock) => stock.color?.name).filter(Boolean)),
+  )
+  const sizes = Array.from(new Set(product.stocks?.map((stock) => stock.size).filter(Boolean)))
+  const images = Array.from(
+    new Set(product.stocks?.map((stock) => stock.media?.url).filter(Boolean)),
+  )
+
   const [currentItem, setcurrentItem] = useState(0)
   const [api, setApi] = useState<CarouselApi>()
-  const [color, setColor] = useState(product.stock?.color[0])
-  const [size, setSize] = useState(product.stock?.size[0])
+  const [color, setColor] = useState(colors[0])
+  const [size, setSize] = useState(sizes[0])
   const [quantity, setQuantity] = useState(1)
 
   useEffect(() => {
@@ -56,8 +65,8 @@ export function ProductModal({
   }, [api, currentItem])
 
   useEffect(() => {
-    setColor(product.stock?.color[0])
-    setSize(product.stock?.size[0])
+    setColor(colors[0])
+    setSize(sizes[0])
   }, [isOpen])
 
   return (
@@ -70,13 +79,13 @@ export function ProductModal({
           <div className='flex flex-col gap-3 pr-10'>
             <Carousel setApi={setApi} className='w-full max-w-xs'>
               <CarouselContent>
-                {product.stock?.media?.map((item) => (
-                  <CarouselItem>
+                {images.map((item, index) => (
+                  <CarouselItem key={index}>
                     <div>
                       <Image
-                        className='flex aspect-square items-center justify-center rounded-lg'
-                        src={item}
-                        alt={item}
+                        className='flex aspect-square cursor-pointer items-center justify-center rounded-lg'
+                        src={item!}
+                        alt=''
                         layout='responsive'
                         width={50}
                         height={50}
@@ -88,7 +97,7 @@ export function ProductModal({
             </Carousel>
             <Carousel className='w-full max-w-xs'>
               <CarouselContent>
-                {product.stock?.media?.map((item, index) => (
+                {images.map((item, index) => (
                   <CarouselItem
                     key={index}
                     onClick={() => setcurrentItem(index)}
@@ -97,8 +106,8 @@ export function ProductModal({
                     <div>
                       <Image
                         className={`flex aspect-square cursor-pointer items-center justify-center rounded-lg ${currentItem === index ? 'border-[3px] border-blue-500' : ''}`}
-                        src={item}
-                        alt={item}
+                        src={item!}
+                        alt=''
                         layout='responsive'
                         width={50}
                         height={50}
@@ -117,27 +126,27 @@ export function ProductModal({
             <div className='flex flex-col gap-[20px] pt-[10px]'>
               <div className='flex items-center gap-3'>
                 <span className='text-[15px]'>Color:</span>
-                <ToggleGroup type='single' defaultValue={product.stock?.color[0]} className='gap-2'>
-                  {product.stock?.color?.map((color) => (
+                <ToggleGroup type='single' defaultValue={colors[0]} className='gap-2'>
+                  {colors.map((color) => (
                     <ToggleGroupItem
                       key={color}
-                      value={color}
+                      value={color!}
                       variant='outline'
                       onClick={() => setColor(color)}
                       className='rounded-xl'
                     >
-                      {color.replace(/\b\w/g, (s) => s.toUpperCase())}
+                      {color!.replace(/\b\w/g, (s) => s.toUpperCase())}
                     </ToggleGroupItem>
                   ))}
                 </ToggleGroup>
               </div>
               <div className='flex items-center gap-3'>
                 <span className='text-[15px]'>Sizes:</span>
-                <ToggleGroup type='single' defaultValue={product.stock?.size[0]} className='gap-2'>
-                  {product.stock?.size?.map((size) => (
+                <ToggleGroup type='single' defaultValue={sizes[0]} className='gap-2'>
+                  {sizes.map((size) => (
                     <ToggleGroupItem
                       key={size}
-                      value={size}
+                      value={size!}
                       variant='outline'
                       onClick={() => setSize(size)}
                       className='rounded-xl'
@@ -147,19 +156,21 @@ export function ProductModal({
                   ))}
                 </ToggleGroup>
               </div>
-              <div className='flex items-center'>
+              <div className='flex items-center gap-2'>
                 <span className='text-[15px]'>Quantity:</span>
-                <div style={{ transform: 'scale(0.5)' }}>
-                  <NumericStepper
-                    size='sm'
-                    minimumValue={1}
-                    onChange={(value) => {
-                      setQuantity(value)
-                    }}
+                <div>
+                  <InputNumber
+                    min={1}
+                    max={100}
+                    initialValue={1}
+                    onChange={(value) => setQuantity(value)}
                   />
                 </div>
               </div>
-              <Button className='gap-[10px]' onClick={() => onAddToReceipt(color, size, quantity)}>
+              <Button
+                className='gap-[10px]'
+                onClick={() => onAddToReceipt(color!, size!, quantity)}
+              >
                 <ReceiptText size={20} />
                 Add to receipt
               </Button>

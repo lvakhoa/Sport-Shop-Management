@@ -4,7 +4,12 @@ export const queryKeys = {
   },
   // PRODUCT
   products: {
-    gen: (page: number) => ['products', page],
+    gen: (page: number, categoryId?: string, searchTerm?: string) => [
+      'products',
+      page,
+      categoryId,
+      searchTerm,
+    ],
   },
   productDetails: {
     gen: (id: string) => ['productDetails', id],

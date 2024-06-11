@@ -1,13 +1,20 @@
 import { IProductRequest, IProductResponse } from '@/interfaces/product'
 import BaseApi from './base'
+import { handleResponse } from '@/helpers'
+import { httpClient } from '@/services'
 
 class ProductApi extends BaseApi {
   constructor() {
     super('/products')
   }
 
-  async getAllProduct(count?: number, page?: number) {
-    return super.getAll<IProductResponse>(count, page)
+  async getAllProduct(count?: number, page?: number, categoryId?: string) {
+    const categoryQuery = !!categoryId
+      ? !!count || !!page
+        ? `&category_id=${categoryId}`
+        : `?category_id=${categoryId}`
+      : ''
+    return super.getAll<IProductResponse>(count, page, categoryQuery)
   }
 
   async getProductById(id: string) {
@@ -28,6 +35,15 @@ class ProductApi extends BaseApi {
 
   async deleteAllProducts() {
     return super.deleteAll()
+  }
+
+  async searchProduct(text: string, count?: number, page?: number) {
+    const countQuery = !!count ? `&count=${count}` : ''
+    const pageQuery = !!page ? `&page=${page}` : ''
+    const data = await handleResponse<IProductResponse[]>(() =>
+      httpClient.get<IProductResponse[]>(`/products/search?text=${text}` + countQuery + pageQuery),
+    )
+    return data
   }
 }
 

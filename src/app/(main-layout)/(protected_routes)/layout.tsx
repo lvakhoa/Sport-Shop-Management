@@ -14,11 +14,11 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
 
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     return router.replace(PATH_NAME.LOGIN + '?redirect=' + pathname)
-  //   }
-  // }, [isLoggedIn, router, pathname])
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return router.replace(PATH_NAME.LOGIN + '?redirect=' + pathname)
+    }
+  }, [isLoggedIn, router, pathname])
 
   return (
     <div>
