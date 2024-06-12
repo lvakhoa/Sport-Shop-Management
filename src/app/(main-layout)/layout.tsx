@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 import '../../styles/globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { cn } from '@/lib/utils'
 import Providers from '@/components/providers'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Nunito({ subsets: ['vietnamese'] })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
