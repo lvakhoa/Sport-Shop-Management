@@ -29,7 +29,7 @@ function InputNumber({ min, max, initialValue = 1, onChange }: InputNumberProps)
   return (
     <div className='flex h-[36px] w-[100px] items-center justify-around rounded-full bg-blue-50 p-[2px]'>
       <button
-        className='text-white flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-2xl transition duration-200 ease-in-out hover:bg-secondary'
+        className='text-white flex size-[24px] cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-2xl transition duration-200 ease-in-out hover:bg-secondary'
         type='button'
         onClick={decrement}
       >
@@ -39,7 +39,7 @@ function InputNumber({ min, max, initialValue = 1, onChange }: InputNumberProps)
         {value}
       </span>
       <button
-        className='text-white flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-2xl transition duration-200 ease-in-out hover:bg-secondary'
+        className='text-white flex size-[24px] cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-2xl transition duration-200 ease-in-out hover:bg-secondary'
         type='button'
         onClick={increment}
       >

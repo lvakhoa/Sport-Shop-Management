@@ -132,7 +132,7 @@ export default function PosPage() {
   }
   return (
     <div className='flex w-full'>
-      <div className='pl-[20px] pr-[20px] md:w-[calc(100%-340px)] lg:w-[calc(100%-360px)] xl:w-[calc(100%-400px)]'>
+      <div className='px-[20px] md:w-[calc(100%-340px)] lg:w-[calc(100%-360px)] xl:w-[calc(100%-400px)]'>
         <div className='grid grid-cols-2 gap-4 pb-[20px] '>
           <SearchBar onValueChange={onSearch} />
           <SelectCategory onValueChange={onCategorySelect} />

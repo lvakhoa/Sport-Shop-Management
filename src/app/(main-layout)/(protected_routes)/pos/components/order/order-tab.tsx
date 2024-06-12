@@ -1,4 +1,3 @@
-import { IProductItem1 } from '../../page'
 import { IProductItem } from '../product/product-item'
 import { Card } from '@/components/shared/card'
 import { Sheet } from '@/components/shared/sheet'
@@ -6,7 +5,6 @@ import { ArchiveX, Trash } from 'lucide-react'
 import Image from 'next/image'
 import { Button } from '@/components/shared'
 import { useEffect, useState } from 'react'
-import { set } from 'zod'
 import InputNumber from '@/components/shared/InputNumber'
 
 export function PosTab({
@@ -41,7 +39,7 @@ export function PosTab({
       {productList && productList.length > 0 && (
         <Sheet>
           {productList.map((product, index) => (
-            <Card className='rounded-none'>
+            <Card className='rounded-none' key={index}>
               <div className='flex flex-row gap-3 p-[15px]'>
                 <div>
                   <Image
@@ -52,7 +50,7 @@ export function PosTab({
                     height={120}
                   />
                 </div>
-                <div className='flex flex-grow flex-col justify-between'>
+                <div className='flex grow flex-col justify-between'>
                   <div className='flex flex-col'>
                     <span className='text-[20px] font-semibold text-gray-500'>{product.name}</span>
                     <span className='text-[14px] font-light'>
