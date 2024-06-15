@@ -87,4 +87,5 @@ export interface IOrderResponse {
       city: string
     }
   }
+  total: number
 }

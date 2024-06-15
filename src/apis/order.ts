@@ -1,13 +1,34 @@
 import { IOrderCreateRequest, IOrderUpdateRequest, IOrderResponse } from '@/interfaces/order'
 import BaseApi from './base'
+import { ORDER_STATUS } from '@/configs/enum'
 
 class OrderApi extends BaseApi {
   constructor() {
     super('/orders')
   }
 
-  async getAllOrders(count?: number, page?: number) {
-    return super.getAll<IOrderResponse>(count, page)
+  async getAllOrders(
+    count?: number,
+    page?: number,
+    fromDate?: number,
+    toDate?: number,
+    orderStatus?: ORDER_STATUS,
+  ) {
+    const dateRangeQuery =
+      !!fromDate && !!toDate
+        ? !!count || !!page
+          ? `&fromDate=${fromDate}&toDate=${toDate}`
+          : `?fromDate=${fromDate}&toDate=${toDate}`
+        : ''
+
+    const optionalQuery = !!orderStatus
+      ? !!dateRangeQuery
+        ? `${dateRangeQuery}&status=${orderStatus}`
+        : !!count || !!page
+          ? `&status=${orderStatus}`
+          : `?status=${orderStatus}`
+      : dateRangeQuery
+    return super.getAll<IOrderResponse>(count, page, optionalQuery)
   }
 
   async getOrderById(id: string) {
