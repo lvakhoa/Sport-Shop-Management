@@ -19,4 +19,5 @@ export interface ICustomerResponse {
   gender: GENDER
   rank: RANK
   loyalty_point: number
+  total: number
 }

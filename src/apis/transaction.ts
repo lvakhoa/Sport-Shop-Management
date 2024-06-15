@@ -12,13 +12,17 @@ class TransactionApi extends BaseApi {
     super('/transactions')
   }
 
-  async getTotalIncome(fromDate?: Date, toDate?: Date) {
-    const data = await handleResponse<{ total_income: string }>(() =>
-      httpClient.get<{ total_income: string }>(
-        `/stocks/best-seller?fromDate=${fromDate}&toDate=${toDate}`,
-      ),
-    )
-    return data?.total_income
+  async getTotalIncome(fromDate?: number, toDate?: number) {
+    const data = await handleResponse<
+      { total_income: string } | { total_income: string; date: Date }[]
+    >(() => {
+      const fromDateQuery = !!fromDate ? `?fromDate=${fromDate}` : ''
+      const toDateQuery = !!toDate ? (!!fromDate ? `&toDate=${toDate}` : `?toDate=${toDate}`) : ''
+      const url = this.route + '/income' + fromDateQuery + toDateQuery
+
+      return httpClient.get<{ total_income: string } | { total_income: string; date: Date }[]>(url)
+    })
+    return data
   }
 
   async getAllTransactions(count?: number, page?: number) {
