@@ -17,6 +17,7 @@ export const queryKeys = {
   productDetails: {
     gen: (id: string) => ['productDetails', id],
   },
+  topProducts: ['topProducts'],
   // CATEGORY
   allCategories: ['all-categories'],
   categories: {

@@ -87,7 +87,7 @@ function OverviewTag({}: Props) {
   const totalIncome = Number((totalEarnings as { total_income: string } | undefined)?.total_income)
 
   return (
-    <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
+    <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
       <Tag
         {...overviewStats[0]}
         content={currencyFormatter(isNaN(totalIncome) ? 0 : totalIncome)}

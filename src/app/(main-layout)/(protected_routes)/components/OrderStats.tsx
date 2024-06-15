@@ -161,8 +161,11 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
     : []
 
   return (
-    <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
-      <Tag {...orderStats[0]} content={!!totalOrders ? totalOrders[0].total.toString() : '0'} />
+    <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
+      <Tag
+        {...orderStats[0]}
+        content={!!totalOrders && totalOrders.length > 0 ? totalOrders[0].total.toString() : '0'}
+      />
       <Tag
         {...orderStats[1]}
         content={
