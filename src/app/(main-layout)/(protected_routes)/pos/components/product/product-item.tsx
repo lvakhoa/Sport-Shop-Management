@@ -14,6 +14,7 @@ import Image from 'next/image'
 import { ReactElement } from 'react'
 
 export interface IProductItem {
+  stock_id?: string
   name: string
   price: number
   image: string

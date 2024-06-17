@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { OutsideDisappear, Skeleton } from '@/components/shared'
 import { InfoDropdown } from './components'
 import { useProfile } from '@/hooks'
+import { PATH_NAME } from '@/configs'
 
 export default function Navbar({
   openSidebar,
@@ -38,7 +39,7 @@ export default function Navbar({
     <header className={cn('fixed left-0 top-0 z-50 w-full bg-white-100 shadow-md')}>
       <nav className={cn(styles.nav, 'nav-wrapper container')}>
         <div className={cn(styles.nav, 'flex items-center justify-between')}>
-          <Link href='#/home' className='block'>
+          <Link href={PATH_NAME.HOME} className='block'>
             <Image width={128} height={40} src='/assets/images/logo.png' alt='logo' />
           </Link>
           <div className='relative flex items-center gap-4 transition max-[320px]:gap-2'>

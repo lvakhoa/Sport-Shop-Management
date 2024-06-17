@@ -7,7 +7,7 @@ export const queryKeys = {
   // PRODUCT
   allProducts: ['all-products'],
   products: {
-    gen: (page: number, categoryId?: string, searchTerm?: string) => [
+    gen: (page?: number, categoryId?: string, searchTerm?: string) => [
       'products',
       page,
       categoryId,
@@ -34,7 +34,7 @@ export const queryKeys = {
   },
   // CUSTOMER
   customers: {
-    gen: (page: number) => ['customers', page],
+    gen: (page?: number) => ['customers', page],
   },
   customerAccount: ['customer-account'],
   customerDetails: {
@@ -60,5 +60,20 @@ export const queryKeys = {
   },
   totalEarnings: {
     gen: (month?: number, year?: number) => ['totalEarnings', month, year],
+  },
+  //ADDRESS
+  addresses: {
+    gen: (page?: number) => ['addresses', page],
+  },
+  addressDetails: {
+    gen: (id: string) => ['addressDetails', id],
+  },
+  //SHIPPING-PRICE
+  shippingPrices: {
+    gen: (page?: number) => ['shipping-price', page],
+  },
+  //STOCKS
+  stocks: {
+    gen: (page?: number) => ['stocks', page],
   },
 }

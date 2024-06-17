@@ -5,18 +5,20 @@ import { ArchiveX, Trash } from 'lucide-react'
 import Image from 'next/image'
 import { Button } from '@/components/shared'
 import { useEffect, useState } from 'react'
+import { useOrderStore } from '@/stores'
+import { useRouter } from 'next/navigation'
 import InputNumber from '@/components/shared/InputNumber'
 
 export function PosTab({
-  productList,
   handleRemove,
   cancelOrder,
 }: {
-  productList: IProductItem[] | null
   handleRemove: (index: number) => void
   cancelOrder: () => void
 }) {
-  const [totalPrice, setTotalPrice] = useState(0)
+  const router = useRouter()
+  const productList = useOrderStore((state) => state.orderDetail)
+  const totalPrice = useOrderStore((state) => state.totalPrice)
   const [newProductList, setNewProductList] = useState<IProductItem[] | null>(productList)
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export function PosTab({
       const total = productList.reduce((acc, product) => {
         return acc + product.price * (product.quantity || 1)
       }, 0)
-      setTotalPrice(total)
+      useOrderStore.setState({ totalPrice: total })
     }
   }, [newProductList, productList])
 
@@ -108,7 +110,9 @@ export function PosTab({
                 size='sm'
                 variant='default'
                 className='gap-[5px] rounded-full'
-                onClick={() => {}}
+                onClick={() => {
+                  router.push('/order')
+                }}
               >
                 Order
               </Button>
