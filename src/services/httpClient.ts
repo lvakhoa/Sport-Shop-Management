@@ -105,18 +105,18 @@ class HttpClient {
     onSuccess: (accessToken: string, refreshToken: string) => void
     onError: () => void
   }) {
-    // this.instance.interceptors.request.use(
-    //   async (config: InternalAxiosRequestConfig) => {
-    //     const accessToken = localStorage.getItem('access_token') || ''
-    //     if (!!config && !!config.headers) {
-    //       config.headers.Authorization = `Bearer ${accessToken}`
-    //     }
-    //     return config
-    //   },
-    //   (error) => {
-    //     Promise.reject(error)
-    //   },
-    // )
+    this.instance.interceptors.request.use(
+      async (config: InternalAxiosRequestConfig) => {
+        const accessToken = localStorage.getItem('access_token') || ''
+        if (!!config && !!config.headers) {
+          config.headers.Authorization = `Bearer ${accessToken}`
+        }
+        return config
+      },
+      (error) => {
+        Promise.reject(error)
+      },
+    )
 
     _createAuthRefreshInterceptor(
       this.instance,

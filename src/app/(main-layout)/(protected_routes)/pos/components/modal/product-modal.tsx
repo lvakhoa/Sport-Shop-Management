@@ -67,7 +67,7 @@ export function ProductModal({
   useEffect(() => {
     setColor(colors[0])
     setSize(sizes[0])
-  }, [isOpen, colors, sizes])
+  }, [isOpen])
 
   return (
     <div>

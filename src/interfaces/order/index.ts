@@ -26,6 +26,13 @@ export interface IOrderUpdateRequest {
   buy_in_app: boolean
 }
 
+export interface IOrderDetailUpdateRequest {
+  order_details: {
+    product_stock_id: string
+    quantity: number
+  }[]
+}
+
 export interface IOrderResponse {
   id: string
   order_no: string
