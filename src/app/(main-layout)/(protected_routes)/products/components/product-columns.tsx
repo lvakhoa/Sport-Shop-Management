@@ -15,7 +15,7 @@ export interface IProduct {
   category: string
   listPrice: string
   sellingPrice: string
-  status: STATUS
+  status: React.ReactNode
   total: number
 }
 
@@ -142,6 +142,7 @@ export const columns: ColumnDef<IProduct>[] = [
     header: () => {
       return <div className='font-medium'>Status</div>
     },
+    cell: ({ row }) => <div>{row.getValue('status')}</div>,
   },
   {
     id: 'actions',

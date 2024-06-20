@@ -1,0 +1,112 @@
+'use client'
+
+import { productApi } from '@/apis'
+import { ContentCard } from '@/components/shared'
+import { queryKeys } from '@/configs'
+import { STATUS } from '@/configs/enum'
+import { colorFormatter, currencyFormatter } from '@/helpers'
+import { useQuery } from '@tanstack/react-query'
+import { notFound, useParams } from 'next/navigation'
+import styles from '@/components/shared/ContentCard/ContentCard.module.css'
+
+interface IProductInfo {
+  name: string
+  description?: string
+  status: STATUS
+  listPrice: string
+  sellingPrice: string
+  color: string[]
+  size: string
+  categories: string
+  totalQuantity: number
+}
+
+function InformationPage() {
+  const { id: productId } = useParams<{ id: string }>()
+  const { data } = useQuery({
+    queryKey: queryKeys.productDetails.gen(productId),
+    queryFn: () => productApi.getProductById(productId),
+    throwOnError(error, query) {
+      notFound()
+    },
+  })
+
+  const details: IProductInfo = {
+    name: data?.name ?? '',
+    description: data?.description,
+    status: !!data?.status ? STATUS.ACTIVE : STATUS.INACTIVE,
+    listPrice: currencyFormatter(Number(data?.list_price ?? 0)),
+    sellingPrice: currencyFormatter(Number(data?.selling_price ?? 0)),
+    color:
+      !!data && data.stocks.length > 0
+        ? data?.stocks
+            .map((item) => colorFormatter(item.color?.name ?? ''))
+            .filter((item, index, arr) => arr.indexOf(item) === index)
+        : [],
+    size:
+      !!data && data.stocks.length > 0
+        ? data?.stocks
+            .map((item) => item.size ?? '')
+            .filter((item, index, arr) => arr.indexOf(item) === index)
+            .join(', ')
+        : '',
+    categories:
+      !!data && data.category_list.length > 0
+        ? data.category_list
+            .map((item) => item.category?.name ?? '')
+            .slice(0, 2)
+            .join(', ') + (data.category_list.length > 2 ? ', ...' : '')
+        : '',
+    totalQuantity:
+      !!data && data.stocks.length > 0
+        ? data?.stocks.reduce((acc, item) => acc + item.quantity_in_stock, 0)
+        : 0,
+  }
+
+  return (
+    <ContentCard title='Information'>
+      <div className='mb-6 flex flex-col gap-y-2 sm:flex-row sm:gap-20 md:gap-32'>
+        <div className='flex min-w-[260px] gap-10'>
+          <div className={styles.list}>
+            <span className={styles.info_title}>Name</span>
+            <span className={styles.info_title}>Categories</span>
+            <span className={styles.info_title}>Colors</span>
+            <span className={styles.info_title}>Sizes</span>
+          </div>
+          <div className={styles.list}>
+            <span className={styles.info_content}>{details.name}</span>
+            <span className={styles.info_content}>{details.categories}</span>
+            <div className='flex items-center gap-2'>
+              {details.color.map((color) => (
+                <div key={color} className='size-6 rounded-sm' style={{ backgroundColor: color }} />
+              ))}
+            </div>
+            <span className={styles.info_content}>{details.size}</span>
+          </div>
+        </div>
+
+        <div className='flex gap-10'>
+          <div className={styles.list}>
+            <span className={styles.info_title}>Status</span>
+            <span className={styles.info_title}>List Price</span>
+            <span className={styles.info_title}>Selling Price</span>
+            <span className={styles.info_title}>Total Quantity</span>
+          </div>
+          <div className={styles.list}>
+            <span className={styles.info_content}>{details.status}</span>
+            <span className={styles.info_content}>{details.listPrice}</span>
+            <span className={styles.info_content}>{details.sellingPrice}</span>
+            <span className={styles.info_content}>{details.totalQuantity}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className='flex flex-col gap-3'>
+        <span className={styles.info_title}>Description</span>
+        <p className={styles.info_content}>{details.description}</p>
+      </div>
+    </ContentCard>
+  )
+}
+
+export default InformationPage

@@ -1,13 +1,34 @@
 import { PATH_NAME } from './pathName'
+import {
+  CornerDownLeft,
+  LayoutDashboard,
+  ReceiptText,
+  Shirt,
+  ShoppingBasket,
+  ShoppingCart,
+  Smile,
+  UserRound,
+  UsersRound,
+} from 'lucide-react'
 
 export const sidebarItems = [
   {
     title: 'Main',
     items: [
       {
-        icon: 'assets/icons/dashboard.svg',
+        icon: <LayoutDashboard strokeWidth={1.5} />,
         describe: 'Dashboard',
-        link: '/dashboard',
+        link: PATH_NAME.HOME,
+      },
+    ],
+  },
+  {
+    title: 'Product & Stock',
+    items: [
+      {
+        icon: <Shirt strokeWidth={1.5} />,
+        describe: 'Products',
+        link: PATH_NAME.PRODUCT,
       },
     ],
   },
@@ -15,22 +36,22 @@ export const sidebarItems = [
     title: 'Pos & Orders',
     items: [
       {
-        icon: 'assets/icons/pos2.svg',
+        icon: <ReceiptText strokeWidth={1.5} />,
         describe: 'POS',
         link: '/pos',
       },
       {
-        icon: 'assets/icons/POS-Orders.svg',
+        icon: <ShoppingCart strokeWidth={1.5} />,
         describe: 'POS Orders',
         link: '/pos-orders',
       },
       {
-        icon: 'assets/icons/Online-Orders.svg',
+        icon: <ShoppingBasket strokeWidth={1.5} />,
         describe: 'Online Orders',
         link: '/online-orders',
       },
       {
-        icon: 'assets/icons/Returns.svg',
+        icon: <CornerDownLeft strokeWidth={1.5} />,
         describe: 'Returns',
         link: '/returns',
       },
@@ -40,17 +61,17 @@ export const sidebarItems = [
     title: 'Users',
     items: [
       {
-        icon: 'assets/icons/admin.svg',
+        icon: <UserRound strokeWidth={1.5} />,
         describe: 'Administrators',
         link: '/administrators',
       },
       {
-        icon: 'assets/icons/Customers.svg',
+        icon: <Smile strokeWidth={1.5} />,
         describe: 'Customers',
         link: PATH_NAME.CUSTOMER,
       },
       {
-        icon: 'assets/icons/Employees.svg',
+        icon: <UsersRound strokeWidth={1.5} />,
         describe: 'Employees',
         link: PATH_NAME.EMPLOYEE,
       },

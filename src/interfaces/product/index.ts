@@ -21,6 +21,7 @@ export interface IProductResponse {
   selling_price: string
   total: number
   stocks: {
+    id: string
     media?: {
       url: string
     }

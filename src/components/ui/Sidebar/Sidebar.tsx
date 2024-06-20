@@ -4,6 +4,8 @@ import { Item } from './components'
 import { sidebarItems } from '@/configs/sidebarItems'
 import { cn } from '@/lib/utils'
 import { useWindowSize } from '@/hooks'
+import { usePathname } from 'next/navigation'
+import { PATH_NAME } from '@/configs'
 function Sidebar({
   isSidebarVisible,
   openSidebar,
@@ -12,6 +14,7 @@ function Sidebar({
   openSidebar: Dispatch<SetStateAction<boolean>>
 }) {
   const windowSize = useWindowSize()
+  const pathName = usePathname()
 
   useEffect(() => {
     openSidebar(windowSize > 1024)
@@ -29,12 +32,21 @@ function Sidebar({
         {sidebarItems.map((section, index) => (
           <div className='flex flex-col gap-[10px] max-[468px]:gap-[5px]' key={index}>
             {section.title !== 'Main' ? (
-              <span className='font-medium uppercase text-gray-400 sm:pl-[15px]'>
+              <span className='text-[14px] font-medium uppercase text-gray-400'>
                 {section.title}
               </span>
             ) : null}
             {section.items.map((item, index) => (
-              <Item key={index} icon={item.icon} describe={item.describe} link={item.link} />
+              <Item
+                key={index}
+                icon={item.icon}
+                describe={item.describe}
+                link={item.link}
+                active={
+                  pathName === item.link ||
+                  (item.link === PATH_NAME.HOME ? false : pathName.includes(item.link))
+                }
+              />
             ))}
           </div>
         ))}
