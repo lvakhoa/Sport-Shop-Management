@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/shared/card'
+import { currencyFormatter } from '@/helpers'
 import { Label } from '@radix-ui/react-label'
 import Image from 'next/image'
 import { ReactElement } from 'react'
@@ -38,9 +39,9 @@ export function ProductItem({ name, price, image, onClick }: IProductItem) {
         />
       </CardHeader>
       <CardContent>
-        <div className='flex flex-col gap-3'>
-          <CardTitle>{name}</CardTitle>
-          <CardDescription>{price} VND</CardDescription>
+        <div className='flex flex-col'>
+          <CardTitle className='text-md sm:text-lg'>{name}</CardTitle>
+          <CardDescription>{currencyFormatter(price)}</CardDescription>
         </div>
       </CardContent>
     </Card>

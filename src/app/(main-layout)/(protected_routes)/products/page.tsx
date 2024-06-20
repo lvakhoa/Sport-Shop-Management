@@ -10,6 +10,7 @@ import { queryKeys } from '@/configs'
 import { productApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
+import { currencyFormatter } from '@/helpers'
 
 const productFilterInput: IFilterInput[] = [
   {
@@ -58,9 +59,13 @@ export default function ProductsManagementPage() {
         id: item.id,
         name: item.name,
         category: item.category_list.length > 0 ? item.category_list[0].category.name : '',
-        listPrice: item.list_price,
-        sellingPrice: item.selling_price,
-        status: item.status ? STATUS.ACTIVE : STATUS.INACTIVE,
+        listPrice: currencyFormatter(Number(item.list_price)),
+        sellingPrice: currencyFormatter(Number(item.selling_price)),
+        status: item.status ? (
+          <div className='rounded-md bg-[#D4FFE0] px-2 py-1 text-[#46C574]'>{STATUS.ACTIVE}</div>
+        ) : (
+          <div className='bg-[#FFD4D7] text-[#F23E14]'>{STATUS.INACTIVE}</div>
+        ),
         total: item.total,
       }
     }) ?? []

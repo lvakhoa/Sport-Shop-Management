@@ -1,0 +1,18 @@
+.info_title {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: rgb(31 31 57);
+}
+
+.info_content {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(110 113 145);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

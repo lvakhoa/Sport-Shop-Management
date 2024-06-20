@@ -56,9 +56,9 @@ export default function ActionButtonShow({
     return (
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant='outline'>Edit</Button>
+          <Button variant='outline'>Action</Button>
         </PopoverTrigger>
-        <PopoverContent className='w-80'>
+        <PopoverContent className='w-max p-5'>
           <div className='flex gap-[15px]'>
             {actions.map((action) => (
               <ActionButton

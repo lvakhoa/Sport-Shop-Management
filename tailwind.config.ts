@@ -45,6 +45,7 @@ const config = {
           50: '#FFD4D7',
           100: '#DA1521',
         },
+        content: 'rgb(110,113,145)',
         heading: 'rgb(31,31,57)',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

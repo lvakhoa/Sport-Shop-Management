@@ -1,16 +1,26 @@
+import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import React from 'react'
 
-type ItemProps = { icon: string; describe: string; link: string }
+type ItemProps = { icon: React.ReactElement; describe: string; link: string; active: boolean }
 
-function Item({ icon, describe, link }: ItemProps) {
+function Item({ icon, describe, link, active }: ItemProps) {
   return (
-    <div className='flex cursor-pointer items-center rounded-lg bg-white-100 py-[14px] hover:bg-blue-50 sm:px-[10px]'>
-      <a href={link} className='flex items-center gap-[10px] max-[468px]:gap-[5px]'>
-        <Image src={icon} className=' max-[468px]:size-[14px]' alt='icon' width={26} height={26} />
-        <span className='text-[16px] font-medium text-gray-400 max-[468px]:text-[16px]'>
-          {describe}
-        </span>
+    <div
+      className={cn(
+        'flex cursor-pointer items-center rounded-lg px-[8px] py-[10px] sm:px-[10px] sm:py-[14px]',
+        active ? 'bg-blue-50' : 'bg-white hover:bg-blue-50',
+      )}
+    >
+      <a
+        href={link}
+        className={cn(
+          'flex h-full w-full items-center gap-[10px] max-[468px]:gap-[5px]',
+          active ? 'text-primary' : 'text-content',
+        )}
+      >
+        {icon}
+        <span className='text-[16px] font-medium max-[468px]:text-[16px]'>{describe}</span>
       </a>
     </div>
   )
