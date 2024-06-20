@@ -1,3 +1,4 @@
+'use client'
 import { authApi } from '@/apis'
 import { PATH_NAME } from '@/configs'
 import { httpClient } from '@/services'

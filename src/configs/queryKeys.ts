@@ -27,7 +27,7 @@ export const queryKeys = {
   positions: ['positions'],
   employeeAccount: ['employee-account'],
   employees: {
-    gen: (page: number) => ['employees', page],
+    gen: (page?: number) => ['employees', page],
   },
   employeeDetails: {
     gen: (id: string) => ['employeeDetails', id],
@@ -57,6 +57,9 @@ export const queryKeys = {
       fromDate,
       toDate,
     ],
+  },
+  orderDetails: {
+    gen: (id: string) => ['orderDetails', id],
   },
   totalEarnings: {
     gen: (month?: number, year?: number) => ['totalEarnings', month, year],
