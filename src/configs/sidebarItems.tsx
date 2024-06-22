@@ -9,6 +9,7 @@ import {
   Smile,
   UserRound,
   UsersRound,
+  Settings,
 } from 'lucide-react'
 
 export const sidebarItems = [
@@ -38,7 +39,7 @@ export const sidebarItems = [
       {
         icon: <ReceiptText strokeWidth={1.5} />,
         describe: 'POS',
-        link: '/pos',
+        link: PATH_NAME.POS,
       },
       {
         icon: <ShoppingCart strokeWidth={1.5} />,
@@ -74,6 +75,16 @@ export const sidebarItems = [
         icon: <UsersRound strokeWidth={1.5} />,
         describe: 'Employees',
         link: PATH_NAME.EMPLOYEE,
+      },
+    ],
+  },
+  {
+    title: 'Setup',
+    items: [
+      {
+        icon: <Settings strokeWidth={1.5} />,
+        describe: 'Settings',
+        link: PATH_NAME.SETTINGS,
       },
     ],
   },

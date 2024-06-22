@@ -76,4 +76,13 @@ export const queryKeys = {
   stocks: {
     gen: (page?: number) => ['stocks', page],
   },
+  //ROLES
+  roles: ['roles'],
+  roleDetails: {
+    gen: (id: string) => ['roleDetails', id],
+  },
+  //PERMISSIONS
+  permissions: {
+    gen: (page?: number) => ['permissions', page],
+  },
 }
