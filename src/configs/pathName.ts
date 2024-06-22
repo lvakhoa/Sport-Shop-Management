@@ -3,6 +3,7 @@ export const PATH_NAME = {
   CUSTOMER: '/customers',
   EMPLOYEE: '/employees',
   PRODUCT: '/products',
+  POS: '/pos',
   STOCK: '/stocks',
   LOGIN: '/log-in',
   RESET_PASSWORD: '/reset',
@@ -11,4 +12,5 @@ export const PATH_NAME = {
   VERIFICATION_SUCCESS: '/verification-success',
   VERIFICATION_ERROR: '/verification-error',
   VERIFICATION_REQUIRED: '/verification-required',
+  SETTINGS: '/settings/profile',
 }

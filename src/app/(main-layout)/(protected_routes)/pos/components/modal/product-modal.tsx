@@ -1,6 +1,5 @@
 import React from 'react'
 import Modal from 'react-modal'
-import { SIZE } from '@/configs/enum'
 import { IProductItem1 } from '../../page'
 import { CircleX, ReceiptText } from 'lucide-react'
 import Image from 'next/image'
