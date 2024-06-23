@@ -15,7 +15,7 @@ interface IComboBox {
   placeholder: string
   items: string[]
   className?: string
-  onValueChange?: (selectedValue: string | undefined) => void
+  onValueChange?: (selectedValue: string) => void
 }
 
 export default function ComboBox({

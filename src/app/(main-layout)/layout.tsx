@@ -14,14 +14,14 @@ function MainLayout({ children }: { children: React.ReactNode }) {
       <Navbar openSidebar={setOpenSidebar} />
       <div className='mt-[--header-height] flex '>
         {!!isBrowser && (
-          <div className='fixed'>
+          <div className='fixed z-30'>
             <Sidebar isSidebarVisible={openSidebar} openSidebar={setOpenSidebar} />
           </div>
         )}
         <div
           className={cn(
             'h-auto w-full  pt-[10px]',
-            openSidebar ? 'ml-sidebar-compact sm:ml-sidebar-default' : 'ml-0',
+            openSidebar ? 'ml-0 sm:ml-sidebar-default' : 'ml-0',
           )}
         >
           {children}

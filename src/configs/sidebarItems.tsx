@@ -43,13 +43,8 @@ export const sidebarItems = [
       },
       {
         icon: <ShoppingCart strokeWidth={1.5} />,
-        describe: 'POS Orders',
-        link: '/pos-orders',
-      },
-      {
-        icon: <ShoppingBasket strokeWidth={1.5} />,
-        describe: 'Online Orders',
-        link: '/online-orders',
+        describe: 'Order Details',
+        link: '/order-details',
       },
       {
         icon: <CornerDownLeft strokeWidth={1.5} />,

@@ -20,7 +20,7 @@ function Item({ icon, describe, link, active }: ItemProps) {
         )}
       >
         {icon}
-        <span className='text-[16px] font-medium max-[468px]:text-[16px]'>{describe}</span>
+        <span className='text-[16px] font-medium'>{describe}</span>
       </a>
     </div>
   )

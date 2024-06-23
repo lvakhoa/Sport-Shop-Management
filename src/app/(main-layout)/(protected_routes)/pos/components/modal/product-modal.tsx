@@ -16,6 +16,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from '@/components/shared/toggle-group'
 import { Button } from '@/components/shared'
 import InputNumber from '@/components/shared/InputNumber'
+import { currencyFormatter } from '@/helpers'
 
 const customStyles = {
   content: {
@@ -66,7 +67,7 @@ export function ProductModal({
   useEffect(() => {
     setColor(colors[0])
     setSize(sizes[0])
-  }, [isOpen])
+  }, [colors, isOpen, sizes])
 
   return (
     <div>
@@ -120,8 +121,8 @@ export function ProductModal({
             </Carousel>
           </div>
           <div className='flex w-[300px] flex-col pl-[10px]'>
-            <h2 className='font-semi-bold text-[40px]'>{product.name}</h2>
-            <h2 className='text-[25px] font-light'>{product.price} VND</h2>
+            <h2 className='text-lg font-semibold leading-[34px] sm:text-[26px]'>{product.name}</h2>
+            <h2 className='text-[20px] font-light'>{currencyFormatter(product.price)}</h2>
             <div className='flex flex-col gap-[20px] pt-[10px]'>
               <div className='flex items-center gap-3'>
                 <span className='text-[15px]'>Color:</span>
