@@ -11,13 +11,14 @@ import { useRouter } from 'next/router'
 import { IOrderResponse } from '@/interfaces/order'
 import { cn } from '@/lib/utils'
 import moment from 'moment'
-
-const Filter: string[] = ['All Order', 'Success', 'Cancelled', 'Pending']
+import { useProfile } from '@/hooks'
+import { ORDER_STATUS } from '@/configs/enum'
 
 function OrdersManagementPage() {
   const [selectedOrder, setSelectedOrder] = useState<IOrderResponse | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [filter, setFilter] = useState<string>('All Order')
+  const profile = useProfile()
 
   const handleOrderClick = (order: IOrderResponse) => {
     setSelectedOrder(order)
@@ -36,13 +37,39 @@ function OrdersManagementPage() {
     queryFn: () => orderApi.getAllOrders(),
   })
 
+  // useEffect(() => {
+  //   if (ordersData && ordersData.length > 0) {
+  //     setSelectedOrder(ordersData[0])
+  //   } else {
+  //     setSelectedOrder(null)
+  //   }
+  // }, [ordersData])
+
+  const handleConfirmOrder = () => {
+    setSelectedOrder((prevOrder) => ({
+      ...prevOrder!,
+      status: ORDER_STATUS.SUCCESS,
+    }))
+  }
+
+  const handleCancelOrder = () => {
+    setSelectedOrder((prevOrder) => ({
+      ...prevOrder!,
+      status: ORDER_STATUS.CANCELLED,
+    }))
+  }
+
   return (
-    <div className='flex w-full flex-row p-[10px]'>
-      <div className='flex max-h-screen w-1/4 flex-col'>
+    <div className='flex w-full flex-row px-[10px]'>
+      <div className='hover:overflow flex max-h-[calc(100vh-var(--header-height))] w-1/4 flex-col'>
         <SearchBar onSearch={handleSearch} onSelectFilter={handleFilter} />
         <hr className='' />
-        <div className={cn('flex flex-col overflow-y-auto')}>
+        <div className='flex max-h-[calc(100vh-var(--header-height))] flex-col overflow-y-scroll'>
           {ordersData
+            ?.sort(
+              (a: IOrderResponse, b: IOrderResponse) =>
+                new Date(b.order_date).getTime() - new Date(a.order_date).getTime(),
+            )
             ?.filter((order: IOrderResponse) => {
               const matchesSearch =
                 order.order_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -71,12 +98,28 @@ function OrdersManagementPage() {
         </div>
       </div>
       <hr className='' />
-      <div className='flex w-3/4 flex-col'>
-        {selectedOrder && <ActionBar order={selectedOrder} />}
-        <div className='flex w-full flex-row'>
-          <div className='w-3/5'>{selectedOrder && <OrderDetails order={selectedOrder} />}</div>
-          <div className='w-2/5'>{selectedOrder && <ShipmentInfo order={selectedOrder} />}</div>
-        </div>
+      <div className='flex h-screen w-3/4 flex-col'>
+        {selectedOrder && (
+          <ActionBar
+            order={selectedOrder}
+            onConfirm={handleConfirmOrder}
+            onCancel={handleCancelOrder}
+          />
+        )}
+        {selectedOrder ? (
+          <div className='flex w-full flex-row'>
+            <div className='w-3/5'>
+              <OrderDetails order={selectedOrder} />
+            </div>
+            <div className='w-2/5'>
+              <ShipmentInfo order={selectedOrder} />
+            </div>
+          </div>
+        ) : (
+          <div className='flex h-full w-full items-center justify-center'>
+            <span className='text-center'>Select Order To See Details</span>
+          </div>
+        )}
       </div>
     </div>
   )

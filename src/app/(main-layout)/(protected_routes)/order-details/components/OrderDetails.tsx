@@ -40,10 +40,12 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
         </div>
         <div className='flex flex-row space-x-[60px]'>
           <span className='w-[50px] text-[#797979]'>Shipping Address</span>
-          <span>
-            {order.shipment.address?.street}, {order.shipment.address?.ward},{' '}
-            {order.shipment.address?.district}, {order.shipment.address?.city}
-          </span>
+          {order.shipment !== null && (
+            <span>
+              {order.shipment.address?.street}, {order.shipment.address?.ward},{' '}
+              {order.shipment.address?.district}, {order.shipment.address?.city}
+            </span>
+          )}
         </div>
         <div className='flex flex-row space-x-[60px]'>
           <span className='w-[50px] text-[#797979]'>Order</span>
@@ -51,11 +53,13 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
         </div>
         <div className='flex flex-row space-x-[60px]'>
           <span className='w-[50px] text-[#797979]'>Shipped</span>
-          <span>
-            {order.shipment.shipped_date
-              ? moment(order.shipment.shipped_date).format('YYYY-MM-DD HH:mm:ss')
-              : ''}
-          </span>
+          {order.shipment != null && (
+            <span>
+              {order.shipment.shipped_date
+                ? moment(order.shipment.shipped_date).format('YYYY-MM-DD HH:mm:ss')
+                : ''}
+            </span>
+          )}
         </div>
       </div>
       <div className='flex flex-row items-start space-x-[10px] bg-[#E6E7EA] px-[10px] py-[5px]'>
@@ -74,7 +78,7 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
         </div>
         <div className='flex w-full flex-row justify-between'>
           <span>Shipping Fee</span>
-          <span>{currencyFormatter(BigInt(order.shipment.shipping_price))}</span>
+          <span>{currencyFormatter(BigInt(order.shipment?.shipping_price || '0'))}</span>
         </div>
         <div className='flex w-full flex-row justify-between'>
           <span>Discount</span>
@@ -95,7 +99,7 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
           <span>
             {currencyFormatter(
               parseFloat(order.product_total_price) +
-                parseFloat(order.shipment.shipping_price) +
+                parseFloat(order.shipment?.shipping_price || '0') +
                 parseFloat(order.product_total_price) * 0.05,
             )}
           </span>
@@ -105,7 +109,7 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
           <span className='font-semibold'>
             {currencyFormatter(
               parseFloat(order.product_total_price) +
-                parseFloat(order.shipment.shipping_price) +
+                parseFloat(order.shipment?.shipping_price || '0') +
                 parseFloat(order.product_total_price) * 0.05 -
                 (order.voucher
                   ? parseFloat(order.product_total_price) * order.voucher.sale_percent

@@ -39,7 +39,7 @@ class OrderApi extends BaseApi {
     return super.create(order)
   }
 
-  async updateOrder(order: IOrderUpdateRequest, id: string) {
+  async updateOrder(order: Partial<IOrderUpdateRequest>, id: string) {
     return super.update(order, id)
   }
 

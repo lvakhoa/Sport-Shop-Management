@@ -10,6 +10,15 @@ function DeliveredLabel() {
   )
 }
 
+function SuccessLabel() {
+  return (
+    <div className='inline-flex items-center space-x-[5px] rounded-full border-2 border-[#30C365] bg-[#F2FDF5] px-2 py-1 text-[14px] text-[#30C365]'>
+      <BadgeCheck width={18} height={18} />
+      <span>Success</span>
+    </div>
+  )
+}
+
 function InTransitLabel() {
   return (
     <div className='inline-flex space-x-[5px] rounded-full border-2 border-[#30C365] bg-[#F2FDF5] px-2 py-1 text-[14px] text-[#30C365]'>
@@ -55,4 +64,12 @@ function ConfirmLabel() {
   )
 }
 
-export { DeliveredLabel, InTransitLabel, PendingLabel, CancelledLabel, FailedLabel, ConfirmLabel }
+export {
+  DeliveredLabel,
+  InTransitLabel,
+  PendingLabel,
+  CancelledLabel,
+  FailedLabel,
+  ConfirmLabel,
+  SuccessLabel,
+}
