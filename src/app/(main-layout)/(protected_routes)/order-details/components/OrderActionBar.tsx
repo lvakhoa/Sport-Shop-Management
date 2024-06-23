@@ -67,12 +67,13 @@ function ActionBar({
 
   const handlePrint = () => {
     if (printRef.current) {
-      const printContents = printRef.current.innerHTML
-      const originalContents = document.body.innerHTML
-      document.body.innerHTML = printContents
+      const divElement = document.createElement('div')
+      divElement.classList.add('printContainer')
+      divElement.innerHTML = printRef.current.innerHTML
+      document.body.appendChild(divElement).classList.add('printingContent')
       window.print()
-      document.body.innerHTML = originalContents
-      window.location.reload()
+      divElement.remove()
+      document.body.classList.remove('printingContent')
     }
   }
 
@@ -91,7 +92,7 @@ function ActionBar({
         </div>
       </div>
       <div className='flex flex-row space-x-[5px]'>
-        {order.status !== ORDER_STATUS.CANCELLED && (
+        {order.status === ORDER_STATUS.SUCCESS && (
           <Button className='flex gap-[5px] rounded-[5px] bg-[#D4E0FF] px-2 py-1 duration-300 hover:bg-[#EBF1FF]'>
             <Image
               src='assets/icons/print.svg'

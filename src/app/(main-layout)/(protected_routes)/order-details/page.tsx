@@ -61,10 +61,15 @@ function OrdersManagementPage() {
 
   return (
     <div className='flex w-full flex-row px-[10px]'>
-      <div className='hover:overflow flex max-h-[calc(100vh-var(--header-height))] w-1/4 flex-col'>
+      <div className='hover:overflow flex max-h-[calc(100vh-var(--header-height))] grow flex-col'>
         <SearchBar onSearch={handleSearch} onSelectFilter={handleFilter} />
         <hr className='' />
-        <div className='flex max-h-[calc(100vh-var(--header-height))] flex-col overflow-y-scroll'>
+        <div
+          className={cn(
+            'scrollbar',
+            'flex max-h-[calc(100vh-var(--header-height)-120px)] flex-col overflow-hidden hover:overflow-auto',
+          )}
+        >
           {ordersData
             ?.sort(
               (a: IOrderResponse, b: IOrderResponse) =>
@@ -86,9 +91,11 @@ function OrdersManagementPage() {
             })
             .map((order: IOrderResponse) => (
               <div
-                className={cn('cursor-pointer', 'hover: bg-gray-100', {
+                className={cn('cursor-pointer', 'border-b border-b-gray-300 duration-150', {
                   'bg-[#DCEBFE]': selectedOrder && selectedOrder.id === order.id,
-                  'bg-transparent': !(selectedOrder && selectedOrder.id === order.id),
+                  'bg-transparent hover:bg-gray-100': !(
+                    selectedOrder && selectedOrder.id === order.id
+                  ),
                 })}
                 key={order.id}
               >
@@ -96,9 +103,9 @@ function OrdersManagementPage() {
               </div>
             ))}
         </div>
+        <hr />
       </div>
-      <hr className='' />
-      <div className='flex h-screen w-3/4 flex-col'>
+      <div className='flex h-auto grow-[3] flex-col'>
         {selectedOrder && (
           <ActionBar
             order={selectedOrder}
@@ -107,16 +114,16 @@ function OrdersManagementPage() {
           />
         )}
         {selectedOrder ? (
-          <div className='flex w-full flex-row'>
-            <div className='w-3/5'>
+          <div className='grid grid-cols-1 sm:grid-cols-2'>
+            <div>
               <OrderDetails order={selectedOrder} />
             </div>
-            <div className='w-2/5'>
+            <div className='max-w-[360px]'>
               <ShipmentInfo order={selectedOrder} />
             </div>
           </div>
         ) : (
-          <div className='flex h-full w-full items-center justify-center'>
+          <div className='flex size-full items-center justify-center'>
             <span className='text-center'>Select Order To See Details</span>
           </div>
         )}

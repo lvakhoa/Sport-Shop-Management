@@ -2,15 +2,6 @@ import Image from 'next/image'
 import { Input } from '@/components/shared/input'
 import ComboBox from '@/components/shared/ComboBox'
 import { useState } from 'react'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@radix-ui/react-select'
 
 const Filter: string[] = ['All Order', 'Success', 'Cancelled', 'Pending']
 
@@ -41,7 +32,7 @@ function SearchBar({ onSearch, onSelectFilter, selectedFilter, filterOptions }: 
   // }
   return (
     <div className='flex flex-col space-y-[5px]'>
-      <div className='relative flex w-full items-center'>
+      <div className='relative z-[-1] flex w-full items-center'>
         <Input
           className='h-[45px] w-full pl-[45px] text-[14px]'
           placeholder='Search by ID, Date, Name,...'

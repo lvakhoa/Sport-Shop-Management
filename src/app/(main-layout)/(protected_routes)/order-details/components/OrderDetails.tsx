@@ -52,7 +52,7 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
           <span>{moment(order.order_date).format('YYYY-MM-DD HH:mm:ss')}</span>
         </div>
         <div className='flex flex-row space-x-[60px]'>
-          <span className='w-[50px] text-[#797979]'>Shipped</span>
+          <span className='w-[50px] text-[#797979]'>Delivered Date</span>
           {order.shipment != null && (
             <span>
               {order.shipment.shipped_date
@@ -91,10 +91,6 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
           </span>
         </div>
         <div className='flex w-full flex-row justify-between'>
-          <span>VAT</span>
-          <span>{currencyFormatter(BigInt(parseFloat(order.product_total_price) * 0.05))}</span>
-        </div>
-        <div className='flex w-full flex-row justify-between'>
           <span>Customer Paid</span>
           <span>
             {currencyFormatter(
@@ -126,12 +122,7 @@ function Item({ stock, quantity }: { stock: IStockResponse; quantity: number }) 
   return (
     <div className='flex h-[100px] w-full flex-row items-center space-x-[20px] rounded-[5px] border border-[#E6E7EA] px-[15px] py-[10px]'>
       <div className='relative size-[70px] items-center justify-center rounded-[5px] border border-[#E6E7EA]'>
-        <Image
-          src={stock.media?.url || 'assets/images/logo.png'}
-          alt=''
-          layout='fill'
-          objectFit='contain'
-        />
+        <Image src={stock.media?.url || 'assets/images/logo.png'} alt='' objectFit='cover' fill />
       </div>
       <div className='flex w-full flex-col'>
         <div>
@@ -140,11 +131,11 @@ function Item({ stock, quantity }: { stock: IStockResponse; quantity: number }) 
         <div>
           <span className='text-[14px] text-[#797979]'>
             {stock.size} |{' '}
-            {stock.color && stock.color?.name.charAt(0).toUpperCase() + stock.color?.name.slice(1)}
+            {stock.color && stock.color?.name.charAt(0).toUpperCase() + stock.color?.name.slice(1)}{' '}
+            | {currencyFormatter(parseFloat(stock.product.selling_price))}
           </span>
         </div>
-        <div className='flex w-full flex-row justify-between'>
-          <span>{currencyFormatter(parseFloat(stock.product.selling_price))}</span>
+        <div className='flex w-full gap-3'>
           <span>x{quantity.toString()}</span>
           <span>{currencyFormatter(parseFloat(stock.product.selling_price) * quantity)}</span>
         </div>
