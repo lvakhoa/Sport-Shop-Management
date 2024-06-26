@@ -1,71 +1,63 @@
 'use client'
 
 import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
-import { columns, CreateProductForm, IProduct } from './components'
+import { columns, IVoucher } from './components'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
-import { productApi } from '@/apis'
+import { productApi, voucherApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
 import { currencyFormatter } from '@/helpers'
+import CreateVoucherForm from './components/create-voucher'
+import moment from 'moment'
 
-const productFilterInput: IFilterInput[] = [
+const voucherFilterInput: IFilterInput[] = [
   {
-    key: 'name',
-    title: 'Name',
+    key: 'title',
+    title: 'Title',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
   {
-    key: 'category',
-    title: 'Category',
+    key: 'code',
+    title: 'Code',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
   {
-    key: 'listPrice',
-    title: 'Buying Price',
+    key: 'sale_percent',
+    title: 'Sale Percent',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
   {
-    key: 'sellingPrice',
-    title: 'Selling Price',
+    key: 'quantity',
+    title: 'Quantity',
     type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'status',
-    title: 'Status',
-    type: FILTER_INPUT_TYPE.DROPDOWN,
-    dropdownItems: [STATUS.ACTIVE, STATUS.INACTIVE],
   },
 ]
 
-export default function ProductsManagementPage() {
+export default function VouchersManagementPage() {
   const { isBrowser } = useBrowser()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
   const { isPending, data: queryData } = useQuery({
-    queryKey: queryKeys.products.gen(pagination.pageIndex),
-    queryFn: () => productApi.getAllProduct(pagination.pageSize, pagination.pageIndex + 1),
+    queryKey: queryKeys.vouchers.gen(pagination.pageIndex),
+    queryFn: () => voucherApi.getAllVouchers(pagination.pageSize, pagination.pageIndex + 1),
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IProduct[] =
+  const data: IVoucher[] =
     queryData?.map((item) => {
       return {
         id: item.id,
-        name: item.name,
-        category: item.category_list.length > 0 ? item.category_list[0].category.name : '',
-        listPrice: currencyFormatter(Number(item.list_price)),
-        sellingPrice: currencyFormatter(Number(item.selling_price)),
-        status: item.status ? (
-          <div className='rounded-md bg-[#D4FFE0] px-2 py-1 text-[#46C574]'>{STATUS.ACTIVE}</div>
-        ) : (
-          <div className='bg-[#FFD4D7] text-[#F23E14]'>{STATUS.INACTIVE}</div>
-        ),
+        title: item.title,
+        code: item.code,
+        sale_percent: item.sale_percent.toString(),
+        quantity: item.quantity.toString(),
+        expired_date: moment(item.expired_date).toString(),
         total: item.total,
       }
     }) ?? []
@@ -76,11 +68,11 @@ export default function ProductsManagementPage() {
         <DataTable
           columns={columns}
           data={data}
-          title='Products'
-          addContentSidebar={<CreateProductForm />}
+          title='Vouchers'
+          addContentSidebar={<CreateVoucherForm />}
           pagination={pagination}
           setPagination={setPagination}
-          filterInput={productFilterInput}
+          filterInput={voucherFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
         />

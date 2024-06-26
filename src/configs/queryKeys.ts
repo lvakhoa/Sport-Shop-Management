@@ -18,6 +18,14 @@ export const queryKeys = {
     gen: (id: string) => ['productDetails', id],
   },
   topProducts: ['topProducts'],
+  // VOUCHER
+  allVouchers: ['all-vouchers'],
+  vouchers: {
+    gen: (page?: number) => ['vouchers', page],
+  },
+  voucherDetails: {
+    gen: (id: string) => ['voucherDetails', id],
+  },
   // CATEGORY
   allCategories: ['all-categories'],
   categories: {

@@ -10,6 +10,8 @@ import {
   UserRound,
   UsersRound,
   Settings,
+  TicketPercent,
+  Ticket,
 } from 'lucide-react'
 
 export const sidebarItems = [
@@ -50,6 +52,21 @@ export const sidebarItems = [
         icon: <CornerDownLeft strokeWidth={1.5} />,
         describe: 'Returns',
         link: '/returns',
+      },
+    ],
+  },
+  {
+    title: 'Vouchers & Events',
+    items: [
+      {
+        icon: <TicketPercent strokeWidth={1.5} />,
+        describe: 'Vouchers',
+        link: '/vouchers',
+      },
+      {
+        icon: <Ticket strokeWidth={1.5} />,
+        describe: 'Events',
+        link: '/events',
       },
     ],
   },
