@@ -24,6 +24,14 @@ class AddressApi extends BaseApi {
     )
     return data
   }
+
+  async restoreAddress(date: number) {
+    return super.restoreByDate(date)
+  }
+
+  async restoreAllAddress() {
+    return super.restoreAll()
+  }
 }
 
 const addressApi = new AddressApi()

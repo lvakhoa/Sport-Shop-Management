@@ -1,8 +1,9 @@
 export interface IAddressRequest {
-  street: string
-  ward: string
-  district: string
-  city: string
+  street?: string
+  ward?: string
+  district?: string
+  city?: string
+  account_id?: string
 }
 
 export interface IAddressResponse {

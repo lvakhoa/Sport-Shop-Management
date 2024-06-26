@@ -50,6 +50,7 @@ export default function EmployeesManagementPage() {
           setPagination={setPagination}
           filterInput={employeeFilterInput}
           pageCount={data.length > 0 ? data[0].total / pagination.pageSize : 0}
+          showRestoreButton={true}
         />
       )}
     </div>
