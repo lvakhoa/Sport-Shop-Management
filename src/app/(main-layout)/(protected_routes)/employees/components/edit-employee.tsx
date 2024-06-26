@@ -22,32 +22,20 @@ import { useEffect } from 'react'
 
 const gender: string[] = ['MALE', 'FEMALE']
 
-const employeeSchema = z.object({
-  account_id: z.string().optional(),
-  position_id: z.string().optional(),
-  fullname: z.string({
-    message: 'Name is required',
-  }),
-  phone: z.string({
-    message: 'Phone number is required',
-  }),
-  email: z
-    .string({
-      message: 'Email is required',
-    })
-    .email({
+const employeeSchema = z
+  .object({
+    account_id: z.string().nullable(),
+    position_id: z.string().nullable(),
+    fullname: z.string(),
+    phone: z.string(),
+    email: z.string().email({
       message: 'Please enter a valid email address',
     }),
-  gender: z.enum(['MALE', 'FEMALE'], { message: 'Gender is required' }).default('MALE'),
-  started_date: z
-    .string({
-      message: 'Started date is required',
-    })
-    .datetime(),
-  salary: z.number({
-    message: 'Salary is required',
-  }),
-})
+    gender: z.enum(['MALE', 'FEMALE']),
+    started_date: z.string().datetime(),
+    salary: z.string(),
+  })
+  .partial()
 
 export default function EditEmployeeForm({ employeeId }: { employeeId: string }) {
   const queryClient = useQueryClient()
@@ -67,12 +55,12 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
   const form = useForm<z.infer<typeof employeeSchema>>({
     resolver: zodResolver(employeeSchema),
     defaultValues: {
+      account_id: undefined,
       fullname: '',
       phone: '',
       email: '',
-      gender: 'MALE',
       started_date: moment().toISOString(),
-      salary: 1000,
+      salary: '1000',
     },
   })
 
@@ -105,15 +93,17 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
     },
   })
 
+  const account = accounts?.find((acc) => acc?.employee?.id === employeeId)
+
   function onSubmit(data: z.infer<typeof employeeSchema>) {
     editEmployee({
-      account_id: data.account_id,
-      position_id: data.position_id,
+      account_id: data.account_id === null ? undefined : data.account_id,
+      position_id: data.position_id === null ? undefined : data.position_id,
       fullname: data.fullname,
       email: data.email,
       phone: data.phone,
       gender: data.gender,
-      salary: data.salary,
+      salary: !!data.salary ? parseInt(data.salary) : undefined,
       started_date: data.started_date,
     })
   }
@@ -125,9 +115,9 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
       form.setValue('fullname', employee.fullname)
       form.setValue('email', employee.email)
       form.setValue('phone', employee.phone)
-      form.setValue('gender', employee.gender === 'Male' ? 'MALE' : 'FEMALE')
-      form.setValue('started_date', moment(employee.started_date).format('DD/MM/YYYY'))
-      form.setValue('salary', parseInt(employee.salary))
+      form.setValue('gender', employee.gender === GENDER.MALE ? 'MALE' : 'FEMALE')
+      form.setValue('started_date', moment(employee.started_date).toISOString())
+      form.setValue('salary', employee.salary)
     }
   }, [employee, form])
 
@@ -226,9 +216,11 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                   </Label>
                   <div className='col-span-3'>
                     <DatePicker
-                      date={field.value}
+                      date={!!field.value ? moment(field.value).toDate() : moment().toDate()}
                       selectDate={(val) =>
-                        (field.value = val?.toISOString() ?? moment().toISOString())
+                        field.onChange({
+                          target: { value: moment(val).toISOString() },
+                        })
                       }
                     />
                   </div>
@@ -249,7 +241,7 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                   <Label htmlFor='salary' className='text-left'>
                     Salary
                   </Label>
-                  <Input id='salary' className='col-span-3' {...field} />
+                  <Input type='number' id='salary' className='col-span-3' {...field} />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -263,11 +255,8 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
           render={({ field }) => (
             <FormItem>
               <Select
-                defaultValue={(() => {
-                  const account = accounts?.find((acc) => acc.id === field.value)
-                  return account?.email + ' - ' + account?.role.title
-                })()}
-                value={field.value}
+                defaultValue={!!account ? account.email + ' - ' + account.role.title : undefined}
+                value={field.value === null ? undefined : field.value}
                 onValueChange={field.onChange}
               >
                 <FormControl>
@@ -284,7 +273,7 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                       <SelectGroup>
                         {!!accounts &&
                           accounts.map((acc) => {
-                            if (!acc.employee)
+                            if (!acc.employee || acc.employee.id === employeeId)
                               return (
                                 <SelectItem key={acc.id} value={acc.id}>
                                   {acc.email + ' - ' + acc.role.title}
@@ -308,7 +297,7 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
             <FormItem>
               <Select
                 defaultValue={positions?.find((p) => p.id === field.value)?.title}
-                value={field.value}
+                value={field.value === null ? undefined : field.value}
                 onValueChange={field.onChange}
               >
                 <FormControl>

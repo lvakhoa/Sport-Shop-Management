@@ -1,7 +1,10 @@
 export const PATH_NAME = {
   HOME: '/',
   CUSTOMER: '/customers',
+  CATEGORY: '/categories',
   EMPLOYEE: '/employees',
+  EVENT: '/events',
+  VOUCHER: '/vouchers',
   PRODUCT: '/products',
   POS: '/pos',
   STOCK: '/stocks',
@@ -12,5 +15,6 @@ export const PATH_NAME = {
   VERIFICATION_SUCCESS: '/verification-success',
   VERIFICATION_ERROR: '/verification-error',
   VERIFICATION_REQUIRED: '/verification-required',
-  SETTINGS: '/settings/profile',
+  SETTINGS: '/settings',
+  ORDER_DETAILS: '/order-details',
 }

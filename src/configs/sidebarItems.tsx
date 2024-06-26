@@ -1,15 +1,16 @@
 import { PATH_NAME } from './pathName'
 import {
-  CornerDownLeft,
   LayoutDashboard,
   ReceiptText,
   Shirt,
-  ShoppingBasket,
   ShoppingCart,
   Smile,
-  UserRound,
   UsersRound,
   Settings,
+  LayoutGrid,
+  PackageOpen,
+  TicketPercent,
+  BadgeCheck,
 } from 'lucide-react'
 
 export const sidebarItems = [
@@ -31,6 +32,31 @@ export const sidebarItems = [
         describe: 'Products',
         link: PATH_NAME.PRODUCT,
       },
+      {
+        icon: <PackageOpen strokeWidth={1.5} />,
+        describe: 'Stocks',
+        link: PATH_NAME.STOCK,
+      },
+      {
+        icon: <LayoutGrid strokeWidth={1.5} />,
+        describe: 'Categories',
+        link: PATH_NAME.CATEGORY,
+      },
+    ],
+  },
+  {
+    title: 'Sales',
+    items: [
+      {
+        icon: <TicketPercent strokeWidth={1.5} />,
+        describe: 'Vouchers',
+        link: PATH_NAME.VOUCHER,
+      },
+      {
+        icon: <BadgeCheck strokeWidth={1.5} />,
+        describe: 'Events',
+        link: PATH_NAME.EVENT,
+      },
     ],
   },
   {
@@ -44,23 +70,13 @@ export const sidebarItems = [
       {
         icon: <ShoppingCart strokeWidth={1.5} />,
         describe: 'Order Details',
-        link: '/order-details',
-      },
-      {
-        icon: <CornerDownLeft strokeWidth={1.5} />,
-        describe: 'Returns',
-        link: '/returns',
+        link: PATH_NAME.ORDER_DETAILS,
       },
     ],
   },
   {
     title: 'Users',
     items: [
-      {
-        icon: <UserRound strokeWidth={1.5} />,
-        describe: 'Administrators',
-        link: '/administrators',
-      },
       {
         icon: <Smile strokeWidth={1.5} />,
         describe: 'Customers',
@@ -79,7 +95,7 @@ export const sidebarItems = [
       {
         icon: <Settings strokeWidth={1.5} />,
         describe: 'Settings',
-        link: PATH_NAME.SETTINGS,
+        link: `${PATH_NAME.SETTINGS}/profile`,
       },
     ],
   },

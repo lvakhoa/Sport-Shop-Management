@@ -7,6 +7,7 @@ import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import { IFilterInput } from '@/interfaces'
 import { customerApi } from '@/apis'
+import EditCustomerForm from './edit-customer'
 
 export interface ICustomer {
   id: string
@@ -14,6 +15,9 @@ export interface ICustomer {
   email: string
   phone: string
   gender: GENDER
+  rank: string
+  loyalty_point: number
+  total: number
 }
 
 export const customerFilterInput: IFilterInput[] = [
@@ -115,6 +119,29 @@ export const columns: ColumnDef<ICustomer>[] = [
     filterFn: 'equalsString',
   },
   {
+    accessorKey: 'rank',
+    header: () => {
+      return <div className='font-medium'>Rank</div>
+    },
+  },
+  {
+    accessorKey: 'loyalty_point',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          L.Point
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div>{row.getValue('loyalty_point')}</div>,
+  },
+  {
     id: 'actions',
     header: () => {
       return <div className='font-medium'>Action</div>
@@ -127,6 +154,7 @@ export const columns: ColumnDef<ICustomer>[] = [
           path={PATH_NAME.CUSTOMER}
           id={customerId}
           tableKey='customers'
+          editContentElement={<EditCustomerForm customerId={customerId} />}
           deleteMethod={() => customerApi.deleteCustomerById(customerId)}
         />
       )

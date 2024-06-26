@@ -1,17 +1,18 @@
+import { PATH_NAME } from '@/configs'
 import { SettingSidebarNav } from './components/settings-sidebar'
 
 const settingsNavItems = [
   {
     title: 'Profile',
-    href: '/settings/profile',
+    href: `${PATH_NAME.SETTINGS}/profile`,
   },
   {
     title: 'Roles & Permissions',
-    href: '/settings/roles-permissions',
+    href: `${PATH_NAME.SETTINGS}/roles-permissions`,
   },
   {
     title: 'Shipping Setup',
-    href: '/settings/shipping-setup',
+    href: `${PATH_NAME.SETTINGS}/shipping-setup`,
   },
 ]
 

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -25,7 +25,7 @@ export default function ComboBox({
   className,
   onValueChange,
 }: IComboBox) {
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(undefined)
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(defaultValue)
 
   const handleSelectChange = (value: string) => {
     setSelectedValue(value)
@@ -33,6 +33,12 @@ export default function ComboBox({
       onValueChange(value)
     }
   }
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSelectedValue(defaultValue)
+    }
+  }, [defaultValue])
 
   return (
     <div className={className}>

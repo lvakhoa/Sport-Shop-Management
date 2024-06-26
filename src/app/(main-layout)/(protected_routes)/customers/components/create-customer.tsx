@@ -1,13 +1,12 @@
-import { Button, ComboBox, DatePicker, Input, Label } from '@/components/shared'
+import { Button, ComboBox, Input, Label } from '@/components/shared'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/shared/form'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import moment from 'moment'
-import { GENDER } from '@/configs/enum'
+import { GENDER, RANK } from '@/configs/enum'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
-import { employeeAccountApi, employeeApi, positionApi } from '@/apis'
+import { customerAccountApi, customerApi } from '@/apis'
 import {
   Select,
   SelectContent,
@@ -16,80 +15,74 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shared/select'
-import { IEmployeeRequest } from '@/interfaces/employee'
+import { ICustomerRequest } from '@/interfaces/customer'
 import { toast } from 'react-toastify'
 
 const gender: string[] = ['MALE', 'FEMALE']
+const rank: RANK[] = [RANK.COPPER, RANK.SILVER, RANK.GOLD]
 
-const employeeSchema = z
+const customerSchema = z
   .object({
-    account_id: z.string().nullable(),
-    position_id: z.string().nullable(),
+    account_id: z.string(),
     fullname: z.string(),
     phone: z.string(),
     email: z.string().email(),
     gender: z.enum(['MALE', 'FEMALE']),
-    started_date: z.string().datetime(),
-    salary: z.string(),
+    rank: z.enum([RANK.COPPER, RANK.SILVER, RANK.GOLD]),
+    loyalty_point: z.number(),
   })
   .partial()
 
-export default function CreateEmployeeForm() {
+export default function CreateCustomerForm() {
   const queryClient = useQueryClient()
   const { data: accounts } = useQuery({
-    queryKey: queryKeys.employeeAccount,
-    queryFn: () => employeeAccountApi.getAllEmployeeAccounts(),
-  })
-  const { data: positions } = useQuery({
-    queryKey: queryKeys.positions,
-    queryFn: () => positionApi.getAllPositions(),
+    queryKey: queryKeys.customerAccount,
+    queryFn: () => customerAccountApi.getAllCustomerAccounts(),
   })
 
-  const form = useForm<z.infer<typeof employeeSchema>>({
-    resolver: zodResolver(employeeSchema),
+  const form = useForm<z.infer<typeof customerSchema>>({
+    resolver: zodResolver(customerSchema),
     defaultValues: {
       fullname: '',
       phone: '',
       email: '',
       gender: 'MALE',
-      started_date: moment().toISOString(),
-      salary: '1000',
+      rank: RANK.COPPER,
+      loyalty_point: 0,
     },
   })
 
-  const { mutate: createEmployee } = useMutation({
-    mutationFn: (data: IEmployeeRequest) =>
-      employeeApi.createEmployee({
+  const { mutate: createCustomer } = useMutation({
+    mutationFn: (data: ICustomerRequest) =>
+      customerApi.createCustomer({
         account_id: data.account_id,
-        position_id: data.position_id,
         fullname: data.fullname,
-        email: data.email,
         phone: data.phone,
+        email: data.email,
         gender: data.gender,
-        salary: data.salary,
-        started_date: data.started_date,
+        rank: data.rank,
+        loyalty_point: data.loyalty_point,
       }),
     onSuccess: () => {
-      toast.success('Employee created successfully')
+      toast.success('Customer created successfully')
     },
-    onError: (error) => {
-      toast.error(error.message)
+    onError: () => {
+      toast.error('Error creating customer')
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'employees' })
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'customers' })
     },
   })
 
-  function onSubmit(data: z.infer<typeof employeeSchema>) {
-    createEmployee({
-      account_id: data.account_id === null ? undefined : data.account_id,
-      position_id: data.position_id === null ? undefined : data.position_id,
+  function onSubmit(data: z.infer<typeof customerSchema>) {
+    createCustomer({
+      account_id: data.account_id,
       fullname: data.fullname,
-      email: data.email,
       phone: data.phone,
+      email: data.email,
       gender: data.gender,
-      salary: !!data.salary ? parseInt(data.salary) : undefined,
-      started_date: data.started_date,
+      rank: data.rank,
+      loyalty_point: data.loyalty_point,
     })
   }
 
@@ -177,58 +170,10 @@ export default function CreateEmployeeForm() {
 
         <FormField
           control={form.control}
-          name='started_date'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='started_date' className='text-left'>
-                    Started date
-                  </Label>
-                  <div className='col-span-3'>
-                    <DatePicker
-                      date={!!field.value ? moment(field.value).toDate() : moment().toDate()}
-                      selectDate={(val) =>
-                        field.onChange({
-                          target: { value: moment(val).toISOString() },
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage className='text-[14px] font-normal' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='salary'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='salary' className='text-left'>
-                    Salary
-                  </Label>
-                  <Input id='salary' className='col-span-3' {...field} />
-                </div>
-              </FormControl>
-              <FormMessage className='text-[14px] font-normal' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name='account_id'
           render={({ field }) => (
             <FormItem>
-              <Select
-                value={field.value === null ? undefined : field.value}
-                onValueChange={field.onChange}
-              >
+              <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <div className='grid grid-cols-4 items-center gap-4'>
                     <Label htmlFor='account_id' className='text-left'>
@@ -243,10 +188,10 @@ export default function CreateEmployeeForm() {
                       <SelectGroup>
                         {!!accounts &&
                           accounts.map((acc) => {
-                            if (!acc.employee)
+                            if (!!acc)
                               return (
                                 <SelectItem key={acc.id} value={acc.id}>
-                                  {acc.email + ' - ' + acc.role.title}
+                                  {acc.email}
                                 </SelectItem>
                               )
                           })}
@@ -262,46 +207,34 @@ export default function CreateEmployeeForm() {
 
         <FormField
           control={form.control}
-          name='position_id'
+          name='rank'
           render={({ field }) => (
             <FormItem>
-              <Select
-                defaultValue={positions?.find((p) => p.id === field.value)?.title}
-                value={field.value === null ? undefined : field.value}
-                onValueChange={field.onChange}
-              >
-                <FormControl>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='position_id' className='text-left'>
-                      Position
-                    </Label>
-                    <SelectTrigger className='col-span-3'>
-                      <SelectValue
-                        placeholder={<span className='text-muted-foreground'>Position</span>}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {!!positions &&
-                          positions.map((acc) => (
-                            <SelectItem key={acc.id} value={acc.id}>
-                              {acc.title}
-                            </SelectItem>
-                          ))}
-                      </SelectGroup>
-                    </SelectContent>
+              <FormControl>
+                <div className='grid grid-cols-4 items-center gap-4'>
+                  <Label htmlFor='rank' className='text-left'>
+                    Rank
+                  </Label>
+                  <div className='col-span-3'>
+                    <ComboBox
+                      key='rank'
+                      placeholder='Rank'
+                      items={rank}
+                      onValueChange={field.onChange}
+                    />
                   </div>
-                </FormControl>
-                <FormMessage className='text-[14px] font-normal' />
-              </Select>
+                </div>
+              </FormControl>
+              <FormMessage className='text-[14px] font-normal' />
             </FormItem>
           )}
         />
+
         <Button
           type='submit'
           className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
         >
-          Add Employee
+          Add Customer
         </Button>
       </form>
     </Form>
