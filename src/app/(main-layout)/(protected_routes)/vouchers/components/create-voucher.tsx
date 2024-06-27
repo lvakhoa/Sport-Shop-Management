@@ -184,7 +184,7 @@ export default function CreateVoucherForm() {
                   </Label>
                   <div className='col-span-3'>
                     <DatePicker
-                      date={field.value}
+                      date={moment(field.value).toDate()}
                       selectDate={(val) => {
                         field.onChange(val?.toISOString() ?? moment().toISOString())
                       }}

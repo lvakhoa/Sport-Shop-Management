@@ -185,7 +185,7 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
                   </Label>
                   <div className='col-span-3'>
                     <DatePicker
-                      date={field.value ?? ''}
+                      date={moment(field.value).toDate()}
                       selectDate={(val) => {
                         field.onChange(moment(val).toString())
                       }}
