@@ -76,21 +76,6 @@ export const sidebarItems = [
     ],
   },
   {
-    title: 'Vouchers & Events',
-    items: [
-      {
-        icon: <TicketPercent strokeWidth={1.5} />,
-        describe: 'Vouchers',
-        link: '/vouchers',
-      },
-      {
-        icon: <Ticket strokeWidth={1.5} />,
-        describe: 'Events',
-        link: '/events',
-      },
-    ],
-  },
-  {
     title: 'Users',
     items: [
       {
