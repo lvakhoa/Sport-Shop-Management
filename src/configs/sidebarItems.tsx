@@ -10,6 +10,7 @@ import {
   LayoutGrid,
   PackageOpen,
   TicketPercent,
+  Ticket,
   BadgeCheck,
 } from 'lucide-react'
 
