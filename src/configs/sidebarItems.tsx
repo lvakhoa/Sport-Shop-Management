@@ -10,6 +10,7 @@ import {
   LayoutGrid,
   PackageOpen,
   TicketPercent,
+  Ticket,
   BadgeCheck,
 } from 'lucide-react'
 
@@ -71,6 +72,21 @@ export const sidebarItems = [
         icon: <ShoppingCart strokeWidth={1.5} />,
         describe: 'Order Details',
         link: PATH_NAME.ORDER_DETAILS,
+      },
+    ],
+  },
+  {
+    title: 'Vouchers & Events',
+    items: [
+      {
+        icon: <TicketPercent strokeWidth={1.5} />,
+        describe: 'Vouchers',
+        link: '/vouchers',
+      },
+      {
+        icon: <Ticket strokeWidth={1.5} />,
+        describe: 'Events',
+        link: '/events',
       },
     ],
   },

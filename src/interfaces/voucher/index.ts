@@ -13,4 +13,5 @@ export interface IVoucherResponse {
   sale_percent: number
   quantity: number
   expired_date: Date
+  total: number
 }
