@@ -5,7 +5,7 @@ export interface ICustomerRequest {
   fullname?: string
   phone?: string
   email?: string
-  gender?: GENDER
+  gender?: 'MALE' | 'FEMALE'
   rank?: RANK
   loyalty_point?: number
 }

@@ -25,6 +25,7 @@ import { motion } from 'framer-motion'
 import { IFilterInput } from '@/interfaces'
 import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
 import { ToggleGroup, ToggleGroupItem } from './toggle-group'
+import { RotateCcw } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -36,6 +37,8 @@ interface DataTableProps<TData, TValue> {
   filterInput: IFilterInput[]
   isPending?: boolean
   pageCount?: number
+  showAddButton?: boolean
+  showRestoreButton?: boolean
 }
 
 interface InputValues {
@@ -43,11 +46,20 @@ interface InputValues {
 }
 
 const exports: string[] = ['XSL', 'Print']
+const restoreOptions: string[] = ['7 days', '30 days', 'All']
 
-const dropdownTrigger = (
+const exportTrigger = (
   <div className='flex gap-[5px]'>
     <Image src='/icons/export.svg' alt='' width={20} height={20} />
     <span className='text-[15px] text-secondary max-[666px]:hidden'>Export</span>
+    <Image src='/icons/down_arrow.svg' alt='' width={20} height={20} />
+  </div>
+)
+
+const restoreTrigger = (
+  <div className='flex gap-[5px]'>
+    <RotateCcw size={20} className='stroke-secondary' />
+    <span className='text-[15px] text-secondary max-[666px]:hidden'>Restore</span>
     <Image src='/icons/down_arrow.svg' alt='' width={20} height={20} />
   </div>
 )
@@ -61,6 +73,8 @@ export default function DataTable<TData, TValue>({
   setPagination,
   filterInput,
   pageCount = 0,
+  showAddButton = true,
+  showRestoreButton = false,
 }: DataTableProps<TData, TValue>) {
   const [isOpened, setIsOpened] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([])
@@ -80,7 +94,7 @@ export default function DataTable<TData, TValue>({
     setIsOpened(!isOpened)
   }
 
-  const addingBtnTitle = title.slice(0, title.length - 1)
+  const addingBtnTitle = title
   const table = useReactTable({
     data,
     columns,
@@ -116,6 +130,13 @@ export default function DataTable<TData, TValue>({
               <span className='text-2xl font-semibold'>{title}</span>
             </div>
             <div className='flex gap-[15px]'>
+              {showRestoreButton && (
+                <Dropdown
+                  className='rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'
+                  trigger={restoreTrigger}
+                  items={restoreOptions}
+                />
+              )}
               <Button
                 onClick={handleOpenFilter}
                 className='bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'
@@ -124,26 +145,28 @@ export default function DataTable<TData, TValue>({
                 <span className='text-[15px] font-normal text-secondary max-[666px]:hidden'>
                   Filter
                 </span>
-                <Image width={20} height={20} src='icons/down_arrow.svg' alt='' />
+                <Image width={20} height={20} src='/icons/down_arrow.svg' alt='' />
               </Button>
               <Dropdown
                 className='rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'
-                trigger={dropdownTrigger}
+                trigger={exportTrigger}
                 items={exports}
               />
 
-              <SidebarEdit
-                title={`Add ${addingBtnTitle}`}
-                description=''
-                content={addContentSidebar}
-              >
-                <Button className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'>
-                  <Image width={20} height={20} src='/icons/plus_circle.svg' alt='' />
-                  <span className='text-[15px] font-normal text-[#FFFFFF] max-[666px]:hidden'>
-                    Add {addingBtnTitle}
-                  </span>
-                </Button>
-              </SidebarEdit>
+              {showAddButton && (
+                <SidebarEdit
+                  title={`Add ${addingBtnTitle}`}
+                  description=''
+                  content={addContentSidebar}
+                >
+                  <Button className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'>
+                    <Image width={20} height={20} src='/icons/plus_circle.svg' alt='' />
+                    <span className='text-[15px] font-normal text-[#FFFFFF] max-[666px]:hidden'>
+                      Add {addingBtnTitle}
+                    </span>
+                  </Button>
+                </SidebarEdit>
+              )}
             </div>
           </motion.div>
 
@@ -185,7 +208,7 @@ export default function DataTable<TData, TValue>({
                   handleClear()
                 }}
               >
-                <Image width={100} height={100} alt='' src='./icons/clear.svg' />
+                <Image width={100} height={100} alt='' src='/icons/clear.svg' />
               </Button>
             </div>
           </motion.div>

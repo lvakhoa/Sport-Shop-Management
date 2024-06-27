@@ -51,7 +51,7 @@ export function RolePermissionTable() {
                 pathname: `roles-permissions/${item.id}`,
               }}
             >
-              <Button variant='outline' className='h-auto border-primary px-[3px] py-[1px]'>
+              <Button variant='outline' className='h-auto border-primary px-[3px] py-px'>
                 <KeyRound size={12} stroke='var(--blue-100)' />
                 <span className='ml-[3px] text-[12px] text-primary'>Permissions</span>
               </Button>

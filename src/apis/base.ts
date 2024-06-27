@@ -50,4 +50,18 @@ export default class BaseApi {
     )
     return data?.message
   }
+
+  async restoreByDate(date: number) {
+    const data = await handleResponse<{ message: string }>(() =>
+      httpClient.patch<{ message: string }>(this.route + '/restore' + `?fromDate=${date}`, {}),
+    )
+    return data?.message
+  }
+
+  async restoreAll() {
+    const data = await handleResponse<{ message: string }>(() =>
+      httpClient.patch<{ message: string }>(this.route + '/restore', {}),
+    )
+    return data?.message
+  }
 }

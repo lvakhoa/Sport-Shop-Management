@@ -221,6 +221,7 @@ function PermissionsDetail() {
         setPagination={setPagination}
         filterInput={PermissionFilterInput}
         pageCount={Math.ceil(tableData.length / pagination.pageSize)}
+        showAddButton={false}
       />
       <Button
         onClick={() => {
