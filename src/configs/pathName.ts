@@ -3,6 +3,7 @@ export const PATH_NAME = {
   CUSTOMER: '/customers',
   EMPLOYEE: '/employees',
   PRODUCT: '/products',
+  EVENT: '/events',
   POS: '/pos',
   STOCK: '/stocks',
   LOGIN: '/log-in',
