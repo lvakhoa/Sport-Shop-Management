@@ -32,11 +32,14 @@ const formSchema = z.object({
   name: z.string(),
   type: z.string(),
   gender: z.enum(['MALE', 'FEMALE']),
-  description: z.string(),
+  description: z.string().optional(),
   product_list: z.array(productListSchema).nullable(),
-  file: z.instanceof(File).refine((file) => file.size < 7000000, {
-    message: 'Your file must be less than 7MB.',
-  }),
+  file: z
+    .instanceof(File)
+    .refine((file) => file.size < 7000000, {
+      message: 'Your file must be less than 7MB.',
+    })
+    .optional(),
 })
 
 const breadcrumbItems = [
@@ -52,6 +55,13 @@ export default function CreateCategoryPage() {
     queryKey: queryKeys.allProducts,
     queryFn: () => productApi.getAllProduct(),
   })
+
+  const { isPending, data: categoriesData } = useQuery({
+    queryKey: queryKeys.allCategories,
+    queryFn: () => categoryApi.getAllCategories(),
+  })
+
+  const typeList = Array.from(new Set(categoriesData?.map((category) => category.type)))
 
   const queryClient = useQueryClient()
 
@@ -95,6 +105,7 @@ export default function CreateCategoryPage() {
   }
 
   const [selectedProducts, setSelectedProducts] = useState<z.infer<typeof productListSchema>[]>([])
+  const [selectedType, setSelectedType] = useState<string>()
   const handleAddProduct = (productId: string) => {
     setSelectedProducts([...selectedProducts, { product_id: productId }])
   }
@@ -108,6 +119,10 @@ export default function CreateCategoryPage() {
       selectedProducts.map((product) => ({ product_id: product.product_id })),
     )
   }, [selectedProducts, form])
+
+  useEffect(() => {
+    setSelectedType(form.getValues('type'))
+  }, [form])
 
   return (
     <div>
@@ -140,7 +155,43 @@ export default function CreateCategoryPage() {
                     <FormControl>
                       <div className='flex flex-col gap-4'>
                         <FormLabel>Type</FormLabel>
-                        <Input id='type' placeholder='Type' className='col-span-3' {...field} />
+                        <div className='flex gap-2'>
+                          <Input
+                            id='type'
+                            placeholder='Type'
+                            className='col-span-3'
+                            {...field}
+                            onChange={(e) => {
+                              field.onChange(e)
+                              setSelectedType(e.target.value)
+                              form.setValue('type', e.target.value)
+                            }}
+                          />
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant='outline'>Select</Button>
+                            </PopoverTrigger>
+                            <PopoverContent className='grid gap-4' side='bottom'>
+                              <ScrollArea className='h-[200px] w-full'>
+                                {typeList.map((type) => (
+                                  <div key={type} className='flex items-center gap-4 py-[5px]'>
+                                    <span
+                                      className={`${
+                                        selectedType === type ? 'bg-blue-50' : 'bg-transparent'
+                                      } w-full cursor-pointer rounded-md px-2 py-1`}
+                                      onClick={() => {
+                                        setSelectedType(type)
+                                        form.setValue('type', type)
+                                      }}
+                                    >
+                                      {type}
+                                    </span>
+                                  </div>
+                                ))}
+                              </ScrollArea>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
                       </div>
                     </FormControl>
                     <FormMessage className='text-[14px] font-normal' />

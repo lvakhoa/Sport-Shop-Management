@@ -75,9 +75,9 @@ export default function CategoriesPage() {
               <TabsContent key={index} value={item} className='grid grid-cols-3 gap-10 px-[10px]'>
                 {categories
                   .filter((it) => it.type === currentType && it.gender === item)
-                  .map((category, index) => (
+                  .map((category) => (
                     <CategoryItem
-                      key={index}
+                      key={category.id}
                       id={category.id}
                       name={category.name}
                       type={category.type}
