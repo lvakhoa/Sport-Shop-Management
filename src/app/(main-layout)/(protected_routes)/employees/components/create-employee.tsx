@@ -21,32 +21,18 @@ import { toast } from 'react-toastify'
 
 const gender: string[] = ['MALE', 'FEMALE']
 
-const employeeSchema = z.object({
-  account_id: z.string().optional(),
-  position_id: z.string().optional(),
-  fullname: z.string({
-    message: 'Name is required',
-  }),
-  phone: z.string({
-    message: 'Phone number is required',
-  }),
-  email: z
-    .string({
-      message: 'Email is required',
-    })
-    .email({
-      message: 'Please enter a valid email address',
-    }),
-  gender: z.enum(['MALE', 'FEMALE'], { message: 'Gender is required' }).default('MALE'),
-  started_date: z
-    .string({
-      message: 'Started date is required',
-    })
-    .datetime(),
-  salary: z.number({
-    message: 'Salary is required',
-  }),
-})
+const employeeSchema = z
+  .object({
+    account_id: z.string().nullable(),
+    position_id: z.string().nullable(),
+    fullname: z.string(),
+    phone: z.string(),
+    email: z.string().email(),
+    gender: z.enum(['MALE', 'FEMALE']),
+    started_date: z.string().datetime(),
+    salary: z.string(),
+  })
+  .partial()
 
 export default function CreateEmployeeForm() {
   const queryClient = useQueryClient()
@@ -67,7 +53,7 @@ export default function CreateEmployeeForm() {
       email: '',
       gender: 'MALE',
       started_date: moment().toISOString(),
-      salary: 1000,
+      salary: '1000',
     },
   })
 
@@ -86,8 +72,8 @@ export default function CreateEmployeeForm() {
     onSuccess: () => {
       toast.success('Employee created successfully')
     },
-    onError: () => {
-      toast.error('Error creating employee')
+    onError: (error) => {
+      toast.error(error.message)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'employees' })
@@ -96,13 +82,13 @@ export default function CreateEmployeeForm() {
 
   function onSubmit(data: z.infer<typeof employeeSchema>) {
     createEmployee({
-      account_id: data.account_id,
-      position_id: data.position_id,
+      account_id: data.account_id === null ? undefined : data.account_id,
+      position_id: data.position_id === null ? undefined : data.position_id,
       fullname: data.fullname,
       email: data.email,
       phone: data.phone,
       gender: data.gender,
-      salary: data.salary,
+      salary: !!data.salary ? parseInt(data.salary) : undefined,
       started_date: data.started_date,
     })
   }
@@ -201,9 +187,11 @@ export default function CreateEmployeeForm() {
                   </Label>
                   <div className='col-span-3'>
                     <DatePicker
-                      date={field.value}
+                      date={!!field.value ? moment(field.value).toDate() : moment().toDate()}
                       selectDate={(val) =>
-                        (field.value = val?.toISOString() ?? moment().toISOString())
+                        field.onChange({
+                          target: { value: moment(val).toISOString() },
+                        })
                       }
                     />
                   </div>
@@ -237,7 +225,10 @@ export default function CreateEmployeeForm() {
           name='account_id'
           render={({ field }) => (
             <FormItem>
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select
+                value={field.value === null ? undefined : field.value}
+                onValueChange={field.onChange}
+              >
                 <FormControl>
                   <div className='grid grid-cols-4 items-center gap-4'>
                     <Label htmlFor='account_id' className='text-left'>
@@ -274,7 +265,11 @@ export default function CreateEmployeeForm() {
           name='position_id'
           render={({ field }) => (
             <FormItem>
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select
+                defaultValue={positions?.find((p) => p.id === field.value)?.title}
+                value={field.value === null ? undefined : field.value}
+                onValueChange={field.onChange}
+              >
                 <FormControl>
                   <div className='grid grid-cols-4 items-center gap-4'>
                     <Label htmlFor='position_id' className='text-left'>
@@ -302,7 +297,6 @@ export default function CreateEmployeeForm() {
             </FormItem>
           )}
         />
-
         <Button
           type='submit'
           className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'

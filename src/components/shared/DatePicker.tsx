@@ -12,7 +12,7 @@ export default function DatePicker({
   date,
   selectDate,
 }: {
-  date: string
+  date: Date | undefined
   selectDate: (date: Date | undefined) => void
 }) {
   return (

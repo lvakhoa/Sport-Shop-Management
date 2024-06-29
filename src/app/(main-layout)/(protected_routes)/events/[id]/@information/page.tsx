@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { notFound, useParams } from 'next/navigation'
 import styles from '@/components/shared/ContentCard/ContentCard.module.css'
 import moment from 'moment'
+import Image from 'next/image'
 
 interface IEventInfo {
   title: string
@@ -16,6 +17,9 @@ interface IEventInfo {
   start_date: Date
   end_date: Date
   sale_percent: number
+  media?: {
+    url: string
+  }
 }
 
 function InformationPage() {
@@ -34,11 +38,13 @@ function InformationPage() {
     start_date: data?.start_date ?? moment().toDate(),
     end_date: data?.end_date ?? moment().toDate(),
     sale_percent: data?.sale_percent ?? 0,
+    media: data?.media,
   }
 
   return (
     <ContentCard title='Information'>
       <div className='mb-6 flex flex-col gap-y-2 sm:flex-row sm:gap-20 md:gap-32'>
+        {details.media && <Image alt='' width={300} height={100} src={details.media?.url} />}
         <div className='flex min-w-[260px] gap-10'>
           <div className={styles.list}>
             <span className={styles.info_title}>Title</span>

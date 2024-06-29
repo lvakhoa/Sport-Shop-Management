@@ -30,4 +30,5 @@ export interface IEventResponse {
   media?: {
     url: string
   }
+  total: number
 }

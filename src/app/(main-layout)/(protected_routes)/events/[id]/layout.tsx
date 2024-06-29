@@ -18,22 +18,17 @@ const viewButtons = [
     text: 'Information',
   },
   {
-    icon: <Image />,
-    text: 'Image',
-  },
-  {
     icon: <Shirt />,
     text: 'Products',
   },
 ]
 
-interface IProductLayout {
+interface IEventLayout {
   information: React.ReactNode
-  image: React.ReactNode
   products: React.ReactNode
 }
 
-function EventLayout({ information, image, products }: IProductLayout) {
+function EventLayout({ information, products }: IEventLayout) {
   const [selectedButton, setSelectedButton] = useState(0)
 
   return (
@@ -53,8 +48,7 @@ function EventLayout({ information, image, products }: IProductLayout) {
 
       <div>
         {selectedButton === 0 && information}
-        {selectedButton === 1 && image}
-        {selectedButton === 2 && products}
+        {selectedButton === 1 && products}
       </div>
     </div>
   )
