@@ -9,8 +9,8 @@ import { categoryApi, productApi } from '@/apis'
 import { Breadcrumb, Input, ComboBox, ScrollArea, Checkbox, AlertPopup } from '@/components/shared'
 import { Button } from '@/components/shared/button'
 import { Textarea } from '@/components/shared/text-area'
-import { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
+import { useState, useEffect, useRef } from 'react'
+import { Id, toast } from 'react-toastify'
 import {
   Form,
   FormControl,
@@ -50,6 +50,7 @@ const breadcrumbItems = [
 ]
 
 export default function CreateCategoryPage() {
+  const toastId = useRef<Id | undefined>()
   const router = useRouter()
   const { data: products } = useQuery({
     queryKey: queryKeys.allProducts,
@@ -69,7 +70,7 @@ export default function CreateCategoryPage() {
     resolver: zodResolver(formSchema),
   })
 
-  const { mutate: createCategory } = useMutation({
+  const { mutate: createCategory, isPending: isLoading } = useMutation({
     mutationFn: (data: ICategoryRequest) =>
       categoryApi.createCategory({
         name: data.name,
@@ -92,6 +93,14 @@ export default function CreateCategoryPage() {
       })
     },
   })
+
+  useEffect(() => {
+    if (isLoading) toastId.current = toast.loading('Loading...')
+
+    return () => {
+      toast.dismiss(toastId.current)
+    }
+  }, [isLoading])
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     createCategory({

@@ -9,8 +9,8 @@ import { categoryApi, productApi } from '@/apis'
 import { Breadcrumb, Input, ComboBox, ScrollArea, Checkbox, AlertPopup } from '@/components/shared'
 import { Button } from '@/components/shared/button'
 import { Textarea } from '@/components/shared/text-area'
-import { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
+import { useState, useEffect, useRef } from 'react'
+import { Id, toast } from 'react-toastify'
 import {
   Form,
   FormControl,
@@ -51,6 +51,7 @@ const breadcrumbItems = [
 ]
 
 export default function EditCategoryPage() {
+  const toastId = useRef<Id | undefined>()
   const { id: categoryId } = useParams<{ id: string }>()
   const router = useRouter()
   const { data: categoryData } = useQuery({
@@ -76,7 +77,7 @@ export default function EditCategoryPage() {
     resolver: zodResolver(formSchema),
   })
 
-  const { mutate: editCategory } = useMutation({
+  const { mutate: editCategory, isPending: isLoading } = useMutation({
     mutationFn: (data: ICategoryRequest) =>
       categoryApi.updateCategory(
         {
@@ -103,6 +104,14 @@ export default function EditCategoryPage() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.categoryDetails.gen(categoryId) })
     },
   })
+
+  useEffect(() => {
+    if (isLoading) toastId.current = toast.loading('Loading...')
+
+    return () => {
+      toast.dismiss(toastId.current)
+    }
+  }, [isLoading])
 
   const { mutate: deleteCategory } = useMutation({
     mutationFn: () => categoryApi.deleteCategoryById(categoryId),
