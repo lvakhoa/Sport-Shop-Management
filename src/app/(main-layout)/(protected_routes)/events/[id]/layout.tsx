@@ -33,7 +33,12 @@ function EventLayout({ information, products }: IEventLayout) {
 
   return (
     <div className='mx-6 my-4'>
-      <Breadcrumb items={breadcrumbItems} page='View' className='mb-6' textSize={22} />
+      <Breadcrumb
+        items={breadcrumbItems.map((item, index) => ({ ...item, key: index }))}
+        page='View'
+        className='mb-6'
+        textSize={22}
+      />
 
       <div className='mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3'>
         {viewButtons.map((item, index) => (
