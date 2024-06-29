@@ -151,7 +151,6 @@ export default function CreateCategoryPage() {
               <FormField
                 control={form.control}
                 name='file'
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 render={({ field: { value, onChange, ...fieldProps } }) => (
                   <FormItem>
                     <FormControl>
