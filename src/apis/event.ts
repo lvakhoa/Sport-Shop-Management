@@ -14,12 +14,28 @@ class EventApi extends BaseApi {
     return super.getById<IEventResponse>(id)
   }
 
+  // async createEvent(event: IEventRequest) {
+  //   return super.create(event)
+  // }
+
   async createEvent(event: IEventRequest) {
-    return super.create(event)
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+
+    return super.create(event, config)
   }
 
   async updateEvent(event: IEventRequest, id: string) {
-    return super.update(event, id)
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+
+    return super.update(event, id, config)
   }
 
   async deleteEventById(id: string) {
