@@ -206,7 +206,7 @@ export default function EditCategoryPage() {
                         <div className='flex gap-2'>
                           <Input
                             id='type'
-                            placeholder='Type'
+                            placeholder={categoryData ? categoryData.type : ''}
                             className='col-span-3'
                             {...field}
                             onChange={(e) => {
