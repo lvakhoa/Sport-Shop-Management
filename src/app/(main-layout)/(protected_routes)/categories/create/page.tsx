@@ -138,7 +138,9 @@ export default function CreateCategoryPage() {
                   <FormItem>
                     <FormControl>
                       <div className='flex flex-col gap-4'>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>
+                          <span className='text-red-500'>*</span> Name
+                        </FormLabel>
                         <Input id='name' placeholder='Name' className='col-span-3' {...field} />
                       </div>
                     </FormControl>
@@ -154,7 +156,9 @@ export default function CreateCategoryPage() {
                   <FormItem>
                     <FormControl>
                       <div className='flex flex-col gap-4'>
-                        <FormLabel>Type</FormLabel>
+                        <FormLabel>
+                          <span className='text-red-500'>*</span> Type
+                        </FormLabel>
                         <div className='flex gap-2'>
                           <Input
                             id='type'
@@ -230,7 +234,9 @@ export default function CreateCategoryPage() {
                   <FormItem>
                     <FormControl>
                       <div className='flex flex-col gap-4'>
-                        <FormLabel>Gender</FormLabel>
+                        <FormLabel>
+                          <span className='text-red-500'>*</span> Gender
+                        </FormLabel>
                         <div className='col-span-3'>
                           <ComboBox
                             key='gender'
@@ -255,7 +261,9 @@ export default function CreateCategoryPage() {
                     <Popover>
                       <FormControl>
                         <div className='flex flex-col gap-4'>
-                          <FormLabel>Products list</FormLabel>
+                          <FormLabel>
+                            <span className='text-red-500'>*</span> Products list
+                          </FormLabel>
                           <div>
                             <PopoverTrigger asChild>
                               <Button variant='outline'>Select</Button>
