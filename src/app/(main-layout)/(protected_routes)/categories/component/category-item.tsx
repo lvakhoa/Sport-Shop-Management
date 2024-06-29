@@ -29,7 +29,10 @@ export function CategoryItem({ id, name, type, gender, image, onClick }: ICatego
       <CardHeader className='overflow-hidden p-0'>
         <Image
           className='rounded-lg pb-[16px]'
-          src={image}
+          src={
+            image ||
+            'https://res.cloudinary.com/dbpvh14wj/image/upload/f_auto,q_auto/pzi7bjxajmsgraesmjt2'
+          }
           alt={name}
           layout='responsive'
           width={50}
