@@ -15,6 +15,26 @@ export const PATH_NAME = {
   VERIFICATION_SUCCESS: '/verification-success',
   VERIFICATION_ERROR: '/verification-error',
   VERIFICATION_REQUIRED: '/verification-required',
-  SETTINGS: '/settings',
+  SETTINGS: {
+    BASE: '/settings',
+    PROFILE: '/profile',
+    ROLE_PERMISSION: '/roles-permissions',
+    SHIPPING_SETUP: '/shipping-setup',
+  },
   ORDER_DETAILS: '/order-details',
 }
+
+export const ADMIN_PATH_NAME = [
+  `${PATH_NAME.SETTINGS}${PATH_NAME.SETTINGS.ROLE_PERMISSION}`,
+  `${PATH_NAME.SETTINGS}${PATH_NAME.SETTINGS.SHIPPING_SETUP}`,
+]
+
+export const AUTH_PATH_NAME = [
+  PATH_NAME.LOGIN,
+  PATH_NAME.RESET_PASSWORD,
+  PATH_NAME.FORGOT_PASSWORD,
+  PATH_NAME.VERIFICATION,
+  PATH_NAME.VERIFICATION_SUCCESS,
+  PATH_NAME.VERIFICATION_ERROR,
+  PATH_NAME.VERIFICATION_REQUIRED,
+]

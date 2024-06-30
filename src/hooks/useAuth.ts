@@ -1,10 +1,9 @@
-'use client'
 import { authApi } from '@/apis'
 import { PATH_NAME } from '@/configs'
 import { httpClient } from '@/services'
 import { useAuthStore } from '@/stores'
 import { useMutation } from '@tanstack/react-query'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
@@ -13,6 +12,7 @@ const useAuth = () => {
   const setAccessToken = useAuthStore((state) => state.setAccessToken)
   const refreshToken = useAuthStore((state) => state.refreshToken)
   const setRefreshToken = useAuthStore((state) => state.setRefreshToken)
+  const router = useRouter()
 
   const logIn = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
@@ -25,6 +25,7 @@ const useAuth = () => {
         localStorage.setItem('refresh_token', data.refreshToken)
         setAccessToken(data.accessToken)
         setRefreshToken(data.refreshToken)
+        router.replace(PATH_NAME.HOME)
       }
     },
     onError: (error) => {
@@ -40,6 +41,7 @@ const useAuth = () => {
       setAccessToken('')
       setRefreshToken('')
       httpClient.removeAuthHeader()
+      router.replace(PATH_NAME.LOGIN)
     },
     onError: (error) => {
       toast.error(error.message)

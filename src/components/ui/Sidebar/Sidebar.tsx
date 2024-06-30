@@ -3,10 +3,27 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Item } from './components'
 import { sidebarItems } from '@/configs/sidebarItems'
 import { cn } from '@/lib/utils'
-import { useWindowSize } from '@/hooks'
+import { useBrowser, useWindowSize } from '@/hooks'
 import { usePathname } from 'next/navigation'
 import { PATH_NAME } from '@/configs'
-function Sidebar({
+
+export default function Sidebar({
+  isSidebarVisible,
+  openSidebar,
+}: {
+  isSidebarVisible: boolean
+  openSidebar: Dispatch<SetStateAction<boolean>>
+}) {
+  const { isBrowser } = useBrowser()
+
+  return (
+    !!isBrowser && (
+      <SidebarComponent isSidebarVisible={isSidebarVisible} openSidebar={openSidebar} />
+    )
+  )
+}
+
+function SidebarComponent({
   isSidebarVisible,
   openSidebar,
 }: {
@@ -54,5 +71,3 @@ function Sidebar({
     </div>
   )
 }
-
-export default Sidebar

@@ -96,7 +96,7 @@ export const sidebarItems = [
       {
         icon: <Settings strokeWidth={1.5} />,
         describe: 'Settings',
-        link: `${PATH_NAME.SETTINGS}/profile`,
+        link: PATH_NAME.SETTINGS.BASE + PATH_NAME.SETTINGS.PROFILE,
       },
     ],
   },
