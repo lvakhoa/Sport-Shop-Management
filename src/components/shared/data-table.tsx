@@ -23,14 +23,9 @@ import { cn } from '@/lib/utils'
 import { Dispatch, ReactElement, SetStateAction, useState } from 'react'
 import { motion } from 'framer-motion'
 import { IFilterInput } from '@/interfaces'
-import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
 import { ToggleGroup, ToggleGroupItem } from './toggle-group'
 import { RotateCcw } from 'lucide-react'
-import * as XLSX from 'xlsx'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
-import moment from 'moment'
-import { toast } from 'react-toastify'
+import { utils as xlsxUtils, writeFile as xlsxWriteFile } from 'xlsx'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -50,7 +45,7 @@ interface InputValues {
   [key: string]: string
 }
 
-const exports: string[] = ['XLS', 'PDF']
+const exports: string[] = ['XLS']
 const restoreOptions: string[] = ['7 days', '30 days', 'All']
 
 const exportTrigger = (
@@ -102,37 +97,15 @@ export default function DataTable<TData, TValue>({
   const handleExport = (type: string) => {
     if (type === 'XLS') {
       exportToXLS(data)
-    } else if (type === 'PDF') {
-      exportToPDF(data)
     }
   }
 
   const exportToXLS = (data: any[]) => {
-    const ws = XLSX.utils.json_to_sheet(data)
-    const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, 'Data')
+    const ws = xlsxUtils.json_to_sheet(data)
+    const wb = xlsxUtils.book_new()
+    xlsxUtils.book_append_sheet(wb, ws, 'Data')
     const fileName = 'Exported.xlsx'
-    XLSX.writeFile(wb, fileName)
-  }
-
-  const exportToPDF = async (data: any[]) => {
-    const input = document.getElementById('table-container')
-    if (input) {
-      try {
-        const canvas = await html2canvas(input)
-        const imgData = canvas.toDataURL('image/png')
-        const pdf = new jsPDF()
-        const imgProps = pdf.getImageProperties(imgData)
-        const pdfWidth = pdf.internal.pageSize.getWidth()
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-        pdf.save('Exported.pdf')
-      } catch (error) {
-        toast.error('Error generating PDF')
-      }
-    } else {
-      toast.error('Not found input data')
-    }
+    xlsxWriteFile(wb, fileName)
   }
 
   const addingBtnTitle = title
