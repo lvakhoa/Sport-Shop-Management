@@ -107,4 +107,9 @@ export const queryKeys = {
   permissions: {
     gen: (page?: number) => ['permissions', page],
   },
+  //COLORS
+  allColors: ['all-colors'],
+  colors: {
+    gen: (id?: string) => ['colors', id],
+  },
 }

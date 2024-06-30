@@ -45,6 +45,10 @@ class ProductApi extends BaseApi {
     )
     return data
   }
+
+  async restoreProduct(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const productApi = new ProductApi()

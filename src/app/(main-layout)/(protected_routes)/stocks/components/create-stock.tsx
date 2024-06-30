@@ -1,7 +1,7 @@
 import { colorApi, productApi, stockApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 import {
@@ -29,20 +29,18 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/pop
 import { IStockRequest } from '@/interfaces/stock'
 
 const sizes: string[] = ['S', 'M', 'L', 'XL']
-const stockSchema = z
-  .object({
-    product_id: z.string(),
-    color_id: z.string(),
-    size: z.enum(['S', 'M', 'L', 'XL']),
-    quantity_in_stock: z.number(),
-    file: z
-      .instanceof(File)
-      .refine((file) => file.type.startsWith('image/'), {
-        message: 'Media must be an image file',
-      })
-      .optional(),
-  })
-  .partial()
+const stockSchema = z.object({
+  product_id: z.string({ required_error: 'Product is required' }),
+  color_id: z.string({ required_error: 'Color is required' }),
+  size: z.enum(['S', 'M', 'L', 'XL'], { message: 'Size is required' }),
+  quantity_in_stock: z.string({ required_error: 'Quantity is required' }),
+  file: z
+    .instanceof(File)
+    .refine((file) => file.size < 7000000, {
+      message: 'Your file must be less than 7MB.',
+    })
+    .optional(),
+})
 
 interface IColor {
   id: string
@@ -54,13 +52,8 @@ interface IProduct {
   name: string
 }
 
-export default function EditStockForm({ stockId }: { stockId: string }) {
+export default function CreateStockForm() {
   const queryClient = useQueryClient()
-
-  const { data: stock } = useQuery({
-    queryKey: queryKeys.stockDetails.gen(stockId),
-    queryFn: () => stockApi.getStockById(stockId),
-  })
 
   const { data: productData } = useQuery({
     queryKey: queryKeys.allProducts,
@@ -78,18 +71,15 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
   const [selectedColorId, setSelectedColorId] = useState<string>()
   const [selectedProductId, setSelectedProductId] = useState<string>()
 
-  const { mutate: editStock } = useMutation({
+  const { mutate: createStock } = useMutation({
     mutationFn: (data: IStockRequest) =>
-      stockApi.updateStock(
-        {
-          product_id: data.product_id,
-          color_id: data.color_id,
-          size: data.size,
-          quantity_in_stock: data.quantity_in_stock,
-          file: data.file,
-        },
-        stockId,
-      ),
+      stockApi.createStock({
+        product_id: data.product_id,
+        color_id: data.color_id,
+        size: data.size,
+        quantity_in_stock: data.quantity_in_stock,
+        file: data.file,
+      }),
     onSuccess: () => {
       toast.success('Stock updated successfully')
     },
@@ -100,7 +90,6 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
       await queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === 'all-stocks',
       })
-      await queryClient.invalidateQueries({ queryKey: queryKeys.stockDetails.gen(stockId) })
     },
   })
 
@@ -109,29 +98,22 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
   })
 
   function onSubmit(data: z.infer<typeof stockSchema>) {
-    editStock({
+    createStock({
       product_id: selectedProductId,
       color_id: selectedColorId,
       size: data.size as SIZE,
-      quantity_in_stock: data.quantity_in_stock,
+      quantity_in_stock: parseInt(data.quantity_in_stock),
       file: data.file,
     })
   }
 
-  useEffect(() => {
-    if (!!stock) {
-      form.setValue('product_id', stock.product_id)
-      form.setValue('color_id', stock.color_id)
-      form.setValue('size', stock.size)
-      form.setValue('quantity_in_stock', stock.quantity_in_stock)
-      setSelectedColorId(stock.color_id)
-      setSelectedProductId(stock.product_id)
-    }
-  }, [stock, form])
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-4 py-4'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        encType='multipart/form-data'
+        className='grid gap-4 py-4'
+      >
         <FormField
           control={form.control}
           name='product_id'
@@ -148,11 +130,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
                       }}
                     >
                       <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            products.find((product) => product.id === selectedProductId)?.name
-                          }
-                        />
+                        <SelectValue placeholder='Select Product' />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
@@ -188,9 +166,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
                       }}
                     >
                       <SelectTrigger>
-                        <SelectValue
-                          placeholder={colors.find((color) => color.id === selectedColorId)?.name}
-                        />
+                        <SelectValue placeholder='Select color' />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
@@ -222,7 +198,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
                     <ComboBox
                       key='size'
                       defaultValue={field.value}
-                      placeholder={stock ? stock.size : ''}
+                      placeholder='Size'
                       items={sizes}
                       onValueChange={field.onChange}
                     />
@@ -237,23 +213,17 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
         <FormField
           control={form.control}
           name='file'
-          render={({ field }) => (
+          render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
               <FormControl>
                 <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='media' className='text-left'>
-                    Upload Image
-                  </Label>
+                  <FormLabel>File</FormLabel>
                   <Input
                     id='file'
-                    type='file'
                     className='col-span-3'
-                    onChange={(e) => {
-                      const files = e.target.files
-                      if (files && files[0]) {
-                        field.onChange(files[0])
-                      }
-                    }}
+                    type='file'
+                    {...fieldProps}
+                    onChange={(event) => onChange(event.target.files && event.target.files[0])}
                   />
                 </div>
               </FormControl>
@@ -269,8 +239,8 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
             <FormItem>
               <FormControl>
                 <div className='grid grid-cols-4 items-center gap-4'>
-                  <FormLabel>Content</FormLabel>
-                  <Input id='quantity' className='col-span-3' {...field} />
+                  <FormLabel>Quantity</FormLabel>
+                  <Input type='number' id='quantity' className='col-span-3' {...field} />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />
@@ -282,7 +252,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
           type='submit'
           className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
         >
-          Edit Stock
+          Create Stock
         </Button>
       </form>
     </Form>

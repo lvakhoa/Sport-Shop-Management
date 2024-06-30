@@ -45,6 +45,10 @@ class EventApi extends BaseApi {
   async deleteAllEvents() {
     return super.deleteAll()
   }
+
+  async restoreEvent(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const eventApi = new EventApi()

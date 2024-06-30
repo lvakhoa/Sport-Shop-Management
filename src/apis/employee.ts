@@ -29,6 +29,10 @@ class EmployeeApi extends BaseApi {
   async deleteAllEmployees() {
     return super.deleteAll()
   }
+
+  async restoreEmployee(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const employeeApi = new EmployeeApi()

@@ -29,6 +29,10 @@ class CustomerApi extends BaseApi {
   async deleteAllCustomers() {
     return super.deleteAll()
   }
+
+  async restoreCustomer(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const customerApi = new CustomerApi()

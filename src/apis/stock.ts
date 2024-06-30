@@ -47,6 +47,10 @@ class StockApi extends BaseApi {
   async deleteAllStock() {
     return super.deleteAll()
   }
+
+  async restoreStock(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const stockApi = new StockApi()

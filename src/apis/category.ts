@@ -37,6 +37,10 @@ class CategoryApi extends BaseApi {
   async deleteAllCategories() {
     return super.deleteAll()
   }
+
+  async restoreCategory(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const categoryApi = new CategoryApi()
