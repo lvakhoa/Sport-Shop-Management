@@ -12,15 +12,18 @@ interface IDropdownButton {
   trigger: ReactElement
   items: string[]
   className?: string
+  onSelect?: (item: string) => void
 }
 
-function Dropdown({ trigger, items, className }: IDropdownButton) {
+function Dropdown({ trigger, items, className, onSelect }: IDropdownButton) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={className}>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         {items.map((item, index) => (
-          <DropdownMenuItem key={item}>{item}</DropdownMenuItem>
+          <DropdownMenuItem key={item} onClick={() => onSelect?.(item)}>
+            {item}
+          </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

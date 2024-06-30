@@ -23,9 +23,9 @@ import { cn } from '@/lib/utils'
 import { Dispatch, ReactElement, SetStateAction, useState } from 'react'
 import { motion } from 'framer-motion'
 import { IFilterInput } from '@/interfaces'
-import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
 import { ToggleGroup, ToggleGroupItem } from './toggle-group'
 import { RotateCcw } from 'lucide-react'
+import { utils as xlsxUtils, writeFile as xlsxWriteFile } from 'xlsx'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -45,7 +45,7 @@ interface InputValues {
   [key: string]: string
 }
 
-const exports: string[] = ['XSL', 'Print']
+const exports: string[] = ['XLS']
 const restoreOptions: string[] = ['7 days', '30 days', 'All']
 
 const exportTrigger = (
@@ -92,6 +92,20 @@ export default function DataTable<TData, TValue>({
 
   const handleOpenFilter = () => {
     setIsOpened(!isOpened)
+  }
+
+  const handleExport = (type: string) => {
+    if (type === 'XLS') {
+      exportToXLS(data)
+    }
+  }
+
+  const exportToXLS = (data: any[]) => {
+    const ws = xlsxUtils.json_to_sheet(data)
+    const wb = xlsxUtils.book_new()
+    xlsxUtils.book_append_sheet(wb, ws, 'Data')
+    const fileName = 'Exported.xlsx'
+    xlsxWriteFile(wb, fileName)
   }
 
   const addingBtnTitle = title
@@ -151,6 +165,7 @@ export default function DataTable<TData, TValue>({
                 className='rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'
                 trigger={exportTrigger}
                 items={exports}
+                onSelect={handleExport}
               />
 
               {showAddButton && (
@@ -214,7 +229,7 @@ export default function DataTable<TData, TValue>({
           </motion.div>
         </div>
 
-        <Table>
+        <Table id='table-container'>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
