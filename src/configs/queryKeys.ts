@@ -34,6 +34,14 @@ export const queryKeys = {
   categories: {
     gen: (page: number) => ['categories', page],
   },
+  // EVENT
+  allEvents: ['all-events'],
+  events: {
+    gen: (page?: number) => ['events', page],
+  },
+  eventDetails: {
+    gen: (id: string) => ['eventDetails', id],
+  },
   // EMPLOYEE
   positions: ['positions'],
   employeeAccount: ['employee-account'],
