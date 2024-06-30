@@ -6,7 +6,6 @@ export const PATH_NAME = {
   EVENT: '/events',
   VOUCHER: '/vouchers',
   PRODUCT: '/products',
-  EVENT: '/events',
   POS: '/pos',
   STOCK: '/stocks',
   LOGIN: '/log-in',
