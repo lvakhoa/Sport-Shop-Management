@@ -13,7 +13,7 @@ export interface IStockResponse {
   product_id: string
   color_id?: string
   media_id?: string
-  size?: SIZE
+  size: SIZE
   quantity_in_stock: number
   product: {
     name: string
@@ -23,9 +23,10 @@ export interface IStockResponse {
   media?: {
     url: string
   }
-  color?: {
+  color: {
     name: string
   }
+  total: number
 }
 
 export interface IBestSellerStock {

@@ -29,6 +29,10 @@ class VoucherApi extends BaseApi {
   async deleteAllVouchers() {
     return super.deleteAll()
   }
+
+  async restoreVoucher(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const voucherApi = new VoucherApi()
