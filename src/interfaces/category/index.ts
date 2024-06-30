@@ -21,7 +21,7 @@ export interface ICategoryResponse {
 export interface ICategoryRequest {
   name?: string
   type?: string
-  gender?: GENDER
+  gender?: 'MALE' | 'FEMALE'
   description?: string
   product_list?: {
     product_id: string

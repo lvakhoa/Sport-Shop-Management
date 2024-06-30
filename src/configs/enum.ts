@@ -1,6 +1,6 @@
 export enum GENDER {
-  MALE = 'Male',
-  FEMALE = 'Female',
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
 }
 
 export enum RANK {

@@ -106,7 +106,7 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
       form.setValue('fullname', customerData.fullname)
       form.setValue('email', customerData.email)
       form.setValue('phone', customerData.phone)
-      form.setValue('gender', customerData.gender === 'Male' ? 'MALE' : 'FEMALE')
+      form.setValue('gender', customerData.gender === GENDER.MALE ? 'MALE' : 'FEMALE')
       form.setValue('rank', customerData.rank)
       form.setValue('loyalty_point', customerData.loyalty_point)
     }

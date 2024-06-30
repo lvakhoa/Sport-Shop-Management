@@ -28,6 +28,9 @@ export const queryKeys = {
   },
   // CATEGORY
   allCategories: ['all-categories'],
+  categoryDetails: {
+    gen: (id: string) => ['categoryDetails', id],
+  },
   categories: {
     gen: (page: number) => ['categories', page],
   },
