@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/shared/alert-dialog'
+import { MouseEvent, SyntheticEvent } from 'react'
 
 interface IAlertPopup {
   title: string
@@ -18,6 +19,11 @@ interface IAlertPopup {
 }
 
 export default function AlertPopup({ title, description, children, action }: IAlertPopup) {
+  const actionHandler = (e: SyntheticEvent) => {
+    e.stopPropagation()
+    action()
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -27,9 +33,9 @@ export default function AlertPopup({ title, description, children, action }: IAl
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={(event) => event.stopPropagation()}>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={action}
+            onClick={actionHandler}
             className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
           >
             Continue

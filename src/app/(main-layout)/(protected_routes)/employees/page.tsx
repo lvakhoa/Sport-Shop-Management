@@ -51,6 +51,13 @@ export default function EmployeesManagementPage() {
           filterInput={employeeFilterInput}
           pageCount={data.length > 0 ? data[0].total / pagination.pageSize : 0}
           showRestoreButton={true}
+          restore7daysFn={() =>
+            employeeApi.restoreEmployee(moment().subtract(7, 'days').utc().unix().valueOf())
+          }
+          restore30daysFn={() =>
+            employeeApi.restoreEmployee(moment().subtract(30, 'days').utc().unix().valueOf())
+          }
+          restoreAllFn={() => employeeApi.restoreEmployee()}
         />
       )}
     </div>

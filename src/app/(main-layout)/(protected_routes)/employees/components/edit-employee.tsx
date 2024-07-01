@@ -28,9 +28,7 @@ const employeeSchema = z
     position_id: z.string().nullable(),
     fullname: z.string(),
     phone: z.string(),
-    email: z.string().email({
-      message: 'Please enter a valid email address',
-    }),
+    email: z.string().email().optional(),
     gender: z.enum(['MALE', 'FEMALE']),
     started_date: z.string().datetime(),
     salary: z.string(),
@@ -54,14 +52,6 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
 
   const form = useForm<z.infer<typeof employeeSchema>>({
     resolver: zodResolver(employeeSchema),
-    defaultValues: {
-      account_id: undefined,
-      fullname: '',
-      phone: '',
-      email: '',
-      started_date: moment().toISOString(),
-      salary: '1000',
-    },
   })
 
   const { mutate: editEmployee } = useMutation({
@@ -103,20 +93,13 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
       email: data.email,
       phone: data.phone,
       gender: data.gender,
-      salary: !!data.salary ? parseInt(data.salary) : undefined,
+      salary: parseInt(data.salary || '0'),
       started_date: data.started_date,
     })
   }
 
   useEffect(() => {
     if (!!employee) {
-      form.setValue('account_id', employee.account_id)
-      form.setValue('position_id', employee.position_id)
-      form.setValue('fullname', employee.fullname)
-      form.setValue('email', employee.email)
-      form.setValue('phone', employee.phone)
-      form.setValue('gender', employee.gender === GENDER.MALE ? 'MALE' : 'FEMALE')
-      form.setValue('started_date', moment(employee.started_date).toISOString())
       form.setValue('salary', employee.salary)
     }
   }, [employee, form])
@@ -134,7 +117,12 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                   <Label htmlFor='fullname' className='text-left'>
                     Name
                   </Label>
-                  <Input id='fullname' className='col-span-3' {...field} />
+                  <Input
+                    id='fullname'
+                    placeholder={employee?.fullname}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -152,7 +140,12 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                   <Label htmlFor='phone' className='text-left'>
                     Phone
                   </Label>
-                  <Input id='phone' className='col-span-3' {...field} />
+                  <Input
+                    id='phone'
+                    placeholder={employee?.phone}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -170,7 +163,12 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                   <Label htmlFor='email' className='text-left'>
                     Email
                   </Label>
-                  <Input id='email' className='col-span-3' {...field} />
+                  <Input
+                    id='email'
+                    placeholder={employee?.email}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -192,7 +190,7 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                     <ComboBox
                       key='gender'
                       defaultValue={field.value}
-                      placeholder='Gender'
+                      placeholder={employee?.gender as string}
                       items={gender}
                       onValueChange={field.onChange}
                     />
@@ -241,7 +239,13 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                   <Label htmlFor='salary' className='text-left'>
                     Salary
                   </Label>
-                  <Input type='number' id='salary' className='col-span-3' {...field} />
+                  <Input
+                    type='number'
+                    placeholder={employee?.salary}
+                    id='salary'
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />

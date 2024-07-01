@@ -64,6 +64,14 @@ export default function EventsManagementPage() {
           filterInput={eventFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
+          showRestoreButton={true}
+          restore7daysFn={() =>
+            eventApi.restoreEvent(moment().subtract(7, 'days').utc().unix().valueOf())
+          }
+          restore30daysFn={() =>
+            eventApi.restoreEvent(moment().subtract(30, 'days').utc().unix().valueOf())
+          }
+          restoreAllFn={() => eventApi.restoreEvent()}
         />
       )}
     </div>
