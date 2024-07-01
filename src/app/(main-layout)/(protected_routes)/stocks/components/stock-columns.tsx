@@ -11,7 +11,7 @@ import EditStockForm from './edit-stock'
 export interface IStock {
   id: string
   product_name: string
-  size: SIZE
+  size?: SIZE
   color: string
   quantity_in_stock: number
   total: number

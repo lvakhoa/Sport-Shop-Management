@@ -61,7 +61,7 @@ export interface IOrderResponse {
         id: string
         event_id: string
         name: string
-        description: string
+        description?: string
         status: boolean
         list_price: string
         selling_price: string
@@ -95,4 +95,28 @@ export interface IOrderResponse {
     }
   }
   total: number
+}
+
+export interface IOrderStockResponse {
+  id: string
+  product_id: string
+  color_id?: string
+  media_id?: string
+  size?: SIZE
+  quantity_in_stock: number
+  product: {
+    id: string
+    event_id: string
+    name: string
+    description?: string
+    status: boolean
+    list_price: string
+    selling_price: string
+  }
+  media?: {
+    url: string
+  }
+  color?: {
+    name: string
+  }
 }

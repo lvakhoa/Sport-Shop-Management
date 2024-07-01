@@ -1,7 +1,7 @@
 import { customerApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { currencyFormatter } from '@/helpers'
-import { IOrderResponse } from '@/interfaces/order'
+import { IOrderResponse, IOrderStockResponse } from '@/interfaces/order'
 import { IStockResponse } from '@/interfaces/stock'
 import { useQueries, useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
@@ -118,7 +118,7 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
   )
 }
 
-function Item({ stock, quantity }: { stock: IStockResponse; quantity: number }) {
+function Item({ stock, quantity }: { stock: IOrderStockResponse; quantity: number }) {
   return (
     <div className='flex h-[100px] w-full flex-row items-center space-x-[20px] rounded-[5px] border border-[#E6E7EA] px-[15px] py-[10px]'>
       <div className='relative size-[70px] items-center justify-center rounded-[5px] border border-[#E6E7EA]'>

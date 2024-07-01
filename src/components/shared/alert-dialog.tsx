@@ -19,6 +19,7 @@ const AlertDialogTrigger = React.forwardRef<
     ref={ref}
   />
 ))
+AlertDialogTrigger.displayName = AlertDialogPrimitive.Trigger.displayName
 
 const AlertDialogPortal = AlertDialogPrimitive.Portal
 

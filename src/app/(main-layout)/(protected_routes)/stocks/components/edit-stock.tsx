@@ -222,7 +222,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
                     <ComboBox
                       key='size'
                       defaultValue={field.value}
-                      placeholder={stock ? stock.size : ''}
+                      placeholder={!!stock?.size ? stock.size : ''}
                       items={sizes}
                       onValueChange={field.onChange}
                     />
