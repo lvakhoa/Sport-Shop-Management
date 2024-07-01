@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { PATH_NAME, queryKeys } from '@/configs'
 import { categoryApi } from '@/apis'
@@ -12,12 +12,13 @@ import { useRouter } from 'next/navigation'
 import { CirclePlus, RotateCcw } from 'lucide-react'
 import { RestorePopup } from '@/components/shared'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
+import { Id, toast } from 'react-toastify'
 import moment from 'moment'
 
 const gender: string[] = ['MALE', 'FEMALE']
 
 export default function CategoriesPage() {
+  const toastId = useRef<Id | undefined>()
   const router = useRouter()
   const { isPending, data: categoriesData } = useQuery({
     queryKey: queryKeys.allCategories,
@@ -80,6 +81,14 @@ export default function CategoriesPage() {
     setTypeList(newtypeList)
     setCurrentType(newtypeList[0])
   }, [categoriesData])
+
+  useEffect(() => {
+    if (isPending) toastId.current = toast.loading('Loading...')
+
+    return () => {
+      toast.dismiss(toastId.current)
+    }
+  }, [isPending])
 
   const [currentType, setCurrentType] = useState<string>(typeList[0])
 

@@ -4,10 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import { toast } from 'react-toastify'
+import { Id, toast } from 'react-toastify'
 import { categoryApi } from '@/apis'
 import { AlertPopup } from '@/components/shared'
-import { SyntheticEvent } from 'react'
+import { SyntheticEvent, useRef, useEffect } from 'react'
 
 export interface ICategoryItem {
   id: string
@@ -19,9 +19,10 @@ export interface ICategoryItem {
 }
 
 export function CategoryItem({ id, name, type, gender, image, onClick }: ICategoryItem) {
+  const toastId = useRef<Id | undefined>()
   const queryClient = useQueryClient()
 
-  const { mutate: deleteCategory } = useMutation({
+  const { mutate: deleteCategory, isPending } = useMutation({
     mutationFn: () => categoryApi.deleteCategoryById(id),
     onSuccess: () => {
       toast.success('Category deleted successfully')
@@ -35,6 +36,14 @@ export function CategoryItem({ id, name, type, gender, image, onClick }: ICatego
       })
     },
   })
+
+  useEffect(() => {
+    if (isPending) toastId.current = toast.loading('Loading...')
+
+    return () => {
+      toast.dismiss(toastId.current)
+    }
+  }, [isPending])
 
   return (
     <Card
