@@ -25,6 +25,18 @@ import { motion } from 'framer-motion'
 import { IFilterInput } from '@/interfaces'
 import { ToggleGroup, ToggleGroupItem } from './toggle-group'
 import { RotateCcw } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './dialog'
+import RestorePopup from './RestorePopup'
+import { useMutation, useQueryClient, UseMutateFunction } from '@tanstack/react-query'
+import { queryKeys } from '@/configs'
+import { toast } from 'react-toastify'
 import { utils as xlsxUtils, writeFile as xlsxWriteFile } from 'xlsx'
 
 interface DataTableProps<TData, TValue> {
@@ -39,6 +51,9 @@ interface DataTableProps<TData, TValue> {
   pageCount?: number
   showAddButton?: boolean
   showRestoreButton?: boolean
+  restore7daysFn?: () => Promise<string | undefined>
+  restore30daysFn?: () => Promise<string | undefined>
+  restoreAllFn?: () => Promise<string | undefined>
 }
 
 interface InputValues {
@@ -56,14 +71,6 @@ const exportTrigger = (
   </div>
 )
 
-const restoreTrigger = (
-  <div className='flex gap-[5px]'>
-    <RotateCcw size={20} className='stroke-secondary' />
-    <span className='text-[15px] text-secondary max-[666px]:hidden'>Restore</span>
-    <Image src='/icons/down_arrow.svg' alt='' width={20} height={20} />
-  </div>
-)
-
 export default function DataTable<TData, TValue>({
   columns,
   data,
@@ -75,6 +82,9 @@ export default function DataTable<TData, TValue>({
   pageCount = 0,
   showAddButton = true,
   showRestoreButton = false,
+  restore7daysFn,
+  restore30daysFn,
+  restoreAllFn,
 }: DataTableProps<TData, TValue>) {
   const [isOpened, setIsOpened] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([])
@@ -129,6 +139,53 @@ export default function DataTable<TData, TValue>({
     },
   })
 
+  const queryClient = useQueryClient()
+
+  const { mutate: restore7daysData } = useMutation({
+    mutationFn: restore7daysFn,
+    onSuccess: () => {
+      toast.success('Data restored successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === title.toLowerCase(),
+      })
+    },
+  })
+
+  const { mutate: restore30daysData } = useMutation({
+    mutationFn: restore30daysFn,
+    onSuccess: () => {
+      toast.success('Data restored successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === title.toLowerCase(),
+      })
+    },
+  })
+
+  const { mutate: restoreAllData } = useMutation({
+    mutationFn: restoreAllFn,
+    onSuccess: () => {
+      toast.success('Data restored successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === title.toLowerCase(),
+      })
+    },
+  })
+
   return (
     <div>
       <div className='rounded-md border'>
@@ -144,12 +201,19 @@ export default function DataTable<TData, TValue>({
               <span className='text-2xl font-semibold'>{title}</span>
             </div>
             <div className='flex gap-[15px]'>
-              {showRestoreButton && (
-                <Dropdown
-                  className='rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'
-                  trigger={restoreTrigger}
-                  items={restoreOptions}
-                />
+              {showRestoreButton && !!restore7daysFn && !!restore30daysFn && !!restoreAllFn && (
+                <RestorePopup
+                  title='Restore'
+                  description='Select the duration to restore'
+                  option1={restore7daysData}
+                  option2={restore30daysData}
+                  option3={restoreAllData}
+                >
+                  <Button className='bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'>
+                    <RotateCcw size={20} className='stroke-secondary' />
+                    <span className='text-[15px] text-secondary max-[666px]:hidden'>Restore</span>
+                  </Button>
+                </RestorePopup>
               )}
               <Button
                 onClick={handleOpenFilter}

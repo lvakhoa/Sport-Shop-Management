@@ -1,3 +1,4 @@
+import { all } from 'axios'
 import { ORDER_STATUS } from './enum'
 
 export const queryKeys = {
@@ -95,8 +96,17 @@ export const queryKeys = {
     gen: (page?: number) => ['shipping-price', page],
   },
   //STOCKS
+  allStocks: ['all-stocks'],
   stocks: {
-    gen: (page?: number) => ['stocks', page],
+    gen: (count?: number, page?: number, product_id?: string) => [
+      'stocks',
+      count,
+      page,
+      product_id,
+    ],
+  },
+  stockDetails: {
+    gen: (id: string) => ['stockDetails', id],
   },
   //ROLES
   roles: ['roles'],
@@ -106,5 +116,10 @@ export const queryKeys = {
   //PERMISSIONS
   permissions: {
     gen: (page?: number) => ['permissions', page],
+  },
+  //COLORS
+  allColors: ['all-colors'],
+  colors: {
+    gen: (id?: string) => ['colors', id],
   },
 }

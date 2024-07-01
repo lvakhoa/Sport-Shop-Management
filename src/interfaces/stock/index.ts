@@ -23,9 +23,10 @@ export interface IStockResponse {
   media?: {
     url: string
   }
-  color?: {
+  color: {
     name: string
   }
+  total: number
 }
 
 export interface IBestSellerStock {

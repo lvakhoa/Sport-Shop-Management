@@ -8,7 +8,18 @@ import { buttonVariants } from '@/components/shared/button'
 
 const AlertDialog = AlertDialogPrimitive.Root
 
-const AlertDialogTrigger = AlertDialogPrimitive.Trigger
+const AlertDialogTrigger = React.forwardRef<
+  React.ElementRef<typeof AlertDialogPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <AlertDialogPrimitive.Trigger
+    onClick={(event) => event.stopPropagation()}
+    className={cn(className)}
+    {...props}
+    ref={ref}
+  />
+))
+AlertDialogTrigger.displayName = AlertDialogPrimitive.Trigger.displayName
 
 const AlertDialogPortal = AlertDialogPrimitive.Portal
 

@@ -11,6 +11,7 @@ import { productApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
 import { currencyFormatter } from '@/helpers'
+import moment from 'moment'
 
 const productFilterInput: IFilterInput[] = [
   {
@@ -83,6 +84,14 @@ export default function ProductsManagementPage() {
           filterInput={productFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
+          showRestoreButton={true}
+          restore7daysFn={() =>
+            productApi.restoreProduct(moment().subtract(7, 'days').utc().unix().valueOf())
+          }
+          restore30daysFn={() =>
+            productApi.restoreProduct(moment().subtract(30, 'days').utc().unix().valueOf())
+          }
+          restoreAllFn={() => productApi.restoreProduct()}
         />
       )}
     </div>

@@ -28,10 +28,10 @@ const customerSchema = z
     account_id: z.string().nullable(),
     fullname: z.string(),
     phone: z.string(),
-    email: z.string().email(),
+    email: z.string().email().optional(),
     gender: z.enum(['MALE', 'FEMALE']),
     rank: z.enum([RANK.COPPER, RANK.SILVER, RANK.GOLD]),
-    loyalty_point: z.number(),
+    loyalty_point: z.string(),
   })
   .partial()
 
@@ -48,14 +48,6 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
 
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),
-    defaultValues: {
-      fullname: '',
-      phone: '',
-      email: '',
-      gender: 'MALE',
-      rank: RANK.COPPER,
-      loyalty_point: 0,
-    },
   })
 
   const { mutate: editCustomer } = useMutation({
@@ -96,21 +88,9 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
       phone: data.phone,
       gender: data.gender,
       rank: data.rank,
-      loyalty_point: data.loyalty_point,
+      loyalty_point: parseInt(data.loyalty_point || '0'),
     })
   }
-
-  useEffect(() => {
-    if (!!customerData) {
-      form.setValue('account_id', customerData.account_id)
-      form.setValue('fullname', customerData.fullname)
-      form.setValue('email', customerData.email)
-      form.setValue('phone', customerData.phone)
-      form.setValue('gender', customerData.gender === GENDER.MALE ? 'MALE' : 'FEMALE')
-      form.setValue('rank', customerData.rank)
-      form.setValue('loyalty_point', customerData.loyalty_point)
-    }
-  }, [customerData, form])
 
   return (
     <Form {...form}>
@@ -125,7 +105,12 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
                   <Label htmlFor='fullname' className='text-left'>
                     Name
                   </Label>
-                  <Input id='fullname' className='col-span-3' {...field} />
+                  <Input
+                    id='fullname'
+                    placeholder={customerData?.fullname}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -143,7 +128,12 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
                   <Label htmlFor='phone' className='text-left'>
                     Phone
                   </Label>
-                  <Input id='phone' className='col-span-3' {...field} />
+                  <Input
+                    id='phone'
+                    placeholder={customerData?.phone}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -161,7 +151,12 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
                   <Label htmlFor='email' className='text-left'>
                     Email
                   </Label>
-                  <Input id='email' className='col-span-3' {...field} />
+                  <Input
+                    id='email'
+                    placeholder={customerData?.email}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -182,7 +177,7 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
                   <div className='col-span-3'>
                     <ComboBox
                       key='gender'
-                      placeholder='Gender'
+                      placeholder={customerData?.gender as string}
                       items={gender}
                       onValueChange={field.onChange}
                     />
@@ -247,7 +242,7 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
                   <div className='col-span-3'>
                     <ComboBox
                       key='rank'
-                      placeholder='Rank'
+                      placeholder={customerData?.rank as string}
                       items={rank}
                       onValueChange={field.onChange}
                     />
@@ -259,6 +254,28 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
           )}
         />
 
+        <FormField
+          control={form.control}
+          name='loyalty_point'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className='grid grid-cols-4 items-center gap-4'>
+                  <Label htmlFor='loyalty_point' className='text-left'>
+                    Loyalty Point
+                  </Label>
+                  <Input
+                    id='loyalty_point'
+                    placeholder={customerData?.loyalty_point.toString()}
+                    className='col-span-3'
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage className='text-[14px] font-normal' />
+            </FormItem>
+          )}
+        />
         <Button
           type='submit'
           className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'

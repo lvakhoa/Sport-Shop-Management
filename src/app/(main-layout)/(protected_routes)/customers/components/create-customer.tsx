@@ -29,7 +29,7 @@ const customerSchema = z
     email: z.string().email(),
     gender: z.enum(['MALE', 'FEMALE']),
     rank: z.enum([RANK.COPPER, RANK.SILVER, RANK.GOLD]),
-    loyalty_point: z.number(),
+    loyalty_point: z.string(),
   })
   .partial()
 
@@ -48,7 +48,7 @@ export default function CreateCustomerForm() {
       email: '',
       gender: 'MALE',
       rank: RANK.COPPER,
-      loyalty_point: 0,
+      loyalty_point: '0',
     },
   })
 
@@ -82,7 +82,7 @@ export default function CreateCustomerForm() {
       email: data.email,
       gender: data.gender,
       rank: data.rank,
-      loyalty_point: data.loyalty_point,
+      loyalty_point: parseInt(data.loyalty_point || '0'),
     })
   }
 
@@ -223,6 +223,24 @@ export default function CreateCustomerForm() {
                       onValueChange={field.onChange}
                     />
                   </div>
+                </div>
+              </FormControl>
+              <FormMessage className='text-[14px] font-normal' />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='loyalty_point'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className='grid grid-cols-4 items-center gap-4'>
+                  <Label htmlFor='loyalty_point' className='text-left'>
+                    Loyalty Point
+                  </Label>
+                  <Input id='loyalty_point' className='col-span-3' {...field} />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />

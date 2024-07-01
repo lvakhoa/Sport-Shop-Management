@@ -29,6 +29,10 @@ class NotificationApi extends BaseApi {
   async deleteAllNotifications() {
     return super.deleteAll()
   }
+
+  async restoreNotification(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const notificationApi = new NotificationApi()

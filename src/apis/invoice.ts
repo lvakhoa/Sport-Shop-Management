@@ -29,6 +29,10 @@ class InvoiceApi extends BaseApi {
   async deleteAllEvent() {
     return super.deleteAll()
   }
+
+  async restoreInvoice(fromDate?: number) {
+    return super.restoreByDate(fromDate)
+  }
 }
 
 const invoiceApi = new InvoiceApi()

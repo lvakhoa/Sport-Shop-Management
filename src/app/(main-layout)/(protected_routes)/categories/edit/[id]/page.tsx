@@ -113,21 +113,6 @@ export default function EditCategoryPage() {
     }
   }, [isLoading])
 
-  const { mutate: deleteCategory } = useMutation({
-    mutationFn: () => categoryApi.deleteCategoryById(categoryId),
-    onSuccess: () => {
-      toast.success('Category deleted successfully')
-      router.push(PATH_NAME.CATEGORY)
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === 'all-categories',
-      })
-    },
-  })
   function onSubmit(data: z.infer<typeof formSchema>) {
     editCategory({
       name: data.name,
@@ -354,20 +339,12 @@ export default function EditCategoryPage() {
                 )}
               ></FormField>
             </div>
-            <div className='flex items-center gap-4'>
-              <Button
-                type='submit'
-                className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
-              >
-                Edit Category
-              </Button>
-              <AlertPopup title='Delete?' description='Are you sure?' action={deleteCategory}>
-                <Button variant='destructive' className='my-6 items-center gap-[5px]'>
-                  <Trash2 width={20} height={20} />
-                  <span className='text-[15px]'>Delete Category</span>
-                </Button>
-              </AlertPopup>
-            </div>
+            <Button
+              type='submit'
+              className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
+            >
+              Edit Category
+            </Button>
           </form>
         </Form>
       </div>

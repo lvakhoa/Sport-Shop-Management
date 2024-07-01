@@ -1,4 +1,4 @@
-import { IAddressRequest, IAddressResponse } from '@/interfaces/address'
+import { IAddressResponse } from '@/interfaces/address'
 import BaseApi from './base'
 import { handleResponse } from '@/helpers'
 import { httpClient } from '@/services'
@@ -25,12 +25,8 @@ class AddressApi extends BaseApi {
     return data
   }
 
-  async restoreAddress(date: number) {
-    return super.restoreByDate(date)
-  }
-
-  async restoreAllAddress() {
-    return super.restoreAll()
+  async restoreAddress(fromDate?: number) {
+    return super.restoreByDate(fromDate)
   }
 }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { PATH_NAME, queryKeys } from '@/configs'
 import { categoryApi } from '@/apis'
@@ -9,15 +9,69 @@ import { cn } from '@/lib/utils'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shared/tabs'
 import { CategoryItem, ICategoryItem } from './component/category-item'
 import { useRouter } from 'next/navigation'
-import { CirclePlus } from 'lucide-react'
+import { CirclePlus, RotateCcw } from 'lucide-react'
+import { RestorePopup } from '@/components/shared'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Id, toast } from 'react-toastify'
+import moment from 'moment'
 
 const gender: string[] = ['MALE', 'FEMALE']
 
 export default function CategoriesPage() {
+  const toastId = useRef<Id | undefined>()
   const router = useRouter()
   const { isPending, data: categoriesData } = useQuery({
     queryKey: queryKeys.allCategories,
     queryFn: () => categoryApi.getAllCategories(),
+  })
+
+  const queryClient = useQueryClient()
+
+  const { mutate: restore7daysData } = useMutation({
+    mutationFn: () =>
+      categoryApi.restoreCategory(moment().subtract(7, 'days').utc().unix().valueOf()),
+    onSuccess: () => {
+      toast.success('Data restored successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === 'all-categories',
+      })
+    },
+  })
+
+  const { mutate: restore30daysData } = useMutation({
+    mutationFn: () =>
+      categoryApi.restoreCategory(moment().subtract(30, 'days').utc().unix().valueOf()),
+    onSuccess: () => {
+      toast.success('Data restored successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === 'all-categories',
+      })
+    },
+  })
+
+  const { mutate: restoreAllData } = useMutation({
+    mutationFn: () => categoryApi.restoreCategory(),
+    onSuccess: () => {
+      toast.success('Data restored successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === 'all-categories',
+      })
+    },
   })
 
   const [typeList, setTypeList] = useState<string[]>([])
@@ -27,6 +81,14 @@ export default function CategoriesPage() {
     setTypeList(newtypeList)
     setCurrentType(newtypeList[0])
   }, [categoriesData])
+
+  useEffect(() => {
+    if (isPending) toastId.current = toast.loading('Loading...')
+
+    return () => {
+      toast.dismiss(toastId.current)
+    }
+  }, [isPending])
 
   const [currentType, setCurrentType] = useState<string>(typeList[0])
 
@@ -99,6 +161,7 @@ export default function CategoriesPage() {
                     type={category.type}
                     gender={category.gender}
                     image={category.image}
+                    onClick={() => router.push(`${PATH_NAME.CATEGORY}/edit/${category.id}`)}
                   />
                 ))}
             </TabsContent>
@@ -107,13 +170,27 @@ export default function CategoriesPage() {
       )}
 
       {!isPending && (
-        <Button
-          onClick={() => router.push(`${PATH_NAME.CATEGORY}/create`)}
-          className='top-[calc(var(--header-height) + 20px)] fixed right-[20px] rounded-full bg-blue-500 px-4 py-2 font-bold text-white-100 hover:bg-blue-700'
-        >
-          <CirclePlus size={24} className='mr-2' />
-          New Category
-        </Button>
+        <div className='top-[calc(var(--header-height) + 20px)] fixed right-[20px] flex gap-4'>
+          <RestorePopup
+            title='Restore'
+            description='Select the duration to restore'
+            option1={restore7daysData}
+            option2={restore30daysData}
+            option3={restoreAllData}
+          >
+            <Button className='rounded-full bg-blue-500 px-4 py-2 font-normal text-white-100 hover:bg-blue-700'>
+              <RotateCcw size={24} className='mr-2' />
+              Restore
+            </Button>
+          </RestorePopup>
+          <Button
+            onClick={() => router.push(`${PATH_NAME.CATEGORY}/create`)}
+            className=' rounded-full bg-blue-500 px-4 py-2 font-normal text-white-100 hover:bg-blue-700'
+          >
+            <CirclePlus size={24} className='mr-2' />
+            New Category
+          </Button>
+        </div>
       )}
     </div>
   )

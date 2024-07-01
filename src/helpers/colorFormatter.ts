@@ -13,7 +13,7 @@ export const colorFormatter = (colorName: string) => {
       return '#31363F'
 
     case 'white':
-      return '#FFFFFF'
+      return '#F9F9F9'
 
     case 'yellow':
       return '#FFDB5C'

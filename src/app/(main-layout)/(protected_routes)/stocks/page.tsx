@@ -1,52 +1,62 @@
 'use client'
 
 import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
-import { columns, CreateEventForm, IEvent } from './components'
+import { columns, IStock } from './components'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
-import { eventApi, productApi } from '@/apis'
+import { stockApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
 import { currencyFormatter } from '@/helpers'
 import moment from 'moment'
+import CreateStockForm from './components/create-stock'
 
-const eventFilterInput: IFilterInput[] = [
+const stockFilterInput: IFilterInput[] = [
   {
-    key: 'title',
-    title: 'Title',
+    key: 'product_name',
+    title: 'Name',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
   {
-    key: 'sale_percent',
-    title: 'Sale Percent',
+    key: 'size',
+    title: 'Size',
+    type: FILTER_INPUT_TYPE.DROPDOWN,
+  },
+  {
+    key: 'color',
+    title: 'Color',
+    type: FILTER_INPUT_TYPE.DROPDOWN,
+  },
+  {
+    key: 'quantity_in_stock',
+    title: 'Quantity',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
 ]
 
-export default function EventsManagementPage() {
+export default function StockManagementPage() {
   const { isBrowser } = useBrowser()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
   const { isPending, data: queryData } = useQuery({
-    queryKey: queryKeys.events.gen(pagination.pageIndex),
-    queryFn: () => eventApi.getAllEvents(pagination.pageSize, pagination.pageIndex + 1),
+    queryKey: queryKeys.stocks.gen(pagination.pageIndex),
+    queryFn: () => stockApi.getAllStock(pagination.pageSize, pagination.pageIndex + 1),
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IEvent[] =
+  const data: IStock[] =
     queryData?.map((item) => {
       return {
         id: item.id,
-        title: item.title,
-        content: item.content,
-        sale_percent: item.sale_percent.toString(),
-        start_date: moment(item.start_date).toString(),
-        end_date: moment(item.end_date).toString(),
+        product_name: item.product.name,
+        size: item.size,
+        color: item.color.name,
+        quantity_in_stock: item.quantity_in_stock,
         total: item.total,
       }
     }) ?? []
@@ -57,21 +67,21 @@ export default function EventsManagementPage() {
         <DataTable
           columns={columns}
           data={data}
-          title='Events'
-          addContentSidebar={<CreateEventForm />}
+          title='Stocks'
+          addContentSidebar={<CreateStockForm />}
           pagination={pagination}
           setPagination={setPagination}
-          filterInput={eventFilterInput}
+          filterInput={stockFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
           showRestoreButton={true}
           restore7daysFn={() =>
-            eventApi.restoreEvent(moment().subtract(7, 'days').utc().unix().valueOf())
+            stockApi.restoreStock(moment().subtract(7, 'days').utc().unix().valueOf())
           }
           restore30daysFn={() =>
-            eventApi.restoreEvent(moment().subtract(30, 'days').utc().unix().valueOf())
+            stockApi.restoreStock(moment().subtract(30, 'days').utc().unix().valueOf())
           }
-          restoreAllFn={() => eventApi.restoreEvent()}
+          restoreAllFn={() => stockApi.restoreStock()}
         />
       )}
     </div>

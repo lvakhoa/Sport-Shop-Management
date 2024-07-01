@@ -25,11 +25,19 @@ class StockApi extends BaseApi {
   }
 
   async createStock(stock: IStockRequest) {
-    return super.create(stock)
+    return super.create(stock, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
   }
 
   async updateStock(stock: IStockRequest, id: string) {
-    return super.update(stock, id)
+    return super.update(stock, id, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
   }
 
   async deleteStockById(id: string) {
@@ -38,6 +46,10 @@ class StockApi extends BaseApi {
 
   async deleteAllStock() {
     return super.deleteAll()
+  }
+
+  async restoreStock(fromDate?: number) {
+    return super.restoreByDate(fromDate)
   }
 }
 

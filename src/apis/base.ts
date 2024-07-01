@@ -51,16 +51,10 @@ export default class BaseApi {
     return data?.message
   }
 
-  async restoreByDate(date: number) {
+  async restoreByDate(fromDate?: number) {
+    const url = this.route + '/restore' + (fromDate ? `?fromDate=${fromDate}` : '')
     const data = await handleResponse<{ message: string }>(() =>
-      httpClient.patch<{ message: string }>(this.route + '/restore' + `?fromDate=${date}`, {}),
-    )
-    return data?.message
-  }
-
-  async restoreAll() {
-    const data = await handleResponse<{ message: string }>(() =>
-      httpClient.patch<{ message: string }>(this.route + '/restore', {}),
+      httpClient.patch<{ message: string }>(url, {}),
     )
     return data?.message
   }

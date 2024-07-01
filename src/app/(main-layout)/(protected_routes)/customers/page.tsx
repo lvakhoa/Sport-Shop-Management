@@ -8,6 +8,7 @@ import { PaginationState } from '@tanstack/react-table'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { customerApi } from '@/apis'
+import moment from 'moment'
 
 export default function CustomerManagementPage() {
   const { isBrowser } = useBrowser()
@@ -48,6 +49,13 @@ export default function CustomerManagementPage() {
           filterInput={customerFilterInput}
           pageCount={data.length > 0 ? data[0].total / pagination.pageSize : 0}
           showRestoreButton={true}
+          restore7daysFn={() =>
+            customerApi.restoreCustomer(moment().subtract(7, 'days').utc().unix().valueOf())
+          }
+          restore30daysFn={() =>
+            customerApi.restoreCustomer(moment().subtract(30, 'days').utc().unix().valueOf())
+          }
+          restoreAllFn={() => customerApi.restoreCustomer()}
         />
       )}
     </div>
