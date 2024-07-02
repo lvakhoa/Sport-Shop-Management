@@ -108,12 +108,12 @@ export default function StockDetailPage() {
               </div>
               {isPending ? (
                 <div className='flex flex-col justify-between'>
-                  <Skeleton className='h-[0.875rem] w-[100px]' />
-                  <Skeleton className='h-[0.875rem] w-[100px]' />
-                  <Skeleton className='h-[0.875rem] w-[100px]' />
-                  <Skeleton className='h-[0.875rem] w-[100px]' />
-                  <Skeleton className='h-[0.875rem] w-[100px]' />
-                  <Skeleton className='h-[0.875rem] w-[100px]' />
+                  <Skeleton className='h-3.5 w-[100px]' />
+                  <Skeleton className='h-3.5 w-[100px]' />
+                  <Skeleton className='h-3.5 w-[100px]' />
+                  <Skeleton className='h-3.5 w-[100px]' />
+                  <Skeleton className='h-3.5 w-[100px]' />
+                  <Skeleton className='h-3.5 w-[100px]' />
                 </div>
               ) : (
                 <div className={styles.list}>
