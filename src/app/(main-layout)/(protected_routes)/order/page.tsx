@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useOrderStore } from '@/stores'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { queryKeys } from '@/configs'
+import { PATH_NAME, queryKeys } from '@/configs'
 import { addressApi, customerApi, shippingPriceApi, orderApi } from '@/apis'
 import Image from 'next/image'
 import {
@@ -73,8 +73,6 @@ export default function OrderPage() {
     queryFn: () => addressApi.getAllAddress(),
   })
 
-  console.log(addressesData)
-
   const { data: shippingPriceData } = useQuery({
     queryKey: queryKeys.shippingPrices.gen(),
     queryFn: () => shippingPriceApi.getAllShippingPrice(),
@@ -115,8 +113,11 @@ export default function OrderPage() {
         payment_type: data.payment_type,
         voucher_id: data.voucher_id,
       }),
-    onSuccess: () => {
+    onSuccess: (response) => {
       toast.success('Order created successfully')
+      if (!!response?.order_id) {
+        router.push(`${PATH_NAME.ORDER_DETAILS}/${response.order_id}`)
+      }
     },
     onError: () => {
       toast.error('Error creating order')
@@ -309,7 +310,16 @@ export default function OrderPage() {
         {orderDetail?.map((product, index) => (
           <Card className='rounded-none' key={index}>
             <div className='flex flex-row gap-3 p-[15px]'>
-              <Image className='rounded-lg' src={product.image} alt={''} width={70} height={70} />
+              <Image
+                className='rounded-lg'
+                src={
+                  product.image ??
+                  'https://res.cloudinary.com/dbpvh14wj/image/upload/f_auto,q_auto/pzi7bjxajmsgraesmjt2'
+                }
+                alt={''}
+                width={70}
+                height={70}
+              />
               <div className='flex grow flex-col justify-between'>
                 <div className='flex flex-col'>
                   <span className='text-[20px] font-semibold text-gray-500'>{product.name}</span>

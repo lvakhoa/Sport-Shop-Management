@@ -46,7 +46,10 @@ export function PosTab({
                 <div>
                   <Image
                     className='aspect-square rounded-lg'
-                    src={product.image}
+                    src={
+                      product.image ??
+                      'https://res.cloudinary.com/dbpvh14wj/image/upload/f_auto,q_auto/pzi7bjxajmsgraesmjt2'
+                    }
                     alt={''}
                     width={120}
                     height={120}

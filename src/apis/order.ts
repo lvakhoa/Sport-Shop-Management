@@ -1,6 +1,8 @@
 import { IOrderCreateRequest, IOrderUpdateRequest, IOrderResponse } from '@/interfaces/order'
 import BaseApi from './base'
 import { ORDER_STATUS } from '@/configs/enum'
+import { httpClient } from '@/services'
+import { handleResponse } from '@/helpers'
 
 class OrderApi extends BaseApi {
   constructor() {
@@ -36,7 +38,10 @@ class OrderApi extends BaseApi {
   }
 
   async createOrder(order: IOrderCreateRequest) {
-    return super.create(order)
+    const data = await handleResponse<{ message: string; order_id: string }>(() =>
+      httpClient.post<{ message: string; order_id: string }>(this.route, order as object),
+    )
+    return data
   }
 
   async updateOrder(order: Partial<IOrderUpdateRequest>, id: string) {

@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Input } from '@/components/shared/input'
 import ComboBox from '@/components/shared/ComboBox'
 import { useState } from 'react'
+import { Search } from 'lucide-react'
 
 const Filter: string[] = ['All Order', 'Success', 'Cancelled', 'Pending']
 
@@ -27,25 +28,16 @@ function SearchBar({ onSearch, onSelectFilter, selectedFilter, filterOptions }: 
     onSelectFilter(value)
   }
 
-  // const handleFilterChange = (selectedOption: string) => {
-  //   onSelectFilter(selectedOption)
-  // }
   return (
     <div className='flex flex-col space-y-[5px]'>
-      <div className='relative z-[-1] flex w-full items-center'>
+      <div className='relative flex w-full items-center'>
         <Input
           className='h-[45px] w-full pl-[45px] text-[14px]'
           placeholder='Search by ID, Date, Name,...'
           value={searchInput}
           onChange={handleSearchInputChange}
         />
-        <Image
-          className='absolute m-3 text-muted-foreground'
-          alt=''
-          src='assets/icons/search.svg'
-          width={20}
-          height={20}
-        />
+        <Search width={20} height={20} className='absolute m-3 text-muted-foreground' />
       </div>
       <ComboBox
         placeholder={filterInput}
