@@ -28,7 +28,7 @@ export interface IProductItem1 {
   id: string
   name: string
   price: number
-  image: string
+  image?: string
   stocks: {
     media?: {
       url: string
@@ -106,7 +106,7 @@ export default function PosPage() {
           id: item.id,
           name: item.name,
           price: parseInt(item.selling_price),
-          image: item.stocks[0]?.media?.url!,
+          image: item.stocks[0]?.media?.url,
           stocks: item.stocks,
           category_list: item.category_list,
         }
@@ -133,7 +133,6 @@ export default function PosPage() {
       const index = productList?.findIndex(
         (item) => item.size === size && item.color === color && item.name === currentProduct.name,
       )
-      console.log(index)
       if (index === -1 || index === undefined) {
         addProduct({
           stock_id: stocksData?.find(

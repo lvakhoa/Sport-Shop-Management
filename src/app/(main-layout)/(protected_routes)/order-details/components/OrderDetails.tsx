@@ -6,6 +6,7 @@ import { IStockResponse } from '@/interfaces/stock'
 import { useQueries, useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
 import moment from 'moment'
+import { StickyNote } from 'lucide-react'
 
 function OrderDetails({ order }: { order: IOrderResponse }) {
   return (
@@ -63,7 +64,7 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
         </div>
       </div>
       <div className='flex flex-row items-start space-x-[10px] bg-[#E6E7EA] px-[10px] py-[5px]'>
-        <Image src='assets/icons/note.svg' alt='' width={20} height={20} />
+        <StickyNote width={20} height={20} color='#8E8E8E' />
         <span className='text-[#797979]'>{order.note}</span>
       </div>
       <div className='flex w-full flex-col space-y-[10px] px-[10px]'>

@@ -43,15 +43,18 @@ export default function Navbar({
             <Image width={128} height={40} src='/assets/images/logo.png' alt='logo' />
           </Link>
           <div className='relative flex items-center gap-4 transition max-[320px]:gap-2'>
-            <a className={cn('flex max-[468px]:hidden', styles.navbutton)}>
+            <Link
+              href={PATH_NAME.POS}
+              className={cn('flex cursor-pointer max-[468px]:hidden', styles.navbutton)}
+            >
               <Image src='/assets/icons/pos.svg' alt='pos' width={24} height={24} />
-            </a>
-            <a
+            </Link>
+            <div
               onClick={() => openSidebar((prev) => !prev)}
               className={cn('flex cursor-pointer', styles.navbutton)}
             >
               <Image src='/assets/icons/sidebar.svg' alt='sidebar' width={20} height={20} />
-            </a>
+            </div>
             <div
               onClick={toggleInfoDropdown}
               className='included-node flex cursor-pointer items-center gap-2 rounded-lg'

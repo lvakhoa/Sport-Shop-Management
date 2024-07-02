@@ -1,43 +1,27 @@
 import { Button } from '@/components/shared'
-import { PaidLabel } from './PaymentStatusLabel'
-import { CancelledLabel, ConfirmLabel, DeliveredLabel } from './ShipmentStatusLabel'
-import Image from 'next/image'
+import { CancelledLabel, ConfirmLabel } from './ShipmentStatusLabel'
 import { IOrderResponse, IOrderUpdateRequest } from '@/interfaces/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { orderApi } from '@/apis'
 import { toast } from 'react-toastify'
 import { queryKeys } from '@/configs'
 import { useProfile } from '@/hooks'
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Invoice from './Invoice'
 import { ORDER_STATUS } from '@/configs/enum'
+import { Printer } from 'lucide-react'
 
-function ActionBar({
-  order,
-  onConfirm,
-  onCancel,
-}: {
-  order: IOrderResponse
-  onConfirm: () => void
-  onCancel: () => void
-}) {
-  const [updateData, setUpdateData] = useState<Partial<IOrderUpdateRequest> | null>(null)
+function ActionBar({ order }: { order: IOrderResponse }) {
   const profile = useProfile()
   const queryClient = useQueryClient()
+
   const printRef = useRef<HTMLDivElement>(null)
+
   const { mutate: editOrder } = useMutation({
     mutationFn: (data: Partial<IOrderUpdateRequest>) => orderApi.updateOrder(data, order.id),
     onSuccess: () => {
       toast.success('Updating order successfully')
-      switch (updateData?.status) {
-        case ORDER_STATUS.SUCCESS:
-          onConfirm()
-          break
-        case ORDER_STATUS.CANCELLED:
-          onCancel()
-          break
-      }
     },
     onError: () => {
       toast.error('Error updating order')
@@ -53,15 +37,14 @@ function ActionBar({
       confirmed_employee_id: profile.data?.id || order.confirmed_employee_id,
       status: ORDER_STATUS.SUCCESS,
     }
-    setUpdateData(updateData)
     editOrder(updateData)
   }
 
   const handleCancel = () => {
     const updateData: Partial<IOrderUpdateRequest> = {
       status: ORDER_STATUS.CANCELLED,
+      confirmed_employee_id: profile.data?.id || order.confirmed_employee_id,
     }
-    setUpdateData(updateData)
     editOrder(updateData)
   }
 
@@ -93,14 +76,11 @@ function ActionBar({
       </div>
       <div className='flex flex-row space-x-[5px]'>
         {order.status === ORDER_STATUS.SUCCESS && (
-          <Button className='flex gap-[5px] rounded-[5px] bg-[#D4E0FF] px-2 py-1 duration-300 hover:bg-[#EBF1FF]'>
-            <Image
-              src='assets/icons/print.svg'
-              alt=''
-              width={22}
-              height={22}
-              onClick={handlePrint}
-            />
+          <Button
+            onClick={handlePrint}
+            className='flex gap-[5px] rounded-[5px] bg-[#D4E0FF] px-2 py-1 duration-300 hover:bg-[#dde6fa]'
+          >
+            <Printer color='#336AEA' width={22} height={22} />
           </Button>
         )}
         {order.status === ORDER_STATUS.PENDING && <Button onClick={handleCancel}>Cancel</Button>}

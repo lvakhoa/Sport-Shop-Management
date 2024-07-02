@@ -10,6 +10,8 @@ import { authApi } from '@/apis'
 import { useAuthStore } from '@/stores'
 import { toast } from 'react-toastify'
 import { useAuth } from '@/hooks'
+import Link from 'next/link'
+import { PATH_NAME } from '@/configs'
 
 export default function InfoDropdown({
   isLoading,
@@ -49,22 +51,18 @@ export default function InfoDropdown({
         </div>
       </div>
       <div className={cn(styles.nav, 'flex flex-col gap-[5px]')}>
-        <a
+        <Link
           onClick={closeDropdown}
-          href='#admin/pos'
+          href={PATH_NAME.POS}
           className='w-full max-[468px]:flex min-[468px]:hidden'
         >
           <Image src='/assets/icons/pos2.svg' alt='pos' width={24} height={24} />
           <span>POS</span>
-        </a>
-        <a onClick={closeDropdown} href='#admin/profile/edit-profile' className='flex w-full'>
+        </Link>
+        <Link onClick={closeDropdown} href={PATH_NAME.SETTINGS} className='flex w-full'>
           <Image src='/assets/icons/edit.svg' alt='edit' width={24} height={24} />
           <span>Edit Profile</span>
-        </a>
-        <a onClick={closeDropdown} href='#admin/profile/change-password' className='flex w-full'>
-          <Image src='/assets/icons/password.svg' alt='password' width={24} height={24} />
-          <span>Change Password</span>
-        </a>
+        </Link>
         <button onClick={handleLogout} className='flex w-full'>
           <Image src='/assets/icons/logout.svg' alt='logout' width={24} height={24} />
           <span>Logout</span>

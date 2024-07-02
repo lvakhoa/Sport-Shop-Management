@@ -21,10 +21,12 @@ function OrderItem({
   order: IOrderResponse
   onClick: (order: IOrderResponse) => void
 }) {
-  const { data: employeeData } = useQuery({
+  const { data: employeeData, isLoading } = useQuery({
     queryKey: queryKeys.employeeDetails.gen(order.confirmed_employee_id),
     queryFn: () => employeeApi.getEmployeesById(order.confirmed_employee_id),
+    enabled: !!order.confirmed_employee_id,
   })
+
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'PENDING':
@@ -53,7 +55,7 @@ function OrderItem({
         </div>
       </div>
       <span className='text-[14px]'>
-        {employeeData ? 'Employee: ' + employeeData.fullname : ''}
+        {!isLoading && !!employeeData ? 'Employee: ' + employeeData.fullname : ''}
       </span>
     </div>
   )
