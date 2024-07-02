@@ -1,7 +1,7 @@
 'use client'
 
 import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
-import { columns, IStock } from './components'
+import { columns, CsvFormDialog, IStock } from './components'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -74,6 +74,7 @@ export default function StockManagementPage() {
           filterInput={stockFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
+          csvFormDialog={<CsvFormDialog />}
           showRestoreButton={true}
           restore7daysFn={() =>
             stockApi.restoreStock(moment().subtract(7, 'days').utc().unix().valueOf())

@@ -24,6 +24,21 @@ class StockApi extends BaseApi {
     return super.getById<IStockResponse>(id)
   }
 
+  async createStockByCsv(file: File) {
+    const data = await handleResponse<{ message: string }>(() =>
+      httpClient.post<{ message: string }>(
+        '/stocks/csv',
+        { file },
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      ),
+    )
+    return data?.message
+  }
+
   async createStock(stock: IStockRequest) {
     return super.create(stock, {
       headers: {

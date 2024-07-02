@@ -7,10 +7,11 @@ import { useState } from 'react'
 import moment from 'moment'
 import { useProfile } from '@/hooks'
 import { useQuery } from '@tanstack/react-query'
-import { queryKeys } from '@/configs'
+import { PATH_NAME, queryKeys } from '@/configs'
 import { stockApi } from '@/apis'
 import { ProductItem } from './pos/components'
 import { DateRange } from 'react-day-picker'
+import { useRouter } from 'next/navigation'
 
 const generateGreetings = () => {
   const currentHour = moment().hours()
@@ -27,6 +28,7 @@ const generateGreetings = () => {
 }
 
 export default function Home() {
+  const router = useRouter()
   const { data: info } = useProfile()
   const [date, setDate] = useState({
     month: moment().utc().month() + 1,
@@ -47,14 +49,16 @@ export default function Home() {
   })
 
   const topProducts =
-    data?.map((item) => {
-      return {
-        id: item.id,
-        name: item.product.name,
-        price: parseInt(item.product.selling_price),
-        image: item.media?.url ?? '',
-      }
-    }) || []
+    data
+      ?.map((item) => {
+        return {
+          id: item.id,
+          name: item.product.name,
+          price: parseInt(item.product.selling_price),
+          image: item.media?.url,
+        }
+      })
+      .filter((item, index, arr) => arr.findIndex((t) => t.image === item.image) === index) || []
 
   return (
     <div className='mx-6'>
@@ -96,7 +100,14 @@ export default function Home() {
       <div className='mb-6'>
         <HomeCard title='Top Products'>
           <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>
-            {!!topProducts && topProducts.map((item) => <ProductItem key={item.id} {...item} />)}
+            {!!topProducts &&
+              topProducts.map((item) => (
+                <ProductItem
+                  onClick={() => router.push(`${PATH_NAME.STOCK}/${item.id}`)}
+                  key={item.id}
+                  {...item}
+                />
+              ))}
           </div>
         </HomeCard>
       </div>

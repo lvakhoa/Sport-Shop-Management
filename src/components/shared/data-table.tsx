@@ -50,6 +50,7 @@ interface DataTableProps<TData, TValue> {
   isPending?: boolean
   pageCount?: number
   showAddButton?: boolean
+  csvFormDialog?: ReactElement
   showRestoreButton?: boolean
   restore7daysFn?: () => Promise<string | undefined>
   restore30daysFn?: () => Promise<string | undefined>
@@ -66,7 +67,7 @@ const restoreOptions: string[] = ['7 days', '30 days', 'All']
 const exportTrigger = (
   <div className='flex gap-[5px]'>
     <Image src='/icons/export.svg' alt='' width={20} height={20} />
-    <span className='text-[15px] text-secondary max-[666px]:hidden'>Export</span>
+    <span className='text-[15px] text-secondary max-[768px]:hidden'>Export</span>
     <Image src='/icons/down_arrow.svg' alt='' width={20} height={20} />
   </div>
 )
@@ -82,6 +83,7 @@ export default function DataTable<TData, TValue>({
   pageCount = 0,
   showAddButton = true,
   showRestoreButton = false,
+  csvFormDialog,
   restore7daysFn,
   restore30daysFn,
   restoreAllFn,
@@ -201,6 +203,7 @@ export default function DataTable<TData, TValue>({
               <span className='text-2xl font-semibold'>{title}</span>
             </div>
             <div className='flex gap-[15px]'>
+              {csvFormDialog}
               {showRestoreButton && !!restore7daysFn && !!restore30daysFn && !!restoreAllFn && (
                 <RestorePopup
                   title='Restore'
@@ -211,7 +214,7 @@ export default function DataTable<TData, TValue>({
                 >
                   <Button className='bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'>
                     <RotateCcw size={20} className='stroke-secondary' />
-                    <span className='text-[15px] text-secondary max-[666px]:hidden'>Restore</span>
+                    <span className='text-[15px] text-secondary max-[768px]:hidden'>Restore</span>
                   </Button>
                 </RestorePopup>
               )}
@@ -220,7 +223,7 @@ export default function DataTable<TData, TValue>({
                 className='bg-white flex gap-[5px] rounded-[5px] border border-secondary px-2 py-1 duration-300 hover:bg-[#EBF1FF]'
               >
                 <Image width={20} height={20} src='/icons/filter.svg' alt='' />
-                <span className='text-[15px] font-normal text-secondary max-[666px]:hidden'>
+                <span className='text-[15px] font-normal text-secondary max-[768px]:hidden'>
                   Filter
                 </span>
                 <Image width={20} height={20} src='/icons/down_arrow.svg' alt='' />
@@ -240,7 +243,7 @@ export default function DataTable<TData, TValue>({
                 >
                   <Button className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'>
                     <Image width={20} height={20} src='/icons/plus_circle.svg' alt='' />
-                    <span className='text-[15px] font-normal text-[#FFFFFF] max-[666px]:hidden'>
+                    <span className='text-[15px] font-normal text-[#FFFFFF] max-[768px]:hidden'>
                       Add {addingBtnTitle}
                     </span>
                   </Button>
