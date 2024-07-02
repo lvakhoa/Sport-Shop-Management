@@ -47,9 +47,10 @@ function StocksPage({}: Props) {
       (!s.size || s.size === selectedStockSizes[selectedSize]),
   )?.quantity_in_stock
 
-  const selectedStockId = productDetails?.stocks.find(
-    (s) => s.color?.name === selectedColor && s.size === selectedStockSizes[selectedSize],
-  )?.id
+  const selectedStockId =
+    productDetails?.stocks.find(
+      (s) => s.color?.name === selectedColor && s.size === selectedStockSizes[selectedSize],
+    )?.id ?? ''
 
   if (!!productDetails && productDetails.stocks.length <= 0) {
     return 'Product has no stocks'
@@ -156,7 +157,7 @@ function StocksPage({}: Props) {
 
             <Button
               className='p-4'
-              onClick={() => router.push(`${PATH_NAME.STOCK}/${selectedStockId ?? ''}`)}
+              onClick={() => router.push(`${PATH_NAME.STOCK}/${selectedStockId}`)}
             >
               Go to details
             </Button>
