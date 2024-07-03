@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
+import { FILTER_INPUT_TYPE, ROLE_TITLE, STATUS } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
 import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
@@ -20,7 +20,7 @@ export interface IEvent {
   total: number
 }
 
-export const columns: ColumnDef<IEvent>[] = [
+export const eventColumns = (accountRole: ROLE_TITLE): ColumnDef<IEvent>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -135,6 +135,7 @@ export const columns: ColumnDef<IEvent>[] = [
       const eventId = row.getValue('id') as string
       return (
         <ActionButtonShow
+          viewOnly={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
           path={PATH_NAME.EVENT}
           id={eventId}
           editContentElement={<EditEventForm eventId={eventId} />}

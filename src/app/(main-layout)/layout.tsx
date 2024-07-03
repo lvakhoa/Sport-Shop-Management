@@ -1,34 +1,25 @@
-'use client'
-
-import { Navbar, Sidebar } from '@/components/ui'
-import React, { useState } from 'react'
+import { MainLayoutComponent } from '@/components/ui'
+import React from 'react'
 import { cn } from '@/lib/utils'
-import { useBrowser } from '@/hooks'
+import { verifySession } from '@/lib/session'
+import { ROLE_TITLE } from '@/configs/enum'
+import {
+  adminSidebarItems,
+  employeeSidebarItems,
+  managerSidebarItems,
+} from '@/configs/sidebarItems'
 
-function MainLayout({ children }: { children: React.ReactNode }) {
-  const [openSidebar, setOpenSidebar] = useState(true)
-  const { isBrowser } = useBrowser()
+async function MainLayout({ children }: { children: React.ReactNode }) {
+  const { role } = await verifySession()
 
-  return (
-    <div>
-      <Navbar openSidebar={setOpenSidebar} />
-      <div className='mt-[--header-height] flex '>
-        {!!isBrowser && (
-          <div className='fixed z-30'>
-            <Sidebar isSidebarVisible={openSidebar} openSidebar={setOpenSidebar} />
-          </div>
-        )}
-        <div
-          className={cn(
-            'h-auto w-full  pt-[10px]',
-            openSidebar ? 'ml-0 sm:ml-sidebar-default' : 'ml-0',
-          )}
-        >
-          {children}
-        </div>
-      </div>
-    </div>
-  )
+  const sidebarItems =
+    role === ROLE_TITLE.ADMIN
+      ? adminSidebarItems
+      : role === ROLE_TITLE.MANAGER
+        ? managerSidebarItems
+        : employeeSidebarItems
+
+  return <MainLayoutComponent sidebarItems={sidebarItems}>{children}</MainLayoutComponent>
 }
 
 export default MainLayout

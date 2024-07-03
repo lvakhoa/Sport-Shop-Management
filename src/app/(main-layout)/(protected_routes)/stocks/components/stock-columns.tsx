@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { SIZE } from '@/configs/enum'
+import { ROLE_TITLE, SIZE } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
 import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
@@ -17,7 +17,7 @@ export interface IStock {
   total: number
 }
 
-export const columns: ColumnDef<IStock>[] = [
+export const stockColumns = (accountRole: ROLE_TITLE): ColumnDef<IStock>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -122,6 +122,7 @@ export const columns: ColumnDef<IStock>[] = [
       const stockId = row.getValue('id') as string
       return (
         <ActionButtonShow
+          viewOnly={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
           path={PATH_NAME.STOCK}
           id={stockId}
           editContentElement={<EditStockForm stockId={stockId} />}

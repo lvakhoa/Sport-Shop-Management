@@ -16,32 +16,45 @@ interface IAlertPopup {
   description: string
   children?: React.ReactNode
   action: () => void
+  hidden?: boolean
 }
 
-export default function AlertPopup({ title, description, children, action }: IAlertPopup) {
+export default function AlertPopup({
+  title,
+  description,
+  children,
+  action,
+  hidden = false,
+}: IAlertPopup) {
   const actionHandler = (e: SyntheticEvent) => {
     e.stopPropagation()
     action()
   }
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={(event) => event.stopPropagation()}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={actionHandler}
-            className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
-          >
-            Continue
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+      {!hidden && (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{title}</AlertDialogTitle>
+              <AlertDialogDescription>{description}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={(event) => event.stopPropagation()}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={actionHandler}
+                className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </>
   )
 }

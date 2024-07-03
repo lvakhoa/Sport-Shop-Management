@@ -12,6 +12,9 @@ import { shippingPriceApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { IShippingPriceRequest, IShippingPriceResponse } from '@/interfaces/shipping-price'
 import { RadioGroup, RadioGroupItem } from '@/components/shared/radio-group'
+import { ROLE_TITLE } from '@/configs/enum'
+import { currencyFormatter } from '@/helpers'
+import { cn } from '@/lib/utils'
 
 const shippingFormSchema = z.object({
   id: z.string(),
@@ -20,7 +23,7 @@ const shippingFormSchema = z.object({
 
 type ShippingFormValues = z.infer<typeof shippingFormSchema>
 
-export function ShippingForm() {
+export function ShippingForm({ accountRole }: { accountRole: ROLE_TITLE }) {
   const { data: shippingPriceData } = useQuery({
     queryKey: queryKeys.shippingPrices.gen(),
     queryFn: () => shippingPriceApi.getAllShippingPrice(),
@@ -37,6 +40,10 @@ export function ShippingForm() {
     resolver: zodResolver(shippingFormSchema),
   })
   const shippingId = form.watch('id')
+
+  const shippingPrice = currencyFormatter(
+    Number(shippingPrices.find((item) => item.id === shippingId)?.price ?? ''),
+  )
 
   const { mutate: updatePrice } = useMutation({
     mutationFn: (data: IShippingPriceRequest) =>
@@ -93,22 +100,27 @@ export function ShippingForm() {
             )}
           />
           <FormField
+            disabled={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
             control={form.control}
             name='price'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={shippingPrices.find((item) => item.id === shippingId)?.price}
-                    {...field}
-                  />
+                  <Input placeholder={shippingPrice} {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
         </div>
-        <Button type='submit'>Update Shipping Price</Button>
+        <Button
+          type='submit'
+          className={cn(
+            accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER ? 'hidden' : '',
+          )}
+        >
+          Update Shipping Price
+        </Button>
       </form>
     </Form>
   )

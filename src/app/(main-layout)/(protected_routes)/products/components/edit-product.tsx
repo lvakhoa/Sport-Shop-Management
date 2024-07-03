@@ -1,3 +1,5 @@
+'use client'
+
 import { categoryApi, productApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { IProductRequest } from '@/interfaces/product'

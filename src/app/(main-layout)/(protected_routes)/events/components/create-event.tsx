@@ -1,6 +1,7 @@
-import { categoryApi, eventApi, productApi } from '@/apis'
+'use client'
+
+import { eventApi, productApi } from '@/apis'
 import { queryKeys } from '@/configs'
-import { IProductRequest } from '@/interfaces/product'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
@@ -11,14 +12,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
   Checkbox,
-  ComboBox,
   DatePicker,
   Input,
   Label,
   ScrollArea,
   Separator,
 } from '@/components/shared'
-import { STATUS } from '@/configs/enum'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
 import { IEventRequest } from '@/interfaces/event'
 import moment from 'moment'

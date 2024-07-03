@@ -43,25 +43,18 @@ function InformationPage() {
 
   return (
     <ContentCard title='Information'>
-      <div className='mb-6 flex flex-col gap-y-2 sm:flex-row sm:gap-20 md:gap-32'>
-        {details.media && <Image alt='' width={300} height={100} src={details.media?.url} />}
-        <div className='flex min-w-[260px] gap-10'>
+      <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:gap-20'>
+        {!!details.media && <Image alt='' width={300} height={100} src={details.media.url} />}
+        <div className='flex gap-10'>
           <div className={styles.list}>
             <span className={styles.info_title}>Title</span>
             <span className={styles.info_title}>Sale Percent</span>
-          </div>
-          <div className={styles.list}>
-            <span className={styles.info_content}>{details.title}</span>
-            <span className={styles.info_content}>{details.sale_percent}</span>
-          </div>
-        </div>
-
-        <div className='flex gap-10'>
-          <div className={styles.list}>
             <span className={styles.info_title}>Start Date</span>
             <span className={styles.info_title}>End Date</span>
           </div>
           <div className={styles.list}>
+            <span className={styles.info_content}>{details.title}</span>
+            <span className={styles.info_content}>{details.sale_percent}</span>
             <span className={styles.info_content}>
               {moment(details.start_date).format('DD-MM-YYYY')}
             </span>

@@ -1,3 +1,5 @@
+'use client'
+
 import { colorApi, productApi, stockApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

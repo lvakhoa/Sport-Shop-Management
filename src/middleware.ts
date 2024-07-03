@@ -1,32 +1,42 @@
-import axios from 'axios'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { ADMIN_PATH_NAME, AUTH_PATH_NAME, PATH_NAME } from './configs'
+import { jwtDecode } from 'jwt-decode'
+import { ROLE_TITLE } from './configs/enum'
+import { MANAGER_PATH_NAME, PUBLIC_PATH_NAME } from './configs/pathName'
 
-export async function middleware(req: NextRequest) {
-  // const cookies = req.cookies.get('connect.sid')
+export default function middleware(request: NextRequest) {
+  const pathName = request.nextUrl.pathname
+  const token = request.cookies.get('access_token')?.value
 
-  // // Not logged in
-  // if (!cookies) {
-  //   return NextResponse.redirect('/login')
-  // }
+  if (!token && !AUTH_PATH_NAME.includes(pathName))
+    return NextResponse.redirect(new URL(PATH_NAME.LOGIN, request.url))
 
-  // try {
-  //   const getMe = await axios.get('/api/me', {
-  //     headers: { cookie: `connect.sid=${cookies}` },
-  //   })
-  //   req.headers.set('x-user-role', JSON.stringify(getMe.data.role))
-  // } catch (error: any) {
-  //   // Invalid session
-  //   if (error.response.status === 401) {
-  //     return NextResponse.redirect('/login')
-  //   }
+  if (!!token) {
+    if (pathName.startsWith(PATH_NAME.LOGIN))
+      return NextResponse.redirect(new URL(PATH_NAME.HOME, request.url))
 
-  //   // Other errors
-  //   return NextResponse.redirect(`/error?status=${error.response.status}`)
-  // }
-
+    const user = jwtDecode<any>(token)
+    if (user.roleName === ROLE_TITLE.ADMIN && ADMIN_PATH_NAME.includes(pathName))
+      return NextResponse.next()
+    else if (user.roleName === ROLE_TITLE.MANAGER && MANAGER_PATH_NAME.includes(pathName))
+      return NextResponse.next()
+    else if (user.roleName === ROLE_TITLE.EMPLOYEE && PUBLIC_PATH_NAME.includes(pathName))
+      return NextResponse.next()
+    else return NextResponse.redirect(new URL('/not-found', request.url))
+  }
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: '/settings/:path*',
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|assets|icons).*)',
+  ],
 }

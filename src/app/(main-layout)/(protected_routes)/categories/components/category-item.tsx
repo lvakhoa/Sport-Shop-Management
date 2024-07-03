@@ -8,6 +8,7 @@ import { Id, toast } from 'react-toastify'
 import { categoryApi } from '@/apis'
 import { AlertPopup } from '@/components/shared'
 import { SyntheticEvent, useRef, useEffect } from 'react'
+import { cn } from '@/lib/utils'
 
 export interface ICategoryItem {
   id: string
@@ -16,9 +17,18 @@ export interface ICategoryItem {
   gender: string
   image: string
   onClick?: () => void
+  canEdit?: boolean
 }
 
-export function CategoryItem({ id, name, type, gender, image, onClick }: ICategoryItem) {
+export function CategoryItem({
+  id,
+  name,
+  type,
+  gender,
+  image,
+  onClick,
+  canEdit = false,
+}: ICategoryItem) {
   const toastId = useRef<Id | undefined>()
   const queryClient = useQueryClient()
 
@@ -47,18 +57,32 @@ export function CategoryItem({ id, name, type, gender, image, onClick }: ICatego
 
   return (
     <Card
-      onClick={onClick}
-      className='group flex cursor-pointer flex-col justify-between rounded-none shadow-md'
+      onClick={canEdit ? onClick : () => {}}
+      className={cn(
+        'group flex flex-col justify-between rounded-none shadow-md',
+        canEdit ? 'cursor-pointer' : '',
+      )}
     >
       <CardHeader className='relative overflow-hidden p-0'>
-        <AlertPopup title='Delete?' description='Are you sure?' action={deleteCategory}>
-          <div className='absolute -right-32 -top-32 size-32 rounded-full bg-[#f06444] p-2 duration-300 group-hover:-right-16 group-hover:-top-16'>
-            <Trash2
-              color='#fff'
-              className='absolute bottom-14 left-14 duration-300 group-hover:bottom-7 group-hover:left-7'
-            />
-          </div>
-        </AlertPopup>
+        {canEdit && (
+          <AlertPopup title='Delete?' description='Are you sure?' action={deleteCategory}>
+            <div
+              className={cn(
+                'absolute -right-20 -top-20 size-20 rounded-full bg-[#f06444] p-2 duration-300 group-hover:-right-10 group-hover:-top-10',
+                'sm:-right-32 sm:-top-32 sm:size-32 sm:group-hover:-right-16 sm:group-hover:-top-16',
+              )}
+            >
+              <Trash2
+                color='#fff'
+                className={cn(
+                  'size-4 sm:size-6',
+                  'absolute bottom-7 left-7 duration-300 group-hover:bottom-4 group-hover:left-4',
+                  'sm:bottom-14 sm:left-14 sm:group-hover:bottom-7 sm:group-hover:left-7',
+                )}
+              />
+            </div>
+          </AlertPopup>
+        )}
         <Image
           className='!mt-0 pb-[16px]'
           src={
