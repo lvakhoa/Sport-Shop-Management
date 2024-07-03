@@ -104,7 +104,7 @@ export default function CreateStockForm() {
       product_id: selectedProductId,
       color_id: selectedColorId,
       size: data.size as SIZE,
-      quantity_in_stock: parseInt(data.quantity_in_stock),
+      quantity_in_stock: data.quantity_in_stock,
       file: data.file,
     })
   }
@@ -242,7 +242,7 @@ export default function CreateStockForm() {
               <FormControl>
                 <div className='grid grid-cols-4 items-center gap-4'>
                   <FormLabel>Quantity</FormLabel>
-                  <Input type='number' id='quantity' className='col-span-3' {...field} />
+                  <Input id='quantity' className='col-span-3' {...field} />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />

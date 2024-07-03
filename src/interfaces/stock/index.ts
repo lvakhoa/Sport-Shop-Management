@@ -4,7 +4,7 @@ export interface IStockRequest {
   product_id?: string
   color_id?: string
   size?: SIZE
-  quantity_in_stock?: number
+  quantity_in_stock?: string
   file?: File
 }
 

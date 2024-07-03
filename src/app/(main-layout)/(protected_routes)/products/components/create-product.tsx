@@ -34,20 +34,8 @@ const productSchema = z.object({
   }),
   description: z.string().optional(),
   status: z.boolean().default(true),
-  list_price: z
-    .number({
-      message: 'List price is required',
-    })
-    .min(1000, {
-      message: 'List price must be greater or equal to 1000',
-    }),
-  selling_price: z
-    .number({
-      message: 'List price is required',
-    })
-    .min(1000, {
-      message: 'List price must be greater or equal to 1000',
-    }),
+  list_price: z.string(),
+  selling_price: z.string(),
   category_list: z.array(categorySchema),
 })
 
@@ -81,8 +69,8 @@ export default function CreateProductForm() {
     onSuccess: () => {
       toast.success('Product created successfully')
     },
-    onError: () => {
-      toast.error('Error creating product')
+    onError: (error) => {
+      toast.error(error.message)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'products' })
@@ -94,8 +82,8 @@ export default function CreateProductForm() {
     defaultValues: {
       name: '',
       status: true,
-      list_price: 1000,
-      selling_price: 1000,
+      list_price: '1000',
+      selling_price: '1000',
       category_list: [],
     },
   })
@@ -105,8 +93,8 @@ export default function CreateProductForm() {
       name: data.name,
       description: data.description,
       status: data.status,
-      list_price: data.list_price,
-      selling_price: data.selling_price,
+      list_price: parseInt(data.list_price),
+      selling_price: parseInt(data.selling_price),
       category_list: selectedCategories,
     })
   }
