@@ -4,8 +4,15 @@ import { cn } from '@/lib/utils'
 import Navbar from './Navbar/Navbar'
 import Sidebar from './Sidebar/Sidebar'
 import { useState } from 'react'
+import { ISidebarItem } from '@/configs/sidebarItems'
 
-function MainLayout({ children }: { children: React.ReactNode }) {
+function MainLayout({
+  sidebarItems,
+  children,
+}: {
+  sidebarItems: ISidebarItem[]
+  children: React.ReactNode
+}) {
   const [openSidebar, setOpenSidebar] = useState(true)
 
   return (
@@ -13,7 +20,11 @@ function MainLayout({ children }: { children: React.ReactNode }) {
       <Navbar openSidebar={setOpenSidebar} />
       <div className='mt-[--header-height] flex '>
         <div className='fixed z-30'>
-          <Sidebar isSidebarVisible={openSidebar} openSidebar={setOpenSidebar} />
+          <Sidebar
+            sidebarItems={sidebarItems}
+            isSidebarVisible={openSidebar}
+            openSidebar={setOpenSidebar}
+          />
         </div>
         <div
           className={cn(

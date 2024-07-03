@@ -1,6 +1,7 @@
-import { categoryApi, eventApi, productApi, voucherApi } from '@/apis'
+'use client'
+
+import { eventApi, productApi } from '@/apis'
 import { queryKeys } from '@/configs'
-import { IProductRequest } from '@/interfaces/product'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -9,18 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DatePicker } from '@/components/shared'
-import {
-  Button,
-  Checkbox,
-  ComboBox,
-  Input,
-  Label,
-  ScrollArea,
-  Separator,
-} from '@/components/shared'
-import { STATUS } from '@/configs/enum'
+import { Button, Checkbox, Input, Label, ScrollArea, Separator } from '@/components/shared'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
-import { IVoucherRequest } from '@/interfaces/voucher'
 import moment from 'moment'
 import { IEventRequest } from '@/interfaces/event'
 import { Textarea } from '@/components/shared/text-area'

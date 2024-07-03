@@ -25,17 +25,8 @@ import { motion } from 'framer-motion'
 import { IFilterInput } from '@/interfaces'
 import { ToggleGroup, ToggleGroupItem } from './toggle-group'
 import { RotateCcw } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from './dialog'
 import RestorePopup from './RestorePopup'
-import { useMutation, useQueryClient, UseMutateFunction } from '@tanstack/react-query'
-import { queryKeys } from '@/configs'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { utils as xlsxUtils, writeFile as xlsxWriteFile } from 'xlsx'
 
@@ -52,6 +43,7 @@ interface DataTableProps<TData, TValue> {
   showAddButton?: boolean
   csvFormDialog?: ReactElement
   showRestoreButton?: boolean
+  showImportButton?: boolean
   restore7daysFn?: () => Promise<string | undefined>
   restore30daysFn?: () => Promise<string | undefined>
   restoreAllFn?: () => Promise<string | undefined>
@@ -83,6 +75,7 @@ export default function DataTable<TData, TValue>({
   pageCount = 0,
   showAddButton = true,
   showRestoreButton = false,
+  showImportButton = false,
   csvFormDialog,
   restore7daysFn,
   restore30daysFn,
@@ -203,7 +196,7 @@ export default function DataTable<TData, TValue>({
               <span className='text-2xl font-semibold'>{title}</span>
             </div>
             <div className='flex gap-[15px]'>
-              {csvFormDialog}
+              {showImportButton ? csvFormDialog : null}
               {showRestoreButton && !!restore7daysFn && !!restore30daysFn && !!restoreAllFn && (
                 <RestorePopup
                   title='Restore'

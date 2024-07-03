@@ -1,3 +1,5 @@
+'use client'
+
 import { stockApi } from '@/apis'
 import { Button } from '@/components/shared/button'
 import {

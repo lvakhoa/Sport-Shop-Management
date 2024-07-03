@@ -1,16 +1,18 @@
 'use client'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Item } from './components'
-import { sidebarItems } from '@/configs/sidebarItems'
+import { ISidebarItem } from '@/configs/sidebarItems'
 import { cn } from '@/lib/utils'
 import { useBrowser, useWindowSize } from '@/hooks'
 import { usePathname } from 'next/navigation'
 import { PATH_NAME } from '@/configs'
 
 export default function Sidebar({
+  sidebarItems,
   isSidebarVisible,
   openSidebar,
 }: {
+  sidebarItems: ISidebarItem[]
   isSidebarVisible: boolean
   openSidebar: Dispatch<SetStateAction<boolean>>
 }) {
@@ -18,15 +20,21 @@ export default function Sidebar({
 
   return (
     !!isBrowser && (
-      <SidebarComponent isSidebarVisible={isSidebarVisible} openSidebar={openSidebar} />
+      <SidebarComponent
+        sidebarItems={sidebarItems}
+        isSidebarVisible={isSidebarVisible}
+        openSidebar={openSidebar}
+      />
     )
   )
 }
 
 function SidebarComponent({
+  sidebarItems,
   isSidebarVisible,
   openSidebar,
 }: {
+  sidebarItems: ISidebarItem[]
   isSidebarVisible: boolean
   openSidebar: Dispatch<SetStateAction<boolean>>
 }) {

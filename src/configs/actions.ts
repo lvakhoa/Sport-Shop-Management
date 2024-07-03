@@ -1,6 +1,6 @@
 import { TABLE_ACTION_TYPE } from './enum'
 
-export const actions = [
+export const fullAccessActions = [
   {
     background: '#D4E0FF',
     icon: '/icons/eye.svg',
@@ -20,4 +20,14 @@ export const actions = [
     type: TABLE_ACTION_TYPE.DELETE,
   },
 ]
+
+export const viewOnlyActions = [
+  {
+    background: '#D4E0FF',
+    icon: '/icons/eye.svg',
+    alt: 'view',
+    type: TABLE_ACTION_TYPE.VIEW,
+  },
+]
+
 export const pageTag = [{ tag: 'customers' }, { tag: 'employees' }]

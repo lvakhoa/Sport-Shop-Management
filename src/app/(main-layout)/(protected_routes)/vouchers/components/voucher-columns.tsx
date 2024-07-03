@@ -1,14 +1,11 @@
-'use client'
-
 import { ColumnDef } from '@tanstack/react-table'
-import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
 import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown, Edit } from 'lucide-react'
-import { IFilterInput } from '@/interfaces'
 import { voucherApi } from '@/apis'
 import EditVoucherForm from './edit-voucher'
 import moment from 'moment'
+import { ROLE_TITLE } from '@/configs/enum'
 
 export interface IVoucher {
   id: string
@@ -19,7 +16,7 @@ export interface IVoucher {
   total: number
 }
 
-export const columns: ColumnDef<IVoucher>[] = [
+export const voucherColumns = (accountRole: ROLE_TITLE): ColumnDef<IVoucher>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -162,6 +159,7 @@ export const columns: ColumnDef<IVoucher>[] = [
       const voucherId = row.getValue('id') as string
       return (
         <ActionButtonShow
+          viewOnly={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
           path={PATH_NAME.VOUCHER}
           id={voucherId}
           editContentElement={<EditVoucherForm voucherId={voucherId} />}

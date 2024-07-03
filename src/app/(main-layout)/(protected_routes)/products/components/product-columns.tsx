@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
+import { FILTER_INPUT_TYPE, ROLE_TITLE, STATUS } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
 import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
@@ -21,7 +21,7 @@ export interface IProduct {
 
 // const status: string[] = [STATUS.ACTIVE, STATUS.INACTIVE]
 
-export const columns: ColumnDef<IProduct>[] = [
+export const productColumns = (accountRole: ROLE_TITLE): ColumnDef<IProduct>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -154,6 +154,7 @@ export const columns: ColumnDef<IProduct>[] = [
       const productId = row.getValue('id') as string
       return (
         <ActionButtonShow
+          viewOnly={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
           path={PATH_NAME.PRODUCT}
           id={productId}
           editContentElement={<EditProductForm productId={productId} />}

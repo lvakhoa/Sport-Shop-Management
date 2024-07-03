@@ -1,4 +1,4 @@
-export { actions } from './actions'
+export { viewOnlyActions, fullAccessActions } from './actions'
 export { PATH_NAME } from './pathName'
 export { ADMIN_PATH_NAME } from './pathName'
 export { AUTH_PATH_NAME } from './pathName'

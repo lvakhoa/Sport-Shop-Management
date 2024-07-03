@@ -1,5 +1,5 @@
 import { useWindowSize } from '@/hooks'
-import { actions, PATH_NAME } from '@/configs'
+import { fullAccessActions, viewOnlyActions } from '@/configs'
 import { Label } from './label'
 import { Input } from './input'
 import ComboBox from './ComboBox'
@@ -10,12 +10,14 @@ import { GENDER, STATUS } from '@/configs/enum'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function ActionButtonShow({
+  viewOnly = false,
   path,
   id,
   editContentElement,
   tableKey,
   deleteMethod,
 }: {
+  viewOnly?: boolean
   path: string
   id: string
   editContentElement?: React.ReactElement
@@ -32,6 +34,7 @@ export default function ActionButtonShow({
       })
     },
   })
+  const actions = viewOnly ? viewOnlyActions : fullAccessActions
 
   const width = useWindowSize()
   if (width > 768)

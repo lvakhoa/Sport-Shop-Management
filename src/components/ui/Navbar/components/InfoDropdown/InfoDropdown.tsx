@@ -59,7 +59,11 @@ export default function InfoDropdown({
           <Image src='/assets/icons/pos2.svg' alt='pos' width={24} height={24} />
           <span>POS</span>
         </Link>
-        <Link onClick={closeDropdown} href={PATH_NAME.SETTINGS} className='flex w-full'>
+        <Link
+          onClick={closeDropdown}
+          href={`${PATH_NAME.SETTINGS.BASE}${PATH_NAME.SETTINGS.PROFILE}`}
+          className='flex w-full'
+        >
           <Image src='/assets/icons/edit.svg' alt='edit' width={24} height={24} />
           <span>Edit Profile</span>
         </Link>
