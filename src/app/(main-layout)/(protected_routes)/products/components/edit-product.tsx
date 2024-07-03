@@ -114,11 +114,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
     if (!!product && !!product.category_list) {
       const categoryIdList = product.category_list.map((c) => ({ category_id: c.category.id }))
       setSelectedCategories(categoryIdList)
-      form.setValue('name', product.name ?? '')
-      form.setValue('description', product.description ?? '')
-      form.setValue('status', product.status)
-      form.setValue('list_price', product.list_price)
-      form.setValue('selling_price', product.selling_price)
       form.setValue('category_list', categoryIdList)
     }
   }, [product, form])
@@ -136,7 +131,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   <Label htmlFor='name' className='text-left'>
                     Name
                   </Label>
-                  <Input id='name' className='col-span-3' {...field} />
+                  <Input id='name' placeholder={product?.name} className='col-span-3' {...field} />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />
@@ -154,7 +149,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   <Label htmlFor='description' className='text-left'>
                     Description
                   </Label>
-                  <Input id='description' className='col-span-3' {...field} />
+                  <Input
+                    id='description'
+                    placeholder={product?.description}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />
@@ -175,7 +175,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   <div className='col-span-3'>
                     <ComboBox
                       key='status'
-                      placeholder='Status'
+                      placeholder={product?.status ? STATUS.ACTIVE : STATUS.INACTIVE}
                       items={status}
                       onValueChange={(val) => {
                         field.value = val === STATUS.ACTIVE
@@ -199,7 +199,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   <Label htmlFor='list_price' className='text-left'>
                     L.Price
                   </Label>
-                  <Input id='list_price' className='col-span-3' {...field} />
+                  <Input
+                    id='list_price'
+                    placeholder={product?.list_price}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />
@@ -217,7 +222,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   <Label htmlFor='selling_price' className='text-left'>
                     S.Price
                   </Label>
-                  <Input id='selling_price' className='col-span-3' {...field} />
+                  <Input
+                    id='selling_price'
+                    placeholder={product?.selling_price}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />
