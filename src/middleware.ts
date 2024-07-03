@@ -7,7 +7,7 @@ import { MANAGER_PATH_NAME, PUBLIC_PATH_NAME } from './configs/pathName'
 
 export default function middleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname
-  const mainPath = pathName.substring(0, pathName.indexOf('/', 1))
+  const mainPath = '/' + pathName.split('/')[1]
   const token = request.cookies.get('access_token')?.value
 
   if (!token && !AUTH_PATH_NAME.includes(mainPath))
