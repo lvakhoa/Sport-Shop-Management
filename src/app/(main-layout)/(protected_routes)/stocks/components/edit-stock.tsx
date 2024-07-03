@@ -36,7 +36,7 @@ const stockSchema = z
     product_id: z.string(),
     color_id: z.string(),
     size: z.enum(['S', 'M', 'L', 'XL']),
-    quantity_in_stock: z.number(),
+    quantity_in_stock: z.string(),
     file: z
       .instanceof(File)
       .refine((file) => file.type.startsWith('image/'), {
@@ -125,7 +125,6 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
       form.setValue('product_id', stock.product_id)
       form.setValue('color_id', stock.color_id)
       form.setValue('size', stock.size)
-      form.setValue('quantity_in_stock', stock.quantity_in_stock)
       setSelectedColorId(stock.color_id)
       setSelectedProductId(stock.product_id)
     }
@@ -271,8 +270,13 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
             <FormItem>
               <FormControl>
                 <div className='grid grid-cols-4 items-center gap-4'>
-                  <FormLabel>Content</FormLabel>
-                  <Input id='quantity' className='col-span-3' {...field} />
+                  <FormLabel>Quantity</FormLabel>
+                  <Input
+                    id='quantity'
+                    placeholder={stock?.quantity_in_stock.toString()}
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />

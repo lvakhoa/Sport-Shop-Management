@@ -31,12 +31,8 @@ const productSchema = z
     name: z.string(),
     description: z.string().optional(),
     status: z.boolean(),
-    list_price: z.number().min(1000, {
-      message: 'List price must be greater or equal to 1000',
-    }),
-    selling_price: z.number().min(1000, {
-      message: 'List price must be greater or equal to 1000',
-    }),
+    list_price: z.string(),
+    selling_price: z.string(),
     category_list: z.array(categorySchema),
   })
   .partial()
@@ -80,8 +76,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
     onSuccess: () => {
       toast.success('Product updated successfully')
     },
-    onError: () => {
-      toast.error('Error updating product')
+    onError: (error) => {
+      toast.error(error.message)
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
@@ -97,8 +93,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
       name: '',
       description: '',
       status: true,
-      list_price: 0,
-      selling_price: 0,
+      list_price: '0',
+      selling_price: '0',
       category_list: [],
     },
   })
@@ -108,8 +104,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
       name: data.name,
       description: data.description,
       status: data.status,
-      list_price: data.list_price,
-      selling_price: data.selling_price,
+      list_price: parseInt(data.list_price ?? '0'),
+      selling_price: parseInt(data.selling_price ?? '0'),
       category_list: selectedCategories,
     })
   }
@@ -121,8 +117,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
       form.setValue('name', product.name ?? '')
       form.setValue('description', product.description ?? '')
       form.setValue('status', product.status)
-      form.setValue('list_price', parseInt(product.list_price))
-      form.setValue('selling_price', parseInt(product.selling_price))
+      form.setValue('list_price', product.list_price)
+      form.setValue('selling_price', product.selling_price)
       form.setValue('category_list', categoryIdList)
     }
   }, [product, form])
