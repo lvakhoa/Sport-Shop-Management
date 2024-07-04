@@ -33,10 +33,10 @@ import { IStockRequest } from '@/interfaces/stock'
 const sizes: string[] = ['S', 'M', 'L', 'XL']
 const stockSchema = z
   .object({
-    product_id: z.string(),
-    color_id: z.string(),
-    size: z.enum(['S', 'M', 'L', 'XL']),
-    quantity_in_stock: z.string(),
+    product_id: z.string().optional(),
+    color_id: z.string().optional(),
+    size: z.enum(['S', 'M', 'L', 'XL']).optional(),
+    quantity_in_stock: z.string().optional(),
     file: z
       .instanceof(File)
       .refine((file) => file.type.startsWith('image/'), {
@@ -100,7 +100,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === 'all-stocks',
+        predicate: (query) => query.queryKey[0] === 'stocks',
       })
       await queryClient.invalidateQueries({ queryKey: queryKeys.stockDetails.gen(stockId) })
     },

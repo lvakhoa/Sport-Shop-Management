@@ -28,11 +28,11 @@ const categorySchema = z.object({
 
 const productSchema = z
   .object({
-    name: z.string(),
+    name: z.string().optional(),
     description: z.string().optional(),
-    status: z.boolean(),
-    list_price: z.string(),
-    selling_price: z.string(),
+    status: z.boolean().optional(),
+    list_price: z.string().optional(),
+    selling_price: z.string().optional(),
     category_list: z.array(categorySchema),
   })
   .partial()
