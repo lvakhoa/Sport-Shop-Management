@@ -89,14 +89,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      status: true,
-      list_price: '0',
-      selling_price: '0',
-      category_list: [],
-    },
   })
 
   function onSubmit(data: z.infer<typeof productSchema>) {
