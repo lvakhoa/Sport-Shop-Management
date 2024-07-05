@@ -73,7 +73,7 @@ function InformationPage() {
                   </div>
                   <div>
                     <Link href={`${PATH_NAME.CUSTOMER}/${details.id}`}>
-                      <Button size='sm'>Go to customer's details</Button>
+                      <Button size='sm'>Go to customer&#39;s details</Button>
                     </Link>
                   </div>
                 </>
