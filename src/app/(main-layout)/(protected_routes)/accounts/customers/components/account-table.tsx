@@ -1,52 +1,47 @@
 'use client'
 
 import { FILTER_INPUT_TYPE, ROLE_TITLE } from '@/configs/enum'
-import { eventColumns, IEvent } from './event-columns'
-import CreateEventForm from './create-event'
+import { customerAccountColumns, ICustomerAccount } from './account-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
-import { eventApi } from '@/apis'
+import { accountApi, customerAccountApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
 import moment from 'moment'
+import CreateCustomerAccountForm from './create-account'
 
-const eventFilterInput: IFilterInput[] = [
+const customerAccFilterInput: IFilterInput[] = [
   {
-    key: 'title',
-    title: 'Title',
-    type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'sale_percent',
-    title: 'Sale Percent',
+    key: 'email',
+    title: 'Email',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
 ]
 
-export default function EventTable({ accountRole }: { accountRole: ROLE_TITLE }) {
+export default function CustomerAccountTable({ accountRole }: { accountRole: ROLE_TITLE }) {
   const { isBrowser } = useBrowser()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
   const { isPending, data: queryData } = useQuery({
-    queryKey: queryKeys.events.gen(pagination.pageIndex),
-    queryFn: () => eventApi.getAllEvents(pagination.pageSize, pagination.pageIndex + 1),
+    queryKey: queryKeys.customerAccount,
+    queryFn: () =>
+      customerAccountApi.getAllCustomerAccounts(pagination.pageSize, pagination.pageIndex + 1),
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IEvent[] =
+  console.log('queryData', queryData)
+
+  const data: ICustomerAccount[] =
     queryData?.map((item) => {
       return {
         id: item.id,
-        title: item.title,
-        content: item.content,
-        sale_percent: item.sale_percent.toString(),
-        start_date: moment(item.start_date).toString(),
-        end_date: moment(item.end_date).toString(),
+        email: item.email,
+        customer: item.customer ? item.customer.fullname : 'N/A',
         total: item.total,
       }
     }) ?? []
@@ -55,25 +50,25 @@ export default function EventTable({ accountRole }: { accountRole: ROLE_TITLE })
     <>
       {!!isBrowser && (
         <DataTable
-          columns={eventColumns(accountRole)}
+          columns={customerAccountColumns(accountRole)}
           data={data}
-          title='Events'
-          queryKey='events'
-          addContentSidebar={<CreateEventForm />}
+          title='Customer Accounts'
+          queryKey='customer-account'
+          addContentSidebar={<CreateCustomerAccountForm />}
           pagination={pagination}
           setPagination={setPagination}
-          filterInput={eventFilterInput}
+          filterInput={customerAccFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
           showAddButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
           showRestoreButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
           restore7daysFn={() =>
-            eventApi.restoreEvent(moment().subtract(7, 'days').utc().unix().valueOf())
+            accountApi.restoreByDate(moment().subtract(7, 'days').utc().unix().valueOf())
           }
           restore30daysFn={() =>
-            eventApi.restoreEvent(moment().subtract(30, 'days').utc().unix().valueOf())
+            accountApi.restoreByDate(moment().subtract(30, 'days').utc().unix().valueOf())
           }
-          restoreAllFn={() => eventApi.restoreEvent()}
+          restoreAllFn={() => accountApi.restoreByDate()}
         />
       )}
     </>

@@ -18,11 +18,20 @@ export default function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(PATH_NAME.HOME, request.url))
 
     const user = jwtDecode<any>(token)
-    if (user.roleName === ROLE_TITLE.ADMIN && ADMIN_PATH_NAME.includes(mainPath))
+    if (
+      user.roleName === ROLE_TITLE.ADMIN &&
+      (ADMIN_PATH_NAME.includes(mainPath) || ADMIN_PATH_NAME.includes(pathName))
+    )
       return NextResponse.next()
-    else if (user.roleName === ROLE_TITLE.MANAGER && MANAGER_PATH_NAME.includes(mainPath))
+    else if (
+      user.roleName === ROLE_TITLE.MANAGER &&
+      (MANAGER_PATH_NAME.includes(mainPath) || MANAGER_PATH_NAME.includes(pathName))
+    )
       return NextResponse.next()
-    else if (user.roleName === ROLE_TITLE.EMPLOYEE && PUBLIC_PATH_NAME.includes(mainPath))
+    else if (
+      user.roleName === ROLE_TITLE.EMPLOYEE &&
+      (PUBLIC_PATH_NAME.includes(mainPath) || PUBLIC_PATH_NAME.includes(pathName))
+    )
       return NextResponse.next()
     else return NextResponse.redirect(new URL('/not-found', request.url))
   }

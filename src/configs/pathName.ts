@@ -1,5 +1,11 @@
 export const PATH_NAME = {
   HOME: '/',
+  ACCOUNT: {
+    BASE: '/accounts',
+    EMPLOYEE: '/employees',
+    CUSTOMER: '/customers',
+  },
+
   CUSTOMER: '/customers',
   CATEGORY: '/categories',
   EMPLOYEE: '/employees',
@@ -55,5 +61,8 @@ export const MANAGER_PATH_NAME = [...PUBLIC_PATH_NAME, PATH_NAME.EMPLOYEE]
 export const ADMIN_PATH_NAME = [
   ...PUBLIC_PATH_NAME,
   PATH_NAME.EMPLOYEE,
+  PATH_NAME.ACCOUNT.BASE,
+  `${PATH_NAME.ACCOUNT.BASE}${PATH_NAME.ACCOUNT.CUSTOMER}`,
+  `${PATH_NAME.ACCOUNT.BASE}${PATH_NAME.ACCOUNT.EMPLOYEE}`,
   `${PATH_NAME.SETTINGS.BASE}${PATH_NAME.SETTINGS.ROLE_PERMISSION}`,
 ]

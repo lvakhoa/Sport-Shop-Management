@@ -68,6 +68,7 @@ function VoucherTable({ accountRole }: { accountRole: ROLE_TITLE }) {
           columns={voucherColumns(accountRole)}
           data={data}
           title='Vouchers'
+          queryKey='vouchers'
           addContentSidebar={<CreateVoucherForm />}
           pagination={pagination}
           setPagination={setPagination}

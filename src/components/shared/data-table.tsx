@@ -47,6 +47,7 @@ interface DataTableProps<TData, TValue> {
   restore7daysFn?: () => Promise<string | undefined>
   restore30daysFn?: () => Promise<string | undefined>
   restoreAllFn?: () => Promise<string | undefined>
+  queryKey?: string
 }
 
 interface InputValues {
@@ -80,6 +81,7 @@ export default function DataTable<TData, TValue>({
   restore7daysFn,
   restore30daysFn,
   restoreAllFn,
+  queryKey,
 }: DataTableProps<TData, TValue>) {
   const [isOpened, setIsOpened] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([])
@@ -146,7 +148,7 @@ export default function DataTable<TData, TValue>({
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === title.toLowerCase(),
+        predicate: (query) => query.queryKey[0] === queryKey,
       })
     },
   })
@@ -161,7 +163,7 @@ export default function DataTable<TData, TValue>({
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === title.toLowerCase(),
+        predicate: (query) => query.queryKey[0] === queryKey,
       })
     },
   })
@@ -176,7 +178,7 @@ export default function DataTable<TData, TValue>({
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === title.toLowerCase(),
+        predicate: (query) => query.queryKey[0] === queryKey,
       })
     },
   })

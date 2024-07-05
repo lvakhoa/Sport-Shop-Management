@@ -43,6 +43,7 @@ export default function CustomerManagementPage() {
           columns={columns}
           data={data}
           title='Customers'
+          queryKey='customers'
           addContentSidebar={<CreateCustomerForm />}
           pagination={pagination}
           setPagination={setPagination}
