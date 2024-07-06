@@ -98,7 +98,7 @@ export function ForgotPasswordForm({ className }: IForgotPasswordForm) {
             </FormItem>
           )}
         />
-        {sendState && <SuccessfulSendMessage />}
+        {sendState && <SuccessfulSendMessage message={form.getValues('email')} />}
         <Button
           type='submit'
           disabled={forgotPassword.isPending || secondsLeft > 0}
