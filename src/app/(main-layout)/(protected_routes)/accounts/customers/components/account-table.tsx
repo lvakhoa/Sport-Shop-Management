@@ -4,7 +4,7 @@ import { FILTER_INPUT_TYPE, ROLE_TITLE } from '@/configs/enum'
 import { customerAccountColumns, ICustomerAccount } from './account-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { accountApi, customerAccountApi } from '@/apis'
@@ -34,17 +34,32 @@ export default function CustomerAccountTable({ accountRole }: { accountRole: ROL
     placeholderData: (previousData) => previousData,
   })
 
-  console.log('queryData', queryData)
+  // const [data, setData] = useState<ICustomerAccount[]>([])
+
+  // useEffect(() => {
+  //   if (!!queryData && queryData.length > 0) {
+  //     setData(
+  //       queryData.map((item) => ({
+  //         id: item.id,
+  //         email: item.email,
+  //         customer: item.customer?.fullname || 'N/A',
+  //         total: item.total,
+  //       })),
+  //     )
+  //   }
+  // }, [queryData])
 
   const data: ICustomerAccount[] =
-    queryData?.map((item) => {
-      return {
-        id: item.id,
-        email: item.email,
-        customer: item.customer ? item.customer.fullname : 'N/A',
-        total: item.total,
-      }
-    }) ?? []
+    queryData && queryData.length > 0
+      ? queryData?.map((item) => ({
+          id: item.id,
+          email: item.email,
+          customer: item.customer?.fullname || 'N/A',
+          total: item.total,
+        }))
+      : []
+
+  console.log(data)
 
   return (
     <>

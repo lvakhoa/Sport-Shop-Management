@@ -4,7 +4,7 @@ import { FILTER_INPUT_TYPE, ROLE_TITLE } from '@/configs/enum'
 import { employeeAccountColumns, IEmployeeAccount } from './account-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { accountApi, employeeAccountApi } from '@/apis'
@@ -39,16 +39,21 @@ export default function EmployeeAccountTable({ accountRole }: { accountRole: ROL
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IEmployeeAccount[] =
-    queryData?.map((item) => {
-      return {
-        id: item.id,
-        email: item.email,
-        role: item.role.title,
-        employee: item.employee ? item.employee.fullname : 'N/A',
-        total: item.total,
-      }
-    }) ?? []
+  const [data, setData] = useState<IEmployeeAccount[]>([])
+
+  useEffect(() => {
+    if (!!queryData && queryData.length > 0) {
+      setData(
+        queryData.map((item) => ({
+          id: item.id,
+          email: item.email,
+          role: item.role.title,
+          employee: item.employee?.fullname || 'N/A',
+          total: item.total,
+        })),
+      )
+    }
+  }, [queryData])
 
   return (
     <>
@@ -65,14 +70,7 @@ export default function EmployeeAccountTable({ accountRole }: { accountRole: ROL
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
           showAddButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
-          showRestoreButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
-          restore7daysFn={() =>
-            accountApi.restoreByDate(moment().subtract(7, 'days').utc().unix().valueOf())
-          }
-          restore30daysFn={() =>
-            accountApi.restoreByDate(moment().subtract(30, 'days').utc().unix().valueOf())
-          }
-          restoreAllFn={() => accountApi.restoreByDate()}
+          showRestoreButton={false}
         />
       )}
     </>

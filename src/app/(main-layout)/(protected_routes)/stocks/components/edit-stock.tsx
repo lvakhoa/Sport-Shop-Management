@@ -112,8 +112,8 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
 
   function onSubmit(data: z.infer<typeof stockSchema>) {
     editStock({
-      product_id: selectedProductId,
-      color_id: selectedColorId,
+      product_id: data.product_id,
+      color_id: data.color_id,
       size: data.size as SIZE,
       quantity_in_stock: data.quantity_in_stock,
       file: data.file,
@@ -124,12 +124,17 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
     if (!!stock) {
       setSelectedColorId(stock.color_id)
       setSelectedProductId(stock.product_id)
+      form.setValue('quantity_in_stock', stock.quantity_in_stock.toString())
     }
-  }, [stock, form])
+  }, [stock])
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-4 py-4'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        encType='multipart/form-data'
+        className='grid gap-4 py-4'
+      >
         <FormField
           control={form.control}
           name='product_id'
