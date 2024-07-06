@@ -14,9 +14,6 @@ export function SuccessfulSendMessage({ message }: ISuccessfulMessage) {
         <Image alt='' src='./icons/success.svg' width={24} height={24} />
         <span className='text-[20px]'>We have sent an email to {message} with instructions.</span>
       </div>
-      <Link className='mt-[10px] flex cursor-pointer justify-center' href=''>
-        <span className='text-[16px]'>Still can not find the email?</span>
-      </Link>
     </div>
   )
 }
