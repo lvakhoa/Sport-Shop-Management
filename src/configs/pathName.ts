@@ -5,7 +5,7 @@ export const PATH_NAME = {
     EMPLOYEE: '/employees',
     CUSTOMER: '/customers',
   },
-
+  ORDER: '/order',
   CUSTOMER: '/customers',
   CATEGORY: '/categories',
   EMPLOYEE: '/employees',
@@ -48,6 +48,7 @@ export const PUBLIC_PATH_NAME = [
   PATH_NAME.VOUCHER,
   PATH_NAME.PRODUCT,
   PATH_NAME.POS,
+  PATH_NAME.ORDER,
   PATH_NAME.STOCK,
   PATH_NAME.ORDER_DETAILS,
   `${PATH_NAME.SETTINGS.BASE}${PATH_NAME.SETTINGS.PROFILE}`,

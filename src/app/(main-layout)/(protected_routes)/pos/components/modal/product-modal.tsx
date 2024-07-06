@@ -64,10 +64,11 @@ export function ProductModal({
     })
   }, [api, currentItem])
 
+  //kệ cái warning kêu thêm colors với sizes nhé
   useEffect(() => {
     setColor(colors[0])
     setSize(sizes[0])
-  }, [colors, isOpen, sizes])
+  }, [isOpen])
 
   return (
     <div>

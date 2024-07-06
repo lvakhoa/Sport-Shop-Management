@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { useOrderStore } from '@/stores'
 import { useRouter } from 'next/navigation'
 import InputNumber from '@/components/shared/InputNumber'
+import { PATH_NAME } from '@/configs'
 
 export function PosTab({
   handleRemove,
@@ -114,7 +115,7 @@ export function PosTab({
                 variant='default'
                 className='gap-[5px] rounded-full'
                 onClick={() => {
-                  router.push('/order')
+                  router.push(PATH_NAME.ORDER)
                 }}
               >
                 Order
