@@ -45,6 +45,7 @@ export default function EmployeesManagementPage() {
           columns={columns}
           data={data}
           title='Employees'
+          queryKey='employees'
           addContentSidebar={<CreateEmployeeForm />}
           pagination={pagination}
           setPagination={setPagination}

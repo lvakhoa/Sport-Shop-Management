@@ -49,6 +49,9 @@ export const queryKeys = {
   employees: {
     gen: (page?: number) => ['employees', page],
   },
+  employeeAccountDetails: {
+    gen: (id: string) => ['employeeAccountDetails', id],
+  },
   employeeDetails: {
     gen: (id: string) => ['employeeDetails', id],
   },
@@ -57,6 +60,9 @@ export const queryKeys = {
     gen: (page?: number) => ['customers', page],
   },
   customerAccount: ['customer-account'],
+  customerAccountDetails: {
+    gen: (id: string) => ['customerAccountDetails', id],
+  },
   customerDetails: {
     gen: (id: string) => ['customerDetails', id],
   },

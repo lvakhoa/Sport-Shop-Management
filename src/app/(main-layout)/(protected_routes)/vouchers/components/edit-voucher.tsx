@@ -47,8 +47,8 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
     onSuccess: () => {
       toast.success('Voucher updated successfully')
     },
-    onError: () => {
-      toast.error('Error updating voucher')
+    onError: (error) => {
+      toast.error(error.message)
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
@@ -60,13 +60,6 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
 
   const form = useForm<z.infer<typeof voucherSchema>>({
     resolver: zodResolver(voucherSchema),
-    defaultValues: {
-      title: '',
-      code: '',
-      sale_percent: '',
-      quantity: '',
-      expired_date: moment().toISOString(),
-    },
   })
 
   function onSubmit(data: z.infer<typeof voucherSchema>) {
@@ -82,7 +75,6 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
   useEffect(() => {
     if (!!voucher) {
       form.setValue('title', voucher.title ?? '')
-      form.setValue('code', voucher.code ?? '')
       form.setValue('sale_percent', voucher.sale_percent.toString())
       form.setValue('quantity', voucher.quantity.toString())
       form.setValue('expired_date', moment(voucher.expired_date).toString())
@@ -120,7 +112,7 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
                   <Label htmlFor='code' className='text-left'>
                     Code
                   </Label>
-                  <Input id='code' className='col-span-3' {...field} />
+                  <Input id='code' placeholder={voucher?.code} className='col-span-3' {...field} />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />

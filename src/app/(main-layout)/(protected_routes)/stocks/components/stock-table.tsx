@@ -68,6 +68,7 @@ export default function StockTable({ accountRole }: { accountRole: ROLE_TITLE })
           columns={stockColumns(accountRole)}
           data={data}
           title='Stocks'
+          queryKey='stocks'
           addContentSidebar={<CreateStockForm />}
           pagination={pagination}
           setPagination={setPagination}

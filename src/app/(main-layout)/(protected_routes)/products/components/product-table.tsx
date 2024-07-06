@@ -79,6 +79,7 @@ export default function ProductTable({ accountRole }: { accountRole: ROLE_TITLE 
           columns={productColumns(accountRole)}
           data={data}
           title='Products'
+          queryKey='products'
           addContentSidebar={<CreateProductForm />}
           pagination={pagination}
           setPagination={setPagination}

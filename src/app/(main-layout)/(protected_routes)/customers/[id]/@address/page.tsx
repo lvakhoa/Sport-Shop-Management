@@ -62,6 +62,7 @@ export default function AddressPage() {
             columns={columns}
             data={data}
             title='Address'
+            queryKey='addresses'
             pagination={pagination}
             setPagination={setPagination}
             filterInput={addressFilterInput}

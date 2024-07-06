@@ -18,6 +18,7 @@ export interface IAccountResponse {
     id: string
     fullname: string
   }
+  total: number
 }
 
 export interface IEmployeeAccountRequest {

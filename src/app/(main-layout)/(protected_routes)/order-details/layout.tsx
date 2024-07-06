@@ -9,13 +9,14 @@ import { useState } from 'react'
 import { IOrderResponse } from '@/interfaces/order'
 import { cn } from '@/lib/utils'
 import moment from 'moment'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 function OrdersManagementLayout({ children }: { children: React.ReactNode }) {
   const [selectedOrder, setSelectedOrder] = useState<IOrderResponse | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [filter, setFilter] = useState<string>('All Order')
   const router = useRouter()
+  const pathName = usePathname()
 
   const handleOrderClick = (order: IOrderResponse) => {
     setSelectedOrder(order)
@@ -33,6 +34,7 @@ function OrdersManagementLayout({ children }: { children: React.ReactNode }) {
   const { data: ordersData } = useQuery({
     queryKey: queryKeys.allOrders.gen(),
     queryFn: () => orderApi.getAllOrders(),
+    enabled: pathName.includes(PATH_NAME.ORDER_DETAILS),
   })
 
   return (

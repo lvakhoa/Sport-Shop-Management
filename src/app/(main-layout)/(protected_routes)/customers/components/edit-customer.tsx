@@ -212,7 +212,7 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
                       <SelectGroup>
                         {!!accounts &&
                           accounts.map((acc) => {
-                            if (!!acc)
+                            if (!acc.customer || acc.customer.id === customerId)
                               return (
                                 <SelectItem key={acc.id} value={acc.id}>
                                   {acc.email}

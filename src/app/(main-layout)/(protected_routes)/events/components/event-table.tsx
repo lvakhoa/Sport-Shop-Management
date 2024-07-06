@@ -58,6 +58,7 @@ export default function EventTable({ accountRole }: { accountRole: ROLE_TITLE })
           columns={eventColumns(accountRole)}
           data={data}
           title='Events'
+          queryKey='events'
           addContentSidebar={<CreateEventForm />}
           pagination={pagination}
           setPagination={setPagination}
