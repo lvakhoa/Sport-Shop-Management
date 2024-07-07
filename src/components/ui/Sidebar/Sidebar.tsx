@@ -7,6 +7,11 @@ import { useBrowser, useWindowSize } from '@/hooks'
 import { usePathname } from 'next/navigation'
 import { PATH_NAME } from '@/configs'
 
+const extractMiddle = (path: string): string => {
+  const pathSegments = path.split('/').filter((segment) => segment !== '')
+  return `/${pathSegments[0]}`
+}
+
 export default function Sidebar({
   sidebarItems,
   isSidebarVisible,
@@ -69,7 +74,9 @@ function SidebarComponent({
                 link={item.link}
                 active={
                   pathName === item.link ||
-                  (item.link === PATH_NAME.HOME ? false : pathName.includes(item.link))
+                  (item.link === PATH_NAME.HOME
+                    ? false
+                    : extractMiddle(pathName) === extractMiddle(item.link))
                 }
               />
             ))}
