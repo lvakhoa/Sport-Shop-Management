@@ -39,8 +39,15 @@ export default function Navbar({
     <header className={cn('fixed left-0 top-0 z-50 w-full bg-white-100 shadow-md')}>
       <nav className={cn(styles.nav, 'nav-wrapper container')}>
         <div className={cn(styles.nav, 'flex items-center justify-between')}>
-          <Link href={PATH_NAME.HOME} className='block'>
-            <Image width={128} height={40} src='/assets/images/logo.png' alt='logo' />
+          <Link href={PATH_NAME.HOME} className='flex h-[--header-height] items-center'>
+            <Image
+              layout='relative'
+              width={128}
+              height={128}
+              objectFit='contain'
+              src='/assets/images/logo.png'
+              alt='logo'
+            />
           </Link>
           <div className='relative flex items-center gap-4 transition max-[320px]:gap-2'>
             <Link
