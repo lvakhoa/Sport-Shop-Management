@@ -15,6 +15,12 @@ interface SettingsProps extends React.HTMLAttributes<HTMLElement> {
 
 export function SettingSidebarNav({ className, items }: SettingsProps) {
   const pathname = usePathname()
+
+  const extractLast = (url: string): string => {
+    const lastSlashIndex = url.lastIndexOf('/')
+    return url.substring(lastSlashIndex)
+  }
+
   return (
     <nav
       className={cn(
@@ -28,7 +34,7 @@ export function SettingSidebarNav({ className, items }: SettingsProps) {
             key={item.href}
             variant='ghost'
             className={cn(
-              pathname.includes(item.href)
+              extractLast(pathname) === extractLast(item.href)
                 ? 'bg-blue-50 hover:bg-blue-50'
                 : 'bg-transparent hover:bg-muted',
               'justify-start min-[1100px]:w-full',
