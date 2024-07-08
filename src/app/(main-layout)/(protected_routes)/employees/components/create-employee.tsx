@@ -26,7 +26,10 @@ const employeeSchema = z
     account_id: z.string().nullable(),
     position_id: z.string().nullable(),
     fullname: z.string(),
-    phone: z.string(),
+    phone: z
+      .string()
+      .min(10)
+      .regex(/^\d{10,11}$/, 'Invalid phone number'),
     email: z.string().email(),
     gender: z.enum(['MALE', 'FEMALE']),
     started_date: z.string().datetime(),

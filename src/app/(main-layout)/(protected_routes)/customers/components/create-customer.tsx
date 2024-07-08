@@ -25,7 +25,10 @@ const customerSchema = z
   .object({
     account_id: z.string(),
     fullname: z.string(),
-    phone: z.string(),
+    phone: z
+      .string()
+      .min(10)
+      .regex(/^\d{10,11}$/, 'Invalid phone number'),
     email: z.string().email(),
     gender: z.enum(['MALE', 'FEMALE']),
     rank: z.enum([RANK.COPPER, RANK.SILVER, RANK.GOLD]),
