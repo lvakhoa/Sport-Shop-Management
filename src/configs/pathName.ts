@@ -15,7 +15,7 @@ export const PATH_NAME = {
   POS: '/pos',
   STOCK: '/stocks',
   LOGIN: '/log-in',
-  RESET_PASSWORD: '/reset',
+  RESET_PASSWORD: '/reset-password',
   FORGOT_PASSWORD: '/forgot-password',
   VERIFICATION: '/verification',
   VERIFICATION_SUCCESS: '/verification-success',
