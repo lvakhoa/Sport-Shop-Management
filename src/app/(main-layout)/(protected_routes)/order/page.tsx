@@ -150,7 +150,9 @@ export default function OrderPage() {
               name='customer_id'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Customer</FormLabel>
+                  <FormLabel>
+                    <span className='text-red-500'>*</span> Customer
+                  </FormLabel>
                   <Select
                     value={field.value}
                     onValueChange={(value) => {
@@ -184,7 +186,9 @@ export default function OrderPage() {
               name='address_id'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Shipping Address</FormLabel>
+                  <FormLabel>
+                    <span className='text-red-500'>*</span> Shipping Address
+                  </FormLabel>
                   <Select onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
@@ -223,7 +227,9 @@ export default function OrderPage() {
               name='shipping_price'
               render={({ field }) => (
                 <FormItem className='space-y-3'>
-                  <FormLabel>Shipping Method</FormLabel>
+                  <FormLabel>
+                    <span className='text-red-500'>*</span> Shipping Method
+                  </FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} className='flex flex-col space-y-1'>
                       {shippingPriceData?.map((shippingPrice, index) => (
@@ -255,7 +261,9 @@ export default function OrderPage() {
               name='payment_type'
               render={({ field }) => (
                 <FormItem className='space-y-3'>
-                  <FormLabel>Payment Method</FormLabel>
+                  <FormLabel>
+                    <span className='text-red-500'>*</span> Payment Method
+                  </FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -293,7 +301,16 @@ export default function OrderPage() {
                 </FormItem>
               )}
             ></FormField>
-            <Button type='submit' className='w-full'>
+            <Button
+              type='submit'
+              className='w-full'
+              disabled={
+                !form.getValues('customer_id') ||
+                !form.getValues('address_id') ||
+                !form.getValues('shipping_price') ||
+                !form.getValues('payment_type')
+              }
+            >
               Place Order
             </Button>
           </form>
