@@ -128,4 +128,9 @@ export const queryKeys = {
   colors: {
     gen: (id?: string) => ['colors', id],
   },
+  //SHIPMENTS
+  allShipments: ['all-shipments'],
+  shipments: {
+    gen: (id?: string) => ['shipments', id],
+  },
 }

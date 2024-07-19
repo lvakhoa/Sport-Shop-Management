@@ -58,7 +58,7 @@ function ShipmentInfo({ order }: { order: IOrderResponse }) {
             <span>
               {order.shipment.shipped_date
                 ? moment(order.shipment.shipped_date).format('YYYY-MM-DD HH:mm:ss')
-                : ''}
+                : 'Awaiting confirmation'}
             </span>
           )}
         </div>
