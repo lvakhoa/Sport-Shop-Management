@@ -2,7 +2,7 @@ import { Button } from '@/components/shared'
 import { CancelledLabel, ConfirmLabel } from './ShipmentStatusLabel'
 import { IOrderResponse, IOrderUpdateRequest } from '@/interfaces/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { orderApi } from '@/apis'
+import { orderApi, shipmentApi } from '@/apis'
 import { toast } from 'react-toastify'
 import { queryKeys } from '@/configs'
 import { useProfile } from '@/hooks'
@@ -11,6 +11,8 @@ import { createPortal } from 'react-dom'
 import Invoice from './Invoice'
 import { ORDER_STATUS } from '@/configs/enum'
 import { Printer } from 'lucide-react'
+import { IShipmentUpdateRequest } from '@/interfaces/shipment'
+import moment from 'moment'
 
 function ActionBar({ order }: { order: IOrderResponse }) {
   const profile = useProfile()
@@ -25,6 +27,21 @@ function ActionBar({ order }: { order: IOrderResponse }) {
     },
     onError: () => {
       toast.error('Error updating order')
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.allOrders.gen() })
+      await queryClient.invalidateQueries({ queryKey: queryKeys.orderDetails.gen(order.id) })
+    },
+  })
+
+  const { mutate: confirmShipment } = useMutation({
+    mutationFn: (data: Partial<IShipmentUpdateRequest>) =>
+      shipmentApi.updateShipment(data, order.shipment.id),
+    onSuccess: () => {
+      toast.success('Confirm shipment successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.allOrders.gen() })
@@ -60,6 +77,18 @@ function ActionBar({ order }: { order: IOrderResponse }) {
     }
   }
 
+  const handleShipment = () => {
+    const updateData: Partial<IShipmentUpdateRequest> = {
+      order_id: order.id,
+      address_id: order.shipment.address_id,
+      shipped: true,
+      shipped_date: moment().toDate(),
+      completed_date: moment().toDate(),
+      shipment_tracking: 'Da giao hang',
+    }
+    confirmShipment(updateData)
+  }
+
   return (
     <div className='flex w-full flex-row items-center justify-between px-[20px] py-[10px]'>
       <div className='flex flex-col space-y-[5px]'>
@@ -84,6 +113,9 @@ function ActionBar({ order }: { order: IOrderResponse }) {
           </Button>
         )}
         {order.status === ORDER_STATUS.PENDING && <Button onClick={handleCancel}>Cancel</Button>}
+        {order.status !== ORDER_STATUS.CANCELLED && !order.shipment.shipped && (
+          <Button onClick={handleShipment}>Confirm Shipment</Button>
+        )}
       </div>
       {order.shipment &&
         createPortal(
