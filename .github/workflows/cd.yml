@@ -32,9 +32,9 @@ jobs:
             git stash --include-untracked
             git reset --hard
             git clean -fd
-            git pull origin dev
+            remote_repo="https://${{ secrets.REPO_ACTOR }}:${{ secrets.REPO_TOKEN }}@github.com/${{ secrets.REPO_REPOSITORY }}.git"
+            git pull "$remote_repo" dev
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
             npm install
-            npm run build
             pm2 start npm --name "shop_fe" -- run start
