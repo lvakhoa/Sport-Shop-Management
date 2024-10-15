@@ -32,7 +32,7 @@ jobs:
             git stash --include-untracked
             git reset --hard
             git clean -fd
-            remote_repo="https://${{ secrets.REPO_ACTOR }}:${{ secrets.REPO_TOKEN }}@github.com/${{ secrets.REPO_REPOSITORY }}.git"
+            remote_repo="https://${{ secrets.REPO_ACTOR }}:${{ secrets.REPO_TOKEN }}@github.com/${{ secrets.REPO_ACTOR }}/${{ secrets.REPO_REPOSITORY }}.git"
             git pull "$remote_repo" dev
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
