@@ -92,9 +92,18 @@ function OverviewTag({}: Props) {
         {...overviewStats[0]}
         content={currencyFormatter(isNaN(totalIncome) ? 0 : totalIncome)}
       />
-      <Tag {...overviewStats[1]} content={`${!!totalOrders ? totalOrders[0].total : 0}`} />
-      <Tag {...overviewStats[2]} content={`${!!totalCustomers ? totalCustomers[0].total : 0}`} />
-      <Tag {...overviewStats[3]} content={`${!!totalProducts ? totalProducts[0].total : 0}`} />
+      <Tag
+        {...overviewStats[1]}
+        content={`${!!totalOrders && totalOrders.length > 0 ? totalOrders[0].total : 0}`}
+      />
+      <Tag
+        {...overviewStats[2]}
+        content={`${!!totalCustomers && totalCustomers.length > 0 ? totalCustomers[0].total : 0}`}
+      />
+      <Tag
+        {...overviewStats[3]}
+        content={`${!!totalProducts && totalProducts.length > 0 ? totalProducts[0].total : 0}`}
+      />
     </div>
   )
 }
