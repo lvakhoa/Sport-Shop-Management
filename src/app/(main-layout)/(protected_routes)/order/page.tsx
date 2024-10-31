@@ -186,9 +186,6 @@ export default function OrderPage() {
               name='address_id'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    <span className='text-red-500'>*</span> Shipping Address
-                  </FormLabel>
                   <Select onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
@@ -304,12 +301,9 @@ export default function OrderPage() {
             <Button
               type='submit'
               className='w-full'
-              disabled={
-                !form.getValues('customer_id') ||
-                !form.getValues('address_id') ||
-                !form.getValues('shipping_price') ||
-                !form.getValues('payment_type')
-              }
+              disabled={Object.entries(form.formState.errors).some(
+                ([_, value]) => value !== undefined,
+              )}
             >
               Place Order
             </Button>
