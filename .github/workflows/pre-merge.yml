@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "We are using NPM to install package!"
           rm -rf yarn.lock
-          npm install
+          npm install --legacy-peer-deps
 
       - name: Add .env
         run: |
