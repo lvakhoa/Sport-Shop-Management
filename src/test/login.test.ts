@@ -38,4 +38,23 @@ describe('Login', () => {
       }
     }
   })
+
+  it('should not let unauthorized account to log in', async () => {
+    try {
+      await axios.post('https://api.clothy.lvakhoa.me/api/v1/auth/log-in', {
+        email: 'quominle@gmail.com',
+        password: 'abcd1234',
+      })
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.error('Error response data:', error.response.data)
+        console.error('Error response status:', error.response.status)
+        expect(error.response.status).toBe(401)
+        expect(error.response.data).toHaveProperty('message')
+        expect(error.response.data.message).toBe('Account is not verified')
+      } else {
+        throw error
+      }
+    }
+  })
 })
