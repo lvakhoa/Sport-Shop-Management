@@ -30,11 +30,9 @@ describe('Login', () => {
       })
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        const errorData = error.response.data
         console.error('Error response data:', error.response.data)
         console.error('Error response status:', error.response.status)
         expect(error.response.status).toBe(400)
-        throw errorData
       } else {
         throw error
       }
