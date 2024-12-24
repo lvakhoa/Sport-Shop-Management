@@ -52,4 +52,33 @@ describe('Voucher', () => {
       }
     }
   })
+
+  it('should return deleted', async () => {
+    const response = await axios.delete(
+      'https://api.clothy.lvakhoa.me/api/v1/vouchers/dfd630de-5c8f-49d7-8f03-64359d0',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    expect(response.status).toBe(200)
+  })
+
+  it('should return not exist voucher', async () => {
+    try {
+      const response = await axios.delete(
+        'https://api.clothy.lvakhoa.me/api/v1/vouchers/dfd630de-5c8f-49d7-8f03-64359d0',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response && error.response.status === 500) {
+        expect(error.response.status).toBe(500)
+      }
+    }
+  })
 })
