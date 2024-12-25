@@ -11,7 +11,11 @@ describe('Event', () => {
     token = response.data.access_token
   })
   it('should return a list of events', async () => {
-    const response = await axios.get('https://api.clothy.lvakhoa.me/api/v1/events')
+    const response = await axios.get('https://api.clothy.lvakhoa.me/api/v1/events', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
 
     expect(response.status).toBe(200)
     expect(Array.isArray(response.data)).toBe(true)
@@ -22,6 +26,11 @@ describe('Event', () => {
   it('should return an event by id', async () => {
     const response = await axios.get(
       'https://api.clothy.lvakhoa.me/api/v1/events/09a16749-83cf-4fc6-932b-af661e9c9a9a',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     )
 
     expect(response.status).toBe(200)
@@ -57,5 +66,6 @@ describe('Event', () => {
         },
       },
     )
+    expect(response.status).toBe(201)
   })
 })
