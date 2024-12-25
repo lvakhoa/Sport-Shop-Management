@@ -14,7 +14,7 @@ function AuthForm({ title, description, content }: IAuthForm) {
         <Image
           className='w-1/2'
           alt='Auth Image'
-          src='/assets/images/login.svg'
+          src='/assets/images/login.png'
           width={500}
           height={450}
         />
