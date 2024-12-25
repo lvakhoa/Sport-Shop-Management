@@ -86,4 +86,23 @@ describe('Voucher', () => {
       }
     }
   })
+
+  it('should update an existing voucher', async () => {
+    const response = await axios.patch(
+      `https://api.clothy.lvakhoa.me/api/v1/vouchers/e53612d5-1fee-42e8-b223-aa58e5f17a3e`,
+      {
+        code: 'SUMMER2025',
+        quantity: 1,
+        sale_percent: 0.4,
+        title: 'SUMMER',
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    expect(response.status).toBe(200)
+  })
 })

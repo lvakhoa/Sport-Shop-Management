@@ -23,15 +23,15 @@ describe('Order', () => {
     expect(response.data[0]).toBeInstanceOf(Object)
   })
 
-  it('should return a new order', async () => {
+  it('should create a new order', async () => {
     const response = await axios.post(
       'https://api.clothy.lvakhoa.me/api/v1/orders',
       {
         buy_in_app: false,
-        customer_id: '6fbc0ad7-51c0-455c-aa1e-ace17649103c',
-        order_details: [{ product_stock_id: 'bdc71368-78dd-401e-adf7-74ae1c0fc409', quantity: 2 }],
+        customer_id: 'c0b92974-f6fd-4519-b0f3-c12e7f10f0ea',
+        order_details: [{ product_stock_id: 'fe73455f-1215-474a-9138-9d758003d23f', quantity: 10 }],
         payment_type: 'CASH',
-        product_total_price: 2000000,
+        product_total_price: 10000000,
         shipping_price: 30000,
         status: 'PENDING',
       },

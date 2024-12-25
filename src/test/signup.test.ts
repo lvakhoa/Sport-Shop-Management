@@ -4,10 +4,10 @@ describe('Signup', () => {
   it('Create valid', async () => {
     try {
       const response = await axios.post('https://api.clothy.lvakhoa.me/api/v1/auth/sign-up', {
-        email: 'quominle@gmail.com', // Change when demo
+        email: 'anhlong123@gmail.com',
         password: 'abcd1234',
-        fullname: 'quominle',
-        phone: '1234567890',
+        fullname: 'quominliem',
+        phone: '1234567800',
         gender: 'MALE',
       })
       expect(response.status).toBe(201)
