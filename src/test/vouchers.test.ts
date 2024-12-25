@@ -2,6 +2,8 @@ import axios from 'axios'
 
 describe('Voucher', () => {
   let token: string
+  let voucherId: string
+
   beforeAll(async () => {
     const response = await axios.post('https://api.clothy.lvakhoa.me/api/v1/auth/log-in', {
       email: 'adminseed@gmail.com',
@@ -9,11 +11,12 @@ describe('Voucher', () => {
     })
     token = response.data.access_token
   })
-  it('should return a new coupon', async () => {
+
+  it('should create a new coupon', async () => {
     const response = await axios.post(
       'https://api.clothy.lvakhoa.me/api/v1/vouchers',
       {
-        code: 'SPR12345',
+        code: 'SPR123456789',
         expired_date: '2024-12-26T17:00:00.000Z',
         quantity: 1,
         sale_percent: 0.4,
@@ -29,12 +32,12 @@ describe('Voucher', () => {
     expect(response.status).toBe(201)
   })
 
-  it('should return duplicate error', async () => {
+  it('should return a duplicate error', async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         'https://api.clothy.lvakhoa.me/api/v1/vouchers',
         {
-          code: 'SPR123',
+          code: 'SPR123456789',
           expired_date: '2024-12-26T17:00:00.000Z',
           quantity: 1,
           sale_percent: 0.4,
@@ -47,37 +50,39 @@ describe('Voucher', () => {
         },
       )
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response && error.response.status === 409) {
+      if (axios.isAxiosError(error) && error.response) {
         expect(error.response.status).toBe(409)
+      } else {
+        throw error
       }
     }
   })
 
-  it('should return deleted', async () => {
+  it('should delete an existing voucher', async () => {
     const response = await axios.delete(
-      'https://api.clothy.lvakhoa.me/api/v1/vouchers/dfd630de-5c8f-49d7-8f03-64359d0',
+      `https://api.clothy.lvakhoa.me/api/v1/vouchers/ced35408-e6af-4609-8ba9-e3bcd51ea9dd`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       },
     )
+
     expect(response.status).toBe(200)
   })
 
-  it('should return not exist voucher', async () => {
+  it('should return an error for a non-existent voucher', async () => {
     try {
-      const response = await axios.delete(
-        'https://api.clothy.lvakhoa.me/api/v1/vouchers/dfd630de-5c8f-49d7-8f03-64359d0',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await axios.delete(`https://api.clothy.lvakhoa.me/api/v1/vouchers/non-existent-id`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      )
+      })
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response && error.response.status === 500) {
+      if (axios.isAxiosError(error) && error.response) {
         expect(error.response.status).toBe(500)
+      } else {
+        throw error
       }
     }
   })
