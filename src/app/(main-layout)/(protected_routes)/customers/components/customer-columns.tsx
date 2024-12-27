@@ -11,12 +11,10 @@ import EditCustomerForm from './edit-customer'
 
 export interface ICustomer {
   id: string
-  name: string
-  email: string
-  phone: string
-  gender: GENDER
-  rank: string
-  loyalty_point: number
+  fullname: string
+  phone?: string
+  gender?: GENDER
+  avatar_url?: string
   total: number
 }
 
@@ -24,11 +22,6 @@ export const customerFilterInput: IFilterInput[] = [
   {
     key: 'name',
     title: 'Name',
-    type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'email',
-    title: 'Email',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
   {
@@ -44,33 +37,7 @@ export const customerFilterInput: IFilterInput[] = [
   },
 ]
 
-const gender: string[] = [GENDER.FEMALE, GENDER.MALE]
-
 export const columns: ColumnDef<ICustomer>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'id',
-    header: 'ID',
-    enableHiding: true,
-  },
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -119,35 +86,12 @@ export const columns: ColumnDef<ICustomer>[] = [
     filterFn: 'equalsString',
   },
   {
-    accessorKey: 'rank',
-    header: () => {
-      return <div className='font-medium'>Rank</div>
-    },
-  },
-  {
-    accessorKey: 'loyalty_point',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          L.Point
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('loyalty_point')}</div>,
-  },
-  {
     id: 'actions',
     header: () => {
       return <div className='font-medium'>Action</div>
     },
 
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const customerId = row.getValue('id') as string
       return (
         <ActionButtonShow

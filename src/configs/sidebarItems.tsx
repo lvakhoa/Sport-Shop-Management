@@ -10,9 +10,7 @@ import {
   LayoutGrid,
   PackageOpen,
   TicketPercent,
-  Ticket,
   BadgeCheck,
-  UserCog,
 } from 'lucide-react'
 
 export interface ISidebarItem {
@@ -97,16 +95,6 @@ export const adminSidebarItems: ISidebarItem[] = [
         icon: <UsersRound strokeWidth={1.5} />,
         describe: 'Employees',
         link: PATH_NAME.EMPLOYEE,
-      },
-    ],
-  },
-  {
-    title: 'Account',
-    items: [
-      {
-        icon: <UserCog strokeWidth={1.5} />,
-        describe: 'Accounts',
-        link: PATH_NAME.ACCOUNT.BASE + PATH_NAME.ACCOUNT.EMPLOYEE,
       },
     ],
   },

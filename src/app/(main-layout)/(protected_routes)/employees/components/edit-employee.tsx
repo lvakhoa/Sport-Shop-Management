@@ -3,7 +3,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import moment from 'moment'
 import { GENDER } from '@/configs/enum'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
@@ -18,39 +17,32 @@ import {
 } from '@/components/shared/select'
 import { IEmployeeRequest } from '@/interfaces/employee'
 import { toast } from 'react-toastify'
-import { useEffect } from 'react'
-
-const gender: string[] = ['MALE', 'FEMALE']
 
 const employeeSchema = z
   .object({
-    account_id: z.string().nullable(),
-    position_id: z.string().nullable(),
     fullname: z.string(),
-    phone: z
-      .string()
-      .min(10)
-      .regex(/^\d{10,11}$/, 'Invalid phone number'),
-    email: z.string().email().optional(),
-    gender: z.enum(['MALE', 'FEMALE']),
-    started_date: z.string().datetime(),
-    salary: z.string(),
+    phone: z.string(),
+    gender: z.nativeEnum(GENDER),
+    group_user_id: z.string(),
   })
   .partial()
+
+const employeeGroupUser = [
+  {
+    id: 'posStaff',
+    title: 'POS Staff',
+  },
+  {
+    id: 'manager',
+    title: 'Manager',
+  },
+] // dummy data
 
 export default function EditEmployeeForm({ employeeId }: { employeeId: string }) {
   const queryClient = useQueryClient()
   const { data: employee } = useQuery({
     queryKey: queryKeys.employeeDetails.gen(employeeId),
     queryFn: () => employeeApi.getEmployeesById(employeeId),
-  })
-  const { data: accounts } = useQuery({
-    queryKey: queryKeys.employeeAccount,
-    queryFn: () => employeeAccountApi.getAllEmployeeAccounts(),
-  })
-  const { data: positions } = useQuery({
-    queryKey: queryKeys.positions,
-    queryFn: () => positionApi.getAllPositions(),
   })
 
   const form = useForm<z.infer<typeof employeeSchema>>({
@@ -61,14 +53,10 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
     mutationFn: (data: IEmployeeRequest) =>
       employeeApi.updateEmployee(
         {
-          account_id: data.account_id,
-          position_id: data.position_id,
           fullname: data.fullname,
-          email: data.email,
           phone: data.phone,
           gender: data.gender,
-          salary: data.salary,
-          started_date: data.started_date,
+          group_user_id: data.group_user_id,
         },
         employeeId,
       ),
@@ -86,26 +74,14 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
     },
   })
 
-  const account = accounts?.find((acc) => acc?.employee?.id === employeeId)
-
   function onSubmit(data: z.infer<typeof employeeSchema>) {
     editEmployee({
-      account_id: data.account_id === null ? undefined : data.account_id,
-      position_id: data.position_id === null ? undefined : data.position_id,
       fullname: data.fullname,
-      email: data.email,
       phone: data.phone,
       gender: data.gender,
-      salary: parseInt(data.salary || '0'),
-      started_date: data.started_date,
+      group_user_id: data.group_user_id,
     })
   }
-
-  useEffect(() => {
-    if (!!employee) {
-      form.setValue('salary', employee.salary)
-    }
-  }, [employee, form])
 
   return (
     <Form {...form}>
@@ -158,29 +134,6 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
 
         <FormField
           control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='email' className='text-left'>
-                    Email
-                  </Label>
-                  <Input
-                    id='email'
-                    placeholder={employee?.email}
-                    className='col-span-3'
-                    {...field}
-                  />
-                </div>
-              </FormControl>
-              <FormMessage className='text-[14px] font-normal' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name='gender'
           render={({ field }) => (
             <FormItem>
@@ -194,7 +147,7 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
                       key='gender'
                       defaultValue={field.value}
                       placeholder={employee?.gender as string}
-                      items={gender}
+                      items={Object.values(GENDER)}
                       onValueChange={field.onChange}
                     />
                   </div>
@@ -207,124 +160,32 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
 
         <FormField
           control={form.control}
-          name='started_date'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='started_date' className='text-left'>
-                    Started date
-                  </Label>
-                  <div className='col-span-3'>
-                    <DatePicker
-                      date={!!field.value ? moment(field.value).toDate() : moment().toDate()}
-                      selectDate={(val) =>
-                        field.onChange({
-                          target: { value: moment(val).toISOString() },
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage className='text-[14px] font-normal' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='salary'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='salary' className='text-left'>
-                    Salary
-                  </Label>
-                  <Input
-                    type='number'
-                    placeholder={employee?.salary}
-                    id='salary'
-                    className='col-span-3'
-                    {...field}
-                  />
-                </div>
-              </FormControl>
-              <FormMessage className='text-[14px] font-normal' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='account_id'
+          name='group_user_id'
           render={({ field }) => (
             <FormItem>
               <Select
-                defaultValue={!!account ? account.email + ' - ' + account.role.title : undefined}
                 value={field.value === null ? undefined : field.value}
                 onValueChange={field.onChange}
               >
                 <FormControl>
                   <div className='grid grid-cols-4 items-center gap-4'>
                     <Label htmlFor='account_id' className='text-left'>
-                      Account
+                      User Group
                     </Label>
                     <SelectTrigger className='col-span-3'>
                       <SelectValue
-                        placeholder={<span className='text-muted-foreground'>Account</span>}
+                        placeholder={<span className='text-muted-foreground'>User Group</span>}
                       />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        {!!accounts &&
-                          accounts.map((acc) => {
-                            if (!acc.employee || acc.employee.id === employeeId)
-                              return (
-                                <SelectItem key={acc.id} value={acc.id}>
-                                  {acc.email + ' - ' + acc.role.title}
-                                </SelectItem>
-                              )
-                          })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </div>
-                </FormControl>
-                <FormMessage className='text-[14px] font-normal' />
-              </Select>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='position_id'
-          render={({ field }) => (
-            <FormItem>
-              <Select
-                defaultValue={positions?.find((p) => p.id === field.value)?.title}
-                value={field.value === null ? undefined : field.value}
-                onValueChange={field.onChange}
-              >
-                <FormControl>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='position_id' className='text-left'>
-                      Position
-                    </Label>
-                    <SelectTrigger className='col-span-3'>
-                      <SelectValue
-                        placeholder={<span className='text-muted-foreground'>Position</span>}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {!!positions &&
-                          positions.map((acc) => (
-                            <SelectItem key={acc.id} value={acc.id}>
-                              {acc.title}
+                        {employeeGroupUser.map((item) => {
+                          return (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.title}
                             </SelectItem>
-                          ))}
+                          )
+                        })}
                       </SelectGroup>
                     </SelectContent>
                   </div>
@@ -334,7 +195,6 @@ export default function EditEmployeeForm({ employeeId }: { employeeId: string })
             </FormItem>
           )}
         />
-
         <Button
           type='submit'
           className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'

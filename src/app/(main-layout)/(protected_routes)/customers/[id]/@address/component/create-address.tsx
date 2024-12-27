@@ -3,7 +3,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { GENDER, RANK } from '@/configs/enum'
+import { GENDER } from '@/configs/enum'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { addressApi, customerAccountApi, customerApi } from '@/apis'
@@ -20,7 +20,6 @@ import { toast } from 'react-toastify'
 import { IAddressRequest } from '@/interfaces/address'
 
 const gender: string[] = ['MALE', 'FEMALE']
-const rank: RANK[] = [RANK.COPPER, RANK.SILVER, RANK.GOLD]
 
 const addressSchema = z.object({
   street: z.string({ required_error: 'Street is required' }),
