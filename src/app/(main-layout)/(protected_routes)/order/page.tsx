@@ -181,7 +181,7 @@ export default function OrderPage() {
               )}
             ></FormField>
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name='address_id'
               render={({ field }) => (
@@ -217,7 +217,7 @@ export default function OrderPage() {
                   </Select>
                 </FormItem>
               )}
-            ></FormField>
+            ></FormField> */}
 
             <FormField
               control={form.control}

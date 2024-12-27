@@ -9,9 +9,10 @@
         "tailwindcss/no-custom-classname": "off"
       },
       "parserOptions": {
-        "project": "./tsconfig.json"
+        "project": ["./tsconfig.json"],
+        "createDefaultProgram": true
       },
-      "excludedFiles": ["*.config.js"]
+      "excludedFiles": ["*.config.js", "coverage/*.*"]
     }
   ]
 }

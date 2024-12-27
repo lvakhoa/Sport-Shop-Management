@@ -18,10 +18,6 @@ const viewButtons = [
     text: 'Profile',
   },
   {
-    icon: <SquareUser />,
-    text: 'Account',
-  },
-  {
     icon: <MapPin />,
     text: 'Address',
   },
@@ -33,12 +29,11 @@ const viewButtons = [
 
 interface ICustomerLayout {
   profile: React.ReactNode
-  account: React.ReactNode
   address: React.ReactNode
   orders: React.ReactNode
 }
 
-function CustomerLayout({ profile, account, address, orders }: ICustomerLayout) {
+function CustomerLayout({ profile, address, orders }: ICustomerLayout) {
   const [selectedButton, setSelectedButton] = useState(0)
 
   return (
@@ -63,9 +58,8 @@ function CustomerLayout({ profile, account, address, orders }: ICustomerLayout) 
 
       <div>
         {selectedButton === 0 && profile}
-        {selectedButton === 1 && account}
-        {selectedButton === 2 && address}
-        {selectedButton === 3 && orders}
+        {selectedButton === 1 && address}
+        {selectedButton === 2 && orders}
       </div>
     </div>
   )
