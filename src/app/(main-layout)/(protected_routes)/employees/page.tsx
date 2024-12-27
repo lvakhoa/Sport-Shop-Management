@@ -1,15 +1,13 @@
 'use client'
 
-import { GENDER } from '@/configs/enum'
 import { columns, CreateEmployeeForm, employeeFilterInput, IEmployee } from './components'
-import { DataTable, Label, Input, ComboBox } from '@/components/shared'
+import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
 import { PaginationState } from '@tanstack/react-table'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { employeeApi } from '@/apis'
-import moment from 'moment'
 
 export default function EmployeesManagementPage() {
   const { isBrowser } = useBrowser()
@@ -27,13 +25,9 @@ export default function EmployeesManagementPage() {
     queryData?.map((item) => {
       return {
         id: item.id,
-        name: item.fullname,
-        email: item.email,
+        fullname: item.fullname,
         phone: item.phone,
         gender: item.gender,
-        startedDate: moment(item.started_date).format('DD/MM/YYYY'),
-        salary: item.salary,
-        position: item.position?.title ?? '',
         total: item.total,
       }
     }) ?? []
@@ -51,14 +45,6 @@ export default function EmployeesManagementPage() {
           setPagination={setPagination}
           filterInput={employeeFilterInput}
           pageCount={data.length > 0 ? data[0].total / pagination.pageSize : 0}
-          showRestoreButton={true}
-          restore7daysFn={() =>
-            employeeApi.restoreEmployee(moment().subtract(7, 'days').utc().unix().valueOf())
-          }
-          restore30daysFn={() =>
-            employeeApi.restoreEmployee(moment().subtract(30, 'days').utc().unix().valueOf())
-          }
-          restoreAllFn={() => employeeApi.restoreEmployee()}
         />
       )}
     </div>
