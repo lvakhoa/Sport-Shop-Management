@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { FILTER_INPUT_TYPE, GENDER, POSITION_TITLE } from '@/configs/enum'
+import { FILTER_INPUT_TYPE, GENDER } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
 import { Button, ActionButtonShow, Checkbox } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
@@ -11,13 +11,10 @@ import EditEmployeeForm from './edit-employee'
 
 export interface IEmployee {
   id: string
-  name: string
-  email: string
-  phone: string
-  gender: GENDER
-  startedDate: string
-  salary: string
-  position: POSITION_TITLE | ''
+  fullname: string
+  phone?: string
+  gender?: GENDER
+  avatar_url?: string
   total: number
 }
 
@@ -25,11 +22,6 @@ export const employeeFilterInput: IFilterInput[] = [
   {
     key: 'name',
     title: 'Name',
-    type: FILTER_INPUT_TYPE.TEXTBOX,
-  },
-  {
-    key: 'email',
-    title: 'Email',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
   {
@@ -43,46 +35,11 @@ export const employeeFilterInput: IFilterInput[] = [
     type: FILTER_INPUT_TYPE.DROPDOWN,
     dropdownItems: [GENDER.MALE, GENDER.FEMALE],
   },
-  // {
-  //   key: 'startedDate',
-  //   title: 'Started Date',
-  //   type: FILTER_INPUT_TYPE.TEXTBOX,
-  //   // thêm filter date
-  // },
-  {
-    key: 'position',
-    title: 'Position',
-    type: FILTER_INPUT_TYPE.DROPDOWN,
-    dropdownItems: [POSITION_TITLE.MANAGER, POSITION_TITLE.EMPLOYEE],
-  },
 ]
 
 export const columns: ColumnDef<IEmployee>[] = [
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'id',
-    enableHiding: true,
-  },
-  {
-    accessorKey: 'name',
+    accessorKey: 'fullname',
     header: ({ column }) => {
       return (
         <Button
@@ -99,23 +56,6 @@ export const columns: ColumnDef<IEmployee>[] = [
     cell: ({ row }) => <div>{row.getValue('name')}</div>,
   },
   {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
-  },
-  {
     accessorKey: 'phone',
     header: () => {
       return <div className='font-medium'>Phone</div>
@@ -125,45 +65,6 @@ export const columns: ColumnDef<IEmployee>[] = [
     accessorKey: 'gender',
     header: () => {
       return <div className='font-medium'>Gender</div>
-    },
-    filterFn: 'equalsString',
-  },
-  {
-    accessorKey: 'startedDate',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Started Date
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-  },
-  {
-    accessorKey: 'salary',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Salary
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-  },
-  {
-    accessorKey: 'position',
-    header: () => {
-      return <div className='font-medium'>Position</div>
     },
     filterFn: 'equalsString',
   },

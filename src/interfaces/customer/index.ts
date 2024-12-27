@@ -1,23 +1,20 @@
-import { GENDER, RANK } from '@/configs/enum'
+import { GENDER } from '@/configs/enum'
 
 export interface ICustomerRequest {
-  account_id?: string
   fullname?: string
   phone?: string
+  gender?: GENDER
   email?: string
-  gender?: 'MALE' | 'FEMALE'
-  rank?: RANK
-  loyalty_point?: number
+  group_user_id?: string
 }
 
 export interface ICustomerResponse {
   id: string
-  account_id?: string
   fullname: string
-  phone: string
-  email: string
-  gender: GENDER
-  rank: RANK
-  loyalty_point: number
+  phone?: string
+  gender?: GENDER
+  avatar_url?: string
+  created_at: Date
+  updated_at?: Date
   total: number
 }

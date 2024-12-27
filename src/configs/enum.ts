@@ -3,12 +3,6 @@ export enum GENDER {
   FEMALE = 'FEMALE',
 }
 
-export enum RANK {
-  COPPER = 'COPPER',
-  SILVER = 'SILVER',
-  GOLD = 'GOLD',
-}
-
 export enum NOTIFICATION_TYPE {
   EVENT = 'EVENT',
   ORDER = 'ORDER',
@@ -64,11 +58,6 @@ export enum TRANSACTION_STATUS {
 export enum STATUS {
   ACTIVE = 'Active',
   INACTIVE = 'Inactive',
-}
-
-export enum POSITION_TITLE {
-  MANAGER = 'Manager',
-  EMPLOYEE = 'Employee',
 }
 
 export enum TABLE_ACTION_TYPE {

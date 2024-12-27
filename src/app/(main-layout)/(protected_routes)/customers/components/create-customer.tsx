@@ -3,38 +3,23 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { GENDER, RANK } from '@/configs/enum'
+import { GENDER } from '@/configs/enum'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { customerAccountApi, customerApi } from '@/apis'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/shared/select'
 import { ICustomerRequest } from '@/interfaces/customer'
 import { toast } from 'react-toastify'
 
-const gender: string[] = ['MALE', 'FEMALE']
-const rank: RANK[] = [RANK.COPPER, RANK.SILVER, RANK.GOLD]
-
-const customerSchema = z
-  .object({
-    account_id: z.string(),
-    fullname: z.string(),
-    phone: z
-      .string()
-      .min(10)
-      .regex(/^\d{10,11}$/, 'Invalid phone number'),
-    email: z.string().email(),
-    gender: z.enum(['MALE', 'FEMALE']),
-    rank: z.enum([RANK.COPPER, RANK.SILVER, RANK.GOLD]),
-    loyalty_point: z.string(),
-  })
-  .partial()
+const customerSchema = z.object({
+  fullname: z.string(),
+  phone: z
+    .string()
+    .min(10)
+    .regex(/^\d{10,11}$/, 'Invalid phone number'),
+  gender: z.nativeEnum(GENDER),
+  email: z.string().email(),
+  group_user_id: z.string(),
+})
 
 export default function CreateCustomerForm() {
   const queryClient = useQueryClient()
@@ -48,23 +33,19 @@ export default function CreateCustomerForm() {
     defaultValues: {
       fullname: '',
       phone: '',
+      gender: GENDER.MALE,
       email: '',
-      gender: 'MALE',
-      rank: RANK.COPPER,
-      loyalty_point: '0',
+      group_user_id: 'customergroupid', // group_user_id is the same for all customers
     },
   })
 
   const { mutate: createCustomer } = useMutation({
     mutationFn: (data: ICustomerRequest) =>
       customerApi.createCustomer({
-        account_id: data.account_id,
         fullname: data.fullname,
         phone: data.phone,
-        email: data.email,
         gender: data.gender,
-        rank: data.rank,
-        loyalty_point: data.loyalty_point,
+        email: data.email,
       }),
     onSuccess: () => {
       toast.success('Customer created successfully')
@@ -79,13 +60,11 @@ export default function CreateCustomerForm() {
 
   function onSubmit(data: z.infer<typeof customerSchema>) {
     createCustomer({
-      account_id: data.account_id,
       fullname: data.fullname,
       phone: data.phone,
-      email: data.email,
       gender: data.gender,
-      rank: data.rank,
-      loyalty_point: parseInt(data.loyalty_point || '0'),
+      email: data.email,
+      group_user_id: data.group_user_id,
     })
   }
 
@@ -160,7 +139,7 @@ export default function CreateCustomerForm() {
                     <ComboBox
                       key='gender'
                       placeholder='Gender'
-                      items={gender}
+                      items={Object.values(GENDER)}
                       onValueChange={field.onChange}
                     />
                   </div>
@@ -170,87 +149,6 @@ export default function CreateCustomerForm() {
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name='account_id'
-          render={({ field }) => (
-            <FormItem>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <FormControl>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='account_id' className='text-left'>
-                      Account
-                    </Label>
-                    <SelectTrigger className='col-span-3'>
-                      <SelectValue
-                        placeholder={<span className='text-muted-foreground'>Account</span>}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {!!accounts &&
-                          accounts.map((acc) => {
-                            if (!!acc)
-                              return (
-                                <SelectItem key={acc.id} value={acc.id}>
-                                  {acc.email}
-                                </SelectItem>
-                              )
-                          })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </div>
-                </FormControl>
-                <FormMessage className='text-[14px] font-normal' />
-              </Select>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='rank'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='rank' className='text-left'>
-                    Rank
-                  </Label>
-                  <div className='col-span-3'>
-                    <ComboBox
-                      key='rank'
-                      placeholder='Rank'
-                      items={rank}
-                      onValueChange={field.onChange}
-                    />
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage className='text-[14px] font-normal' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='loyalty_point'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='loyalty_point' className='text-left'>
-                    Loyalty Point
-                  </Label>
-                  <Input id='loyalty_point' className='col-span-3' {...field} />
-                </div>
-              </FormControl>
-              <FormMessage className='text-[14px] font-normal' />
-            </FormItem>
-          )}
-        />
-
         <Button
           type='submit'
           className='flex gap-[5px] bg-secondary duration-300 hover:bg-[#739AF4]'

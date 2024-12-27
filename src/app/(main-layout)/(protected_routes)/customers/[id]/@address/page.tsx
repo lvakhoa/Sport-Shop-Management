@@ -22,8 +22,6 @@ export default function AddressPage() {
     },
   })
 
-  const accountId = customerData?.account_id || ''
-
   const { isBrowser } = useBrowser()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -35,32 +33,13 @@ export default function AddressPage() {
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IAddress[] = accountId
-    ? queryData
-        ?.map((item) => {
-          return {
-            id: item.id,
-            accountId: item.account_id,
-            street: item.street,
-            ward: item.ward,
-            district: item.district,
-            city: item.city,
-          }
-        })
-        .filter((item) => item.accountId === accountId) ?? []
-    : []
   return (
     <div>
-      {!accountId && (
-        <ContentCard title='Address'>
-          <div className='flex h-60 items-center justify-center'>No addresses found</div>
-        </ContentCard>
-      )}
-      {!!isBrowser && accountId && (
+      {!!isBrowser && (
         <div className='container'>
           <DataTable
             columns={columns}
-            data={data}
+            data={[]}
             title='Address'
             queryKey='addresses'
             pagination={pagination}

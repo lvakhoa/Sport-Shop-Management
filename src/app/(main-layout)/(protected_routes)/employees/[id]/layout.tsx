@@ -18,10 +18,6 @@ const viewButtons = [
     text: 'Profile',
   },
   {
-    icon: <SquareUser />,
-    text: 'Account',
-  },
-  {
     icon: <Package />,
     text: 'Orders',
   },
@@ -29,11 +25,10 @@ const viewButtons = [
 
 interface IEmployeeLayout {
   profile: React.ReactNode
-  account: React.ReactNode
   orders: React.ReactNode
 }
 
-function EmployeeLayout({ profile, account, orders }: IEmployeeLayout) {
+function EmployeeLayout({ profile, orders }: IEmployeeLayout) {
   const [selectedButton, setSelectedButton] = useState(0)
 
   return (
@@ -58,8 +53,7 @@ function EmployeeLayout({ profile, account, orders }: IEmployeeLayout) {
 
       <div>
         {selectedButton === 0 && profile}
-        {selectedButton === 1 && account}
-        {selectedButton === 2 && orders}
+        {selectedButton === 1 && orders}
       </div>
     </div>
   )
