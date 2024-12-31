@@ -14,11 +14,11 @@ import { RestorePopup } from '@/components/shared'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Id, toast } from 'react-toastify'
 import moment from 'moment'
-import { ROLE_TITLE } from '@/configs/enum'
+import { ROLE_NAME } from '@/configs/enum'
 
 const gender: string[] = ['MALE', 'FEMALE']
 
-export default function CategoryBoard({ accountRole }: { accountRole: ROLE_TITLE }) {
+export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME }) {
   const toastId = useRef<Id | undefined>()
   const router = useRouter()
   const { isPending, data: categoriesData } = useQuery({
@@ -78,7 +78,9 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_TITLE
   const [typeList, setTypeList] = useState<string[]>([])
 
   useEffect(() => {
-    const newtypeList = Array.from(new Set(categoriesData?.map((category) => category.type)))
+    const newtypeList = Array.from(
+      new Set(categoriesData?.map((category) => category.consumer_type)),
+    )
     setTypeList(newtypeList)
     setCurrentType(newtypeList[0])
   }, [categoriesData])
@@ -99,9 +101,9 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_TITLE
     categoriesData?.map((category) => ({
       id: category.id,
       name: category.name,
-      type: category.type,
-      gender: category.gender,
-      image: category.media?.url || '',
+      type: category.consumer_type,
+      gender: category.consumer_type,
+      image: category.image_url ?? '',
     })) ?? []
 
   return (
@@ -140,9 +142,7 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_TITLE
                 <div
                   className={cn(
                     'top-[calc(var(--header-height) + 20px)] flex gap-4',
-                    accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER
-                      ? 'hidden'
-                      : '',
+                    accountRole !== ROLE_NAME.ADMIN ? 'hidden' : '',
                   )}
                 >
                   <RestorePopup
@@ -181,9 +181,7 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_TITLE
                       gender={category.gender}
                       image={category.image}
                       onClick={() => router.push(`${PATH_NAME.CATEGORY}/edit/${category.id}`)}
-                      canEdit={
-                        accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER
-                      }
+                      canEdit={accountRole === ROLE_NAME.ADMIN}
                     />
                   ))}
               </TabsContent>
@@ -200,7 +198,7 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_TITLE
                     gender={category.gender}
                     image={category.image}
                     onClick={() => router.push(`${PATH_NAME.CATEGORY}/edit/${category.id}`)}
-                    canEdit={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
+                    canEdit={accountRole === ROLE_NAME.ADMIN}
                   />
                 ))}
             </TabsContent>

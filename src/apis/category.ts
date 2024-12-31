@@ -1,4 +1,4 @@
-import { ICategoryRequest, ICategoryResponse } from '@/interfaces/category'
+import { ICategoryRequest, ICategory } from '@/interfaces/category'
 import BaseApi from './base'
 
 class CategoryApi extends BaseApi {
@@ -7,11 +7,11 @@ class CategoryApi extends BaseApi {
   }
 
   async getAllCategories(count?: number, page?: number) {
-    return super.getAll<ICategoryResponse>(count, page)
+    return super.getAll<ICategory>(count, page)
   }
 
   async getCategoryById(id: string) {
-    return super.getById<ICategoryResponse>(id)
+    return super.getById<ICategory>(id)
   }
 
   async createCategory(category: ICategoryRequest) {

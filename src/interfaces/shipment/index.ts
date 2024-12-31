@@ -1,3 +1,7 @@
+import { ICustomer } from '../customer'
+import { IOrder } from '../order'
+import { IStock } from '../stock'
+
 export interface IShipmentCreateRequest {
   order_id?: string
   address_id?: string
@@ -14,14 +18,17 @@ export interface IShipmentUpdateRequest {
   shipment_tracking?: string
 }
 
-export interface IShipmentResponse {
+export interface IShipment {
   id: string
-  shipment_no: string
   order_id: string
-  address_id?: string
-  shipped: string
-  shipped_date?: string
-  completed_date?: string
-  shipping_price: string
+  carrier_name: string
+  carrier_logo_url: string
+  service_name: string
+  service_description: string
+  shipped_date?: Date
+  completed_date?: Date
+  shipping_fee: number
   shipment_tracking?: string
+  shipping_address: string
+  order: IOrder
 }

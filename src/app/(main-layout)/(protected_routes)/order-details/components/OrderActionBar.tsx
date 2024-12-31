@@ -1,6 +1,6 @@
 import { Button } from '@/components/shared'
 import { CancelledLabel, ConfirmLabel } from './ShipmentStatusLabel'
-import { IOrderResponse, IOrderUpdateRequest } from '@/interfaces/order'
+import { IOrder, IOrderUpdateRequest } from '@/interfaces/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { orderApi, shipmentApi } from '@/apis'
 import { toast } from 'react-toastify'
@@ -14,7 +14,7 @@ import { Printer } from 'lucide-react'
 import { IShipmentUpdateRequest } from '@/interfaces/shipment'
 import moment from 'moment'
 
-function ActionBar({ order }: { order: IOrderResponse }) {
+function ActionBar({ order }: { order: IOrder }) {
   const profile = useProfile()
   const queryClient = useQueryClient()
 
@@ -36,7 +36,7 @@ function ActionBar({ order }: { order: IOrderResponse }) {
 
   const { mutate: confirmShipment } = useMutation({
     mutationFn: (data: Partial<IShipmentUpdateRequest>) =>
-      shipmentApi.updateShipment(data, order.shipment.id),
+      shipmentApi.updateShipment(data, order.shipment?.id || ''),
     onSuccess: () => {
       toast.success('Confirm shipment successfully')
     },
@@ -51,8 +51,8 @@ function ActionBar({ order }: { order: IOrderResponse }) {
 
   const handleConfirm = () => {
     const updateData: Partial<IOrderUpdateRequest> = {
-      confirmed_employee_id: profile.data?.id || order.confirmed_employee_id,
-      status: ORDER_STATUS.SUCCESS,
+      confirmed_employee_id: profile.data?.id || order.confirming_employee_id,
+      status: ORDER_STATUS.DELIVERED,
     }
     editOrder(updateData)
   }
@@ -60,7 +60,7 @@ function ActionBar({ order }: { order: IOrderResponse }) {
   const handleCancel = () => {
     const updateData: Partial<IOrderUpdateRequest> = {
       status: ORDER_STATUS.CANCELLED,
-      confirmed_employee_id: profile.data?.id || order.confirmed_employee_id,
+      confirmed_employee_id: profile.data?.id || order.confirming_employee_id,
     }
     editOrder(updateData)
   }
@@ -80,7 +80,7 @@ function ActionBar({ order }: { order: IOrderResponse }) {
   const handleShipment = () => {
     const updateData: Partial<IShipmentUpdateRequest> = {
       order_id: order.id,
-      address_id: order.shipment.address_id,
+      address_id: order.shipment?.shipping_address || '',
       shipped: true,
       shipped_date: moment().toDate(),
       completed_date: moment().toDate(),
@@ -92,7 +92,7 @@ function ActionBar({ order }: { order: IOrderResponse }) {
   return (
     <div className='flex w-full flex-row items-center justify-between px-[20px] py-[10px]'>
       <div className='flex flex-col space-y-[5px]'>
-        <span className='font-semibold'>Order {order.order_no}</span>
+        <span className='font-semibold'>Order {order.order_code}</span>
         <div className='flex flex-row space-x-[5px]'>
           {order.status === ORDER_STATUS.PENDING ? (
             <Button onClick={handleConfirm}>Confirm</Button>
@@ -104,7 +104,7 @@ function ActionBar({ order }: { order: IOrderResponse }) {
         </div>
       </div>
       <div className='flex flex-row space-x-[5px]'>
-        {order.status === ORDER_STATUS.SUCCESS && (
+        {order.status === ORDER_STATUS.DELIVERED && (
           <Button
             onClick={handlePrint}
             className='flex gap-[5px] rounded-[5px] bg-[#D4E0FF] px-2 py-1 duration-300 hover:bg-[#dde6fa]'
@@ -113,7 +113,7 @@ function ActionBar({ order }: { order: IOrderResponse }) {
           </Button>
         )}
         {order.status === ORDER_STATUS.PENDING && <Button onClick={handleCancel}>Cancel</Button>}
-        {order.status !== ORDER_STATUS.CANCELLED && !order.shipment.shipped && (
+        {order.status !== ORDER_STATUS.CANCELLED && !!order.shipment?.completed_date && (
           <Button onClick={handleShipment}>Confirm Shipment</Button>
         )}
       </div>

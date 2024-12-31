@@ -1,18 +1,24 @@
-export enum GENDER {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
+export enum ROLE_NAME {
+  ADMIN = 'ADMIN',
+  EMPLOYEE = 'EMPLOYEE',
+  CUSTOMER = 'CUSTOMER',
 }
 
-export enum NOTIFICATION_TYPE {
-  EVENT = 'EVENT',
-  ORDER = 'ORDER',
+export enum GROUP_VOUCHER_TYPE {
+  SPORT = 'SPORT',
+  BRAND = 'BRAND',
   PRODUCT = 'PRODUCT',
 }
 
-export enum ORDER_STATUS {
-  PENDING = 'PENDING',
-  SUCCESS = 'SUCCESS',
-  CANCELLED = 'CANCELLED',
+export enum VOUCHER_APPLICABLE_TYPE {
+  SPORT = 'SPORT',
+  BRAND = 'BRAND',
+  PRODUCT = 'PRODUCT',
+}
+
+export enum VOUCHER_TYPE {
+  FIXED_PRICE = 'FIXED_PRICE',
+  PERCENT = 'PERCENT',
 }
 
 export enum PAYMENT_TYPE {
@@ -20,14 +26,13 @@ export enum PAYMENT_TYPE {
   BANK = 'BANK',
 }
 
-export enum SIZE {
-  S = 'S',
-  M = 'M',
-  L = 'L',
-  XL = 'XL',
+export enum GENDER {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
 }
 
-export enum HTTP_METHOD {
+export enum METHOD {
   GET = 'GET',
   POST = 'POST',
   PATCH = 'PATCH',
@@ -37,16 +42,14 @@ export enum HTTP_METHOD {
   HEAD = 'HEAD',
 }
 
-export enum ROLE_TITLE {
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  EMPLOYEE = 'EMPLOYEE',
-  CUSTOMER = 'CUSTOMER',
-}
-
-export enum SHIPPING_LOCATION {
-  IN_PROVINCE = 'IN_PROVINCE',
-  OUT_PROVINCE = 'OUT_PROVINCE',
+export enum ORDER_STATUS {
+  PENDING = 'PENDING',
+  PACKAGING = 'PACKAGING',
+  IN_TRANSIT = 'IN_TRANSIT',
+  CANCELLED = 'CANCELLED',
+  DELIVERED = 'DELIVERED',
+  RETURNED = 'RETURNED',
+  UNDELIVERED = 'UNDELIVERED',
 }
 
 export enum TRANSACTION_STATUS {
@@ -55,9 +58,44 @@ export enum TRANSACTION_STATUS {
   ERROR = 'ERROR',
 }
 
-export enum STATUS {
-  ACTIVE = 'Active',
-  INACTIVE = 'Inactive',
+export enum TOKEN_TYPE {
+  RESET_PASSWORD = 'RESET_PASSWORD',
+  VERIFY_EMAIL = 'VERIFY_EMAIL',
+  FCM_TOKEN = 'FCM_TOKEN',
+}
+
+export enum NOTIFICATION_TYPE {
+  EVENT = 'EVENT',
+  ORDER = 'ORDER',
+  PRODUCT = 'PRODUCT',
+}
+
+export enum SIZE {
+  S = 'S',
+  M = 'M',
+  L = 'L',
+  XL = 'XL',
+}
+
+export enum SHIPPING_LOCATION {
+  IN_PROVINCE = 'IN_PROVINCE',
+  OUT_PROVINCE = 'OUT_PROVINCE',
+}
+
+export enum CONSUMER_TYPE {
+  MEN = 'MEN',
+  WOMEN = 'WOMEN',
+  CHILDREN = 'CHILDREN',
+}
+
+export enum MEDIA_TYPE {
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
+}
+
+export enum GROUP_MEDIA_TYPE {
+  STOCK = 'STOCK',
+  ORDER = 'ORDER',
 }
 
 export enum TABLE_ACTION_TYPE {

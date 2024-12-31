@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { GENDER } from '@/configs/enum'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
-import { customerAccountApi, customerApi } from '@/apis'
+import { customerApi } from '@/apis'
 import { ICustomerRequest } from '@/interfaces/customer'
 import { toast } from 'react-toastify'
 
@@ -23,10 +23,6 @@ const customerSchema = z.object({
 
 export default function CreateCustomerForm() {
   const queryClient = useQueryClient()
-  const { data: accounts } = useQuery({
-    queryKey: queryKeys.customerAccount,
-    queryFn: () => customerAccountApi.getAllCustomerAccounts(),
-  })
 
   const form = useForm<z.infer<typeof customerSchema>>({
     resolver: zodResolver(customerSchema),

@@ -8,15 +8,7 @@ import { ArrowUpDown } from 'lucide-react'
 import { IFilterInput } from '@/interfaces'
 import { employeeApi } from '@/apis'
 import EditEmployeeForm from './edit-employee'
-
-export interface IEmployee {
-  id: string
-  fullname: string
-  phone?: string
-  gender?: GENDER
-  avatar_url?: string
-  total: number
-}
+import { IEmployee } from '@/interfaces/employee'
 
 export const employeeFilterInput: IFilterInput[] = [
   {

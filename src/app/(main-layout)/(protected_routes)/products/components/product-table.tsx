@@ -1,7 +1,7 @@
 'use client'
 
-import { FILTER_INPUT_TYPE, ROLE_TITLE, STATUS } from '@/configs/enum'
-import { productColumns, IProduct } from './product-columns'
+import { FILTER_INPUT_TYPE, ROLE_NAME } from '@/configs/enum'
+import { productColumns } from './product-columns'
 import CreateProductForm from './create-product'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
@@ -12,6 +12,7 @@ import { productApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
 import { currencyFormatter } from '@/helpers'
+import { IProduct } from '@/interfaces/product'
 import moment from 'moment'
 
 const productFilterInput: IFilterInput[] = [
@@ -35,15 +36,9 @@ const productFilterInput: IFilterInput[] = [
     title: 'Selling Price',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
-  {
-    key: 'status',
-    title: 'Status',
-    type: FILTER_INPUT_TYPE.DROPDOWN,
-    dropdownItems: [STATUS.ACTIVE, STATUS.INACTIVE],
-  },
 ]
 
-export default function ProductTable({ accountRole }: { accountRole: ROLE_TITLE }) {
+export default function ProductTable({ accountRole }: { accountRole: ROLE_NAME }) {
   const { isBrowser } = useBrowser()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -60,14 +55,18 @@ export default function ProductTable({ accountRole }: { accountRole: ROLE_TITLE 
       return {
         id: item.id,
         name: item.name,
-        category: item.category_list.length > 0 ? item.category_list[0].category.name : '',
-        listPrice: currencyFormatter(Number(item.list_price)),
-        sellingPrice: currencyFormatter(Number(item.selling_price)),
-        status: item.status ? (
-          <div className='rounded-md bg-[#D4FFE0] px-2 py-1 text-[#46C574]'>{STATUS.ACTIVE}</div>
-        ) : (
-          <div className='bg-[#FFD4D7] text-[#F23E14]'>{STATUS.INACTIVE}</div>
-        ),
+        brand: item.brand,
+        sport: item.sport,
+        weight: item.weight,
+        is_active: item.is_active,
+        stocks: item.stocks,
+        categories: item.categories,
+        liked_customers: item.liked_customers,
+        group_vouchers: item.group_vouchers,
+        brand_id: item.brand_id,
+        sport_id: item.sport_id,
+        list_price: item.list_price,
+        selling_price: item.selling_price,
         total: item.total,
       }
     }) ?? []
@@ -86,8 +85,8 @@ export default function ProductTable({ accountRole }: { accountRole: ROLE_TITLE 
           filterInput={productFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
-          showAddButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
-          showRestoreButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
+          showAddButton={accountRole === ROLE_NAME.ADMIN}
+          showRestoreButton={accountRole === ROLE_NAME.ADMIN}
           restore7daysFn={() =>
             productApi.restoreProduct(moment().subtract(7, 'days').utc().unix().valueOf())
           }

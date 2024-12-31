@@ -23,6 +23,7 @@ import {
   PaginationPrevious,
 } from '@/components/shared/pagination'
 import { toast } from 'react-toastify'
+import { ICategory } from '@/interfaces/category'
 
 export interface IProductItem1 {
   id: string
@@ -33,18 +34,10 @@ export interface IProductItem1 {
     media?: {
       url: string
     }
-    color?: {
-      name: string
-    }
+    color?: string
     size?: SIZE
-    quantity_in_stock: number
   }[]
-  category_list: {
-    category: {
-      id: string
-      name: string
-    }
-  }[]
+  category_list: ICategory[]
 }
 
 interface IPaginationState {
@@ -105,10 +98,10 @@ export default function PosPage() {
         return {
           id: item.id,
           name: item.name,
-          price: parseInt(item.selling_price),
-          image: item.stocks[0]?.media?.url,
+          price: item.selling_price,
+          image: '',
           stocks: item.stocks,
-          category_list: item.category_list,
+          category_list: item.categories,
         }
       }) || []
 
@@ -138,7 +131,7 @@ export default function PosPage() {
           stock_id: stocksData?.find(
             (stock) =>
               stock.size === size &&
-              stock.color?.name === color &&
+              stock.color === color &&
               stock.product_id === currentProduct.id,
           )?.id,
           name: currentProduct.name,

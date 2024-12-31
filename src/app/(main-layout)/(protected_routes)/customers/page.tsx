@@ -1,6 +1,6 @@
 'use client'
 
-import { columns, customerFilterInput, ICustomer, CreateCustomerForm } from './components'
+import { columns, customerFilterInput, CreateCustomerForm } from './components'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ import { PaginationState } from '@tanstack/react-table'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { customerApi } from '@/apis'
+import { ICustomer } from '@/interfaces/customer'
 
 export default function CustomerManagementPage() {
   const { isBrowser } = useBrowser()
@@ -21,17 +22,7 @@ export default function CustomerManagementPage() {
     placeholderData: (previousData) => previousData,
   })
 
-  const data: ICustomer[] =
-    queryData?.map((item) => {
-      return {
-        id: item.id,
-        fullname: item.fullname,
-        phone: item.phone,
-        gender: item.gender,
-        avatar_url: item.avatar_url,
-        total: item.total,
-      }
-    }) ?? []
+  const data: ICustomer[] = queryData || []
 
   return (
     <div className='container mx-auto py-10'>

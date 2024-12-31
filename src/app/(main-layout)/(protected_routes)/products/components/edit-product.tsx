@@ -19,7 +19,6 @@ import {
   ScrollArea,
   Separator,
 } from '@/components/shared'
-import { STATUS } from '@/configs/enum'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
 
 const categorySchema = z.object({
@@ -36,8 +35,6 @@ const productSchema = z
     category_list: z.array(categorySchema),
   })
   .partial()
-
-const status: string[] = [STATUS.ACTIVE, STATUS.INACTIVE]
 
 export default function EditProductForm({ productId }: { productId: string }) {
   const queryClient = useQueryClient()
@@ -103,8 +100,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
   }
 
   useEffect(() => {
-    if (!!product && !!product.category_list) {
-      const categoryIdList = product.category_list.map((c) => ({ category_id: c.category.id }))
+    if (!!product && !!product.categories) {
+      const categoryIdList = product.categories.map((c) => ({ category_id: c.id }))
       setSelectedCategories(categoryIdList)
       form.setValue('category_list', categoryIdList)
     }
@@ -156,33 +153,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
 
         <FormField
           control={form.control}
-          name='status'
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='status' className='text-left'>
-                    Status
-                  </Label>
-                  <div className='col-span-3'>
-                    <ComboBox
-                      key='status'
-                      placeholder={product?.status ? STATUS.ACTIVE : STATUS.INACTIVE}
-                      items={status}
-                      onValueChange={(val) => {
-                        field.value = val === STATUS.ACTIVE
-                      }}
-                    />
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage className='text-[16px] font-normal' />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name='list_price'
           render={({ field }) => (
             <FormItem>
@@ -193,7 +163,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   </Label>
                   <Input
                     id='list_price'
-                    placeholder={product?.list_price}
+                    placeholder={product?.list_price.toString()}
                     className='col-span-3'
                     {...field}
                   />
@@ -216,7 +186,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   </Label>
                   <Input
                     id='selling_price'
-                    placeholder={product?.selling_price}
+                    placeholder={product?.selling_price.toString()}
                     className='col-span-3'
                     {...field}
                   />
@@ -261,9 +231,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
                                     : handleRemoveCategory(category.id)
                                 }
                               />
-                              <span className='text-sm leading-none'>
-                                {category.name} - {category.gender}
-                              </span>
+                              <span className='text-sm leading-none'>{category.name}</span>
                             </div>
                             <Separator className='my-2' />
                           </div>

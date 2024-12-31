@@ -1,4 +1,4 @@
-import { INotificationRequest, INotificationResponse } from '@/interfaces/notification'
+import { INotificationRequest, INotification } from '@/interfaces/notification'
 import BaseApi from './base'
 
 class NotificationApi extends BaseApi {
@@ -7,11 +7,11 @@ class NotificationApi extends BaseApi {
   }
 
   async getAllNotification(count?: number, page?: number) {
-    return super.getAll<INotificationResponse>(count, page)
+    return super.getAll<INotification>(count, page)
   }
 
   async getNotificationById(id: string) {
-    return super.getById<INotificationResponse>(id)
+    return super.getById<INotification>(id)
   }
 
   async createNotification(notification: INotificationRequest) {

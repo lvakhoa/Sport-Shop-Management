@@ -1,7 +1,7 @@
 'use client'
 
-import { FILTER_INPUT_TYPE, ROLE_TITLE, STATUS } from '@/configs/enum'
-import { stockColumns, IStock } from './stock-columns'
+import { FILTER_INPUT_TYPE, ROLE_NAME } from '@/configs/enum'
+import { stockColumns } from './stock-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -10,6 +10,7 @@ import { queryKeys } from '@/configs'
 import { stockApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
+import { IStock } from '@/interfaces/stock'
 import moment from 'moment'
 import CreateStockForm from './create-stock'
 import CsvFormDialog from './csv-form-dialog'
@@ -37,7 +38,7 @@ const stockFilterInput: IFilterInput[] = [
   },
 ]
 
-export default function StockTable({ accountRole }: { accountRole: ROLE_TITLE }) {
+export default function StockTable({ accountRole }: { accountRole: ROLE_NAME }) {
   const { isBrowser } = useBrowser()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -53,10 +54,15 @@ export default function StockTable({ accountRole }: { accountRole: ROLE_TITLE })
     queryData?.map((item) => {
       return {
         id: item.id,
-        product_name: item.product.name,
+        product_id: item.product_id,
         size: item.size,
-        color: item.color.name,
-        quantity_in_stock: item.quantity_in_stock,
+        color: item.color,
+        quantity: item.quantity,
+        is_active: item.is_active,
+        ordered_product: item.ordered_product,
+        name: item.name,
+        selected_product: item.selected_product,
+        product: item.product,
         total: item.total,
       }
     }) ?? []
@@ -76,9 +82,9 @@ export default function StockTable({ accountRole }: { accountRole: ROLE_TITLE })
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
           csvFormDialog={<CsvFormDialog />}
-          showImportButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
-          showAddButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
-          showRestoreButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
+          showImportButton={accountRole === ROLE_NAME.ADMIN}
+          showAddButton={accountRole === ROLE_NAME.ADMIN}
+          showRestoreButton={accountRole === ROLE_NAME.ADMIN}
           restore7daysFn={() =>
             stockApi.restoreStock(moment().subtract(7, 'days').utc().unix().valueOf())
           }

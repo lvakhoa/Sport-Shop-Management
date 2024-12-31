@@ -1,4 +1,4 @@
-import { IEmployeeRequest, IEmployeeResponse } from '@/interfaces/employee'
+import { IEmployeeRequest, IEmployee } from '@/interfaces/employee'
 import BaseApi from './base'
 
 class EmployeeApi extends BaseApi {
@@ -7,11 +7,11 @@ class EmployeeApi extends BaseApi {
   }
 
   async getAllEmployees(count?: number, page?: number) {
-    return super.getAll<IEmployeeResponse>(count, page)
+    return super.getAll<IEmployee>(count, page)
   }
 
   async getEmployeesById(id: string) {
-    return super.getById<IEmployeeResponse>(id)
+    return super.getById<IEmployee>(id)
   }
 
   async createEmployee(employee: IEmployeeRequest) {

@@ -1,4 +1,4 @@
-import { IOrderCreateRequest, IOrderUpdateRequest, IOrderResponse } from '@/interfaces/order'
+import { IOrderCreateRequest, IOrderUpdateRequest, IOrder } from '@/interfaces/order'
 import BaseApi from './base'
 import { ORDER_STATUS } from '@/configs/enum'
 import { httpClient } from '@/services'
@@ -30,11 +30,11 @@ class OrderApi extends BaseApi {
           ? `&status=${orderStatus}`
           : `?status=${orderStatus}`
       : dateRangeQuery
-    return super.getAll<IOrderResponse>(count, page, optionalQuery)
+    return super.getAll<IOrder>(count, page, optionalQuery)
   }
 
   async getOrderById(id: string) {
-    return super.getById<IOrderResponse>(id)
+    return super.getById<IOrder>(id)
   }
 
   async createOrder(order: IOrderCreateRequest) {

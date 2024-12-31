@@ -12,7 +12,7 @@ import { shippingPriceApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { IShippingPriceRequest, IShippingPriceResponse } from '@/interfaces/shipping-price'
 import { RadioGroup, RadioGroupItem } from '@/components/shared/radio-group'
-import { ROLE_TITLE } from '@/configs/enum'
+import { ROLE_NAME } from '@/configs/enum'
 import { currencyFormatter } from '@/helpers'
 import { cn } from '@/lib/utils'
 
@@ -23,7 +23,7 @@ const shippingFormSchema = z.object({
 
 type ShippingFormValues = z.infer<typeof shippingFormSchema>
 
-export function ShippingForm({ accountRole }: { accountRole: ROLE_TITLE }) {
+export function ShippingForm({ accountRole }: { accountRole: ROLE_NAME }) {
   const { data: shippingPriceData } = useQuery({
     queryKey: queryKeys.shippingPrices.gen(),
     queryFn: () => shippingPriceApi.getAllShippingPrice(),
@@ -100,7 +100,7 @@ export function ShippingForm({ accountRole }: { accountRole: ROLE_TITLE }) {
             )}
           />
           <FormField
-            disabled={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
+            disabled={accountRole !== ROLE_NAME.ADMIN}
             control={form.control}
             name='price'
             render={({ field }) => (
@@ -113,12 +113,7 @@ export function ShippingForm({ accountRole }: { accountRole: ROLE_TITLE }) {
             )}
           />
         </div>
-        <Button
-          type='submit'
-          className={cn(
-            accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER ? 'hidden' : '',
-          )}
-        >
+        <Button type='submit' className={cn(accountRole !== ROLE_NAME.ADMIN ? 'hidden' : '')}>
           Update Shipping Price
         </Button>
       </form>

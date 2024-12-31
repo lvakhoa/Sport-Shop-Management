@@ -1,4 +1,5 @@
-import { FILTER_INPUT_TYPE, STATUS } from '@/configs/enum'
+import { FILTER_INPUT_TYPE, TOKEN_TYPE } from '@/configs/enum'
+import { IUser } from './users'
 
 export interface IPerson {
   id: string
@@ -8,6 +9,14 @@ export interface IPerson {
   gender: 'MALE' | 'FEMALE'
   rank: 'GOLD' | 'SILVER' | 'COPPER'
   loyalty_point: number
+}
+
+export interface IToken {
+  token: string
+  type: TOKEN_TYPE
+  expired_date?: Date
+  user_id: string
+  user: IUser
 }
 
 export interface ITokenResponse {

@@ -8,15 +8,7 @@ import { ArrowUpDown } from 'lucide-react'
 import { IFilterInput } from '@/interfaces'
 import { customerApi } from '@/apis'
 import EditCustomerForm from './edit-customer'
-
-export interface ICustomer {
-  id: string
-  fullname: string
-  phone?: string
-  gender?: GENDER
-  avatar_url?: string
-  total: number
-}
+import { ICustomer } from '@/interfaces/customer'
 
 export const customerFilterInput: IFilterInput[] = [
   {

@@ -1,6 +1,6 @@
 'use client'
 
-import { IOrderResponse } from '@/interfaces/order'
+import { IOrder } from '@/interfaces/order'
 import moment from 'moment'
 import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
@@ -8,9 +8,9 @@ import { queryKeys } from '@/configs'
 import { customerApi } from '@/apis'
 import { currencyFormatter } from '@/helpers'
 
-function Invoice({ order }: { order: IOrderResponse }) {
+function Invoice({ order }: { order: IOrder }) {
   const { data: customerData } = useQuery({
-    queryKey: queryKeys.customerDetails.gen(order.account_id),
+    queryKey: queryKeys.customerDetails.gen(order.customer_id),
     queryFn: () => customerApi.getCustomerById(order.customer_id),
   })
   return (
@@ -27,7 +27,7 @@ function Invoice({ order }: { order: IOrderResponse }) {
       </div>
       <hr />
       <div className='flex w-full justify-around'>
-        <span className='text-start font-bold'>ORDER NO: {order.order_no}</span>
+        <span className='text-start font-bold'>ORDER NO: {order.order_code}</span>
         <span className='text-start font-bold'>
           INVOICE DATE: {moment(new Date()).format('DD-MM-YYYY HH:mm:ss')}
         </span>
@@ -37,10 +37,7 @@ function Invoice({ order }: { order: IOrderResponse }) {
         <span className='text-[20px] font-bold'>BILL TO</span>
         <span>Customer Name: {customerData?.fullname}</span>
         <span>Phone Number: {customerData?.phone}</span>
-        <span>
-          Address: {order.shipment.address?.street}, {order.shipment.address?.ward},{' '}
-          {order.shipment.address?.district}, {order.shipment.address?.city}
-        </span>
+        <span>Address: {order.shipment?.shipping_address}</span>
       </div>
       <hr />
       <table>
@@ -54,7 +51,7 @@ function Invoice({ order }: { order: IOrderResponse }) {
           </tr>
         </thead>
         <tbody className='bg-white divide-y divide-gray-200'>
-          {order.order_details.map((order, index) => (
+          {order.ordered_products.map((order, index) => (
             <tr key={order.stock.id}>
               <td className='p-[5px] text-center'>{index + 1}</td>
               <td className='p-[5px] text-center'>{order.stock.product.name}</td>
@@ -63,7 +60,7 @@ function Invoice({ order }: { order: IOrderResponse }) {
                 {currencyFormatter(BigInt(order.stock.product.selling_price))}
               </td>
               <td className='p-[5px] text-center'>
-                {currencyFormatter(parseFloat(order.stock.product.selling_price) * order.quantity)}
+                {currencyFormatter(order.stock.product.selling_price * order.quantity)}
               </td>
             </tr>
           ))}

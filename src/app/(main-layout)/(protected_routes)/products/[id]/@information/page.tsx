@@ -3,7 +3,6 @@
 import { productApi } from '@/apis'
 import { ContentCard } from '@/components/shared'
 import { queryKeys } from '@/configs'
-import { STATUS } from '@/configs/enum'
 import { colorFormatter, currencyFormatter } from '@/helpers'
 import { useQuery } from '@tanstack/react-query'
 import { notFound, useParams } from 'next/navigation'
@@ -12,7 +11,6 @@ import styles from '@/components/shared/ContentCard/ContentCard.module.css'
 interface IProductInfo {
   name: string
   description?: string
-  status: STATUS
   listPrice: string
   sellingPrice: string
   color: string[]
@@ -34,13 +32,12 @@ function InformationPage() {
   const details: IProductInfo = {
     name: data?.name ?? '',
     description: data?.description,
-    status: !!data?.status ? STATUS.ACTIVE : STATUS.INACTIVE,
     listPrice: currencyFormatter(Number(data?.list_price ?? 0)),
     sellingPrice: currencyFormatter(Number(data?.selling_price ?? 0)),
     color:
       !!data && data.stocks.length > 0
         ? data?.stocks
-            .map((item) => colorFormatter(item.color?.name ?? ''))
+            .map((item) => colorFormatter(item.color))
             .filter((item, index, arr) => arr.indexOf(item) === index)
         : [],
     size:
@@ -51,15 +48,15 @@ function InformationPage() {
             .join(', ')
         : '',
     categories:
-      !!data && data.category_list.length > 0
-        ? data.category_list
-            .map((item) => item.category?.name ?? '')
+      !!data && data.categories.length > 0
+        ? data.categories
+            .map((item) => item.name ?? '')
             .slice(0, 2)
-            .join(', ') + (data.category_list.length > 2 ? ', ...' : '')
+            .join(', ') + (data.categories.length > 2 ? ', ...' : '')
         : '',
     totalQuantity:
       !!data && data.stocks.length > 0
-        ? data?.stocks.reduce((acc, item) => acc + item.quantity_in_stock, 0)
+        ? data?.stocks.reduce((acc, item) => acc + item.quantity, 0)
         : 0,
   }
 
@@ -87,13 +84,11 @@ function InformationPage() {
 
         <div className='flex gap-10'>
           <div className={styles.list}>
-            <span className={styles.info_title}>Status</span>
             <span className={styles.info_title}>List Price</span>
             <span className={styles.info_title}>Selling Price</span>
             <span className={styles.info_title}>Total Quantity</span>
           </div>
           <div className={styles.list}>
-            <span className={styles.info_content}>{details.status}</span>
             <span className={styles.info_content}>{details.listPrice}</span>
             <span className={styles.info_content}>{details.sellingPrice}</span>
             <span className={styles.info_content}>{details.totalQuantity}</span>

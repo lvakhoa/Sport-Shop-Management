@@ -6,19 +6,19 @@ import { useQuery } from '@tanstack/react-query'
 import { PATH_NAME, queryKeys } from '@/configs'
 import { orderApi } from '@/apis'
 import { useState } from 'react'
-import { IOrderResponse } from '@/interfaces/order'
+import { IOrder } from '@/interfaces/order'
 import { cn } from '@/lib/utils'
 import moment from 'moment'
 import { usePathname, useRouter } from 'next/navigation'
 
 function OrdersManagementLayout({ children }: { children: React.ReactNode }) {
-  const [selectedOrder, setSelectedOrder] = useState<IOrderResponse | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [filter, setFilter] = useState<string>('All Order')
   const router = useRouter()
   const pathName = usePathname()
 
-  const handleOrderClick = (order: IOrderResponse) => {
+  const handleOrderClick = (order: IOrder) => {
     setSelectedOrder(order)
     router.push(`${PATH_NAME.ORDER_DETAILS}/${order.id}`)
   }
@@ -50,12 +50,12 @@ function OrdersManagementLayout({ children }: { children: React.ReactNode }) {
         >
           {ordersData
             ?.sort(
-              (a: IOrderResponse, b: IOrderResponse) =>
+              (a: IOrder, b: IOrder) =>
                 new Date(b.order_date).getTime() - new Date(a.order_date).getTime(),
             )
-            ?.filter((order: IOrderResponse) => {
+            ?.filter((order: IOrder) => {
               const matchesSearch =
-                order.order_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                order.order_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 moment(order.order_date).format('DD-MM-YYYY').includes(searchQuery.toLowerCase()) ||
                 order.status.toLowerCase().includes(searchQuery.toLowerCase())
 
@@ -67,7 +67,7 @@ function OrdersManagementLayout({ children }: { children: React.ReactNode }) {
 
               return matchesSearch && filterSearch
             })
-            .map((order: IOrderResponse) => (
+            .map((order: IOrder) => (
               <div
                 className={cn('cursor-pointer', 'border-b border-b-gray-300 duration-150', {
                   'bg-[#DCEBFE]': selectedOrder && selectedOrder.id === order.id,

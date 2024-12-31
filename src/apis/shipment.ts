@@ -1,8 +1,4 @@
-import {
-  IShipmentCreateRequest,
-  IShipmentUpdateRequest,
-  IShipmentResponse,
-} from '@/interfaces/shipment'
+import { IShipmentCreateRequest, IShipmentUpdateRequest, IShipment } from '@/interfaces/shipment'
 import BaseApi from './base'
 
 class ShipmentApi extends BaseApi {
@@ -11,11 +7,11 @@ class ShipmentApi extends BaseApi {
   }
 
   async getAllShipments(count?: number, page?: number) {
-    return super.getAll<IShipmentResponse>(count, page)
+    return super.getAll<IShipment>(count, page)
   }
 
   async getShipmentById(id: string) {
-    return super.getById<IShipmentResponse>(id)
+    return super.getById<IShipment>(id)
   }
 
   async createShipment(shipment: IShipmentCreateRequest) {

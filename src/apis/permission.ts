@@ -1,4 +1,4 @@
-import { IPermissionRequest, IPermissionResponse } from '@/interfaces/permission'
+import { IPermissionRequest, IPermission } from '@/interfaces/permission'
 import BaseApi from './base'
 
 class PermissionApi extends BaseApi {
@@ -7,11 +7,11 @@ class PermissionApi extends BaseApi {
   }
 
   async getAllPermission(count?: number, page?: number) {
-    return super.getAll<IPermissionResponse>(count, page)
+    return super.getAll<IPermission>(count, page)
   }
 
   async getPermissionById(id: string) {
-    return super.getById<IPermissionResponse>(id)
+    return super.getById<IPermission>(id)
   }
 
   async createPermission(permission: IPermissionRequest) {

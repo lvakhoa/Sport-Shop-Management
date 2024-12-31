@@ -1,4 +1,9 @@
 import { GENDER } from '@/configs/enum'
+import { IAddress } from '../address'
+import { IUser } from '../users'
+import { IOrder } from '../order'
+import { IProduct, ISelectedProduct } from '../product'
+import { INotification } from '../notification'
 
 export interface ICustomerRequest {
   fullname?: string
@@ -8,13 +13,17 @@ export interface ICustomerRequest {
   group_user_id?: string
 }
 
-export interface ICustomerResponse {
+export interface ICustomer {
   id: string
   fullname: string
   phone?: string
   gender?: GENDER
   avatar_url?: string
-  created_at: Date
-  updated_at?: Date
+  addresses: IAddress[]
+  user: IUser
+  notifications: INotification[]
+  orders: IOrder[]
+  selected_product: ISelectedProduct[]
+  favorite_products: IProduct[]
   total: number
 }

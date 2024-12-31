@@ -1,4 +1,9 @@
-import { SIZE } from '@/configs/enum'
+import { IBrand } from '../brand'
+import { ISport } from '../sport'
+import { ICategory } from '../category'
+import { ICustomer } from '../customer'
+import { IGroupVoucher } from '../voucher'
+import { IStock } from '../stock'
 
 export interface IProductRequest {
   name?: string
@@ -11,30 +16,29 @@ export interface IProductRequest {
   }[]
 }
 
-export interface IProductResponse {
+export interface IProduct {
   id: string
-  event_id?: string
+  brand_id: string
+  sport_id: string
   name: string
   description?: string
-  status: boolean
-  list_price: string
-  selling_price: string
+  list_price: number
+  selling_price: number
+  weight: number
+  is_active: boolean
+  brand: IBrand
+  sport: ISport
+  stocks: IStock[]
+  categories: ICategory[]
+  liked_customers: ICustomer[]
+  group_vouchers: IGroupVoucher[]
   total: number
-  stocks: {
-    id: string
-    media?: {
-      url: string
-    }
-    color?: {
-      name: string
-    }
-    size?: SIZE
-    quantity_in_stock: number
-  }[]
-  category_list: {
-    category: {
-      id: string
-      name: string
-    }
-  }[]
+}
+
+export interface ISelectedProduct {
+  customer_id: string
+  stock_id: string
+  quantity: number
+  customer: ICustomer
+  stock: IStock
 }

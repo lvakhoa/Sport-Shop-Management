@@ -39,9 +39,7 @@ export function ProductModal({
   product: IProductItem1
   onAddToReceipt: (color: string, size: string, quantity: number) => void
 }) {
-  const colors = Array.from(
-    new Set(product.stocks?.map((stock) => stock.color?.name).filter(Boolean)),
-  )
+  const colors = Array.from(new Set(product.stocks?.map((stock) => stock.color).filter(Boolean)))
   const sizes = Array.from(new Set(product.stocks?.map((stock) => stock.size).filter(Boolean)))
   const images = Array.from(
     new Set(product.stocks?.map((stock) => stock.media?.url).filter(Boolean)),

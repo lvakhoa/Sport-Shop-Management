@@ -24,32 +24,31 @@ function StocksPage({}: Props) {
   const stockImages =
     !!productDetails && productDetails.stocks.length > 0
       ? productDetails.stocks
-          .map((stock) => stock.media?.url ?? '')
+          .map((stock) => stock.group_media)
           .filter((val, index, arr) => arr.indexOf(val) === index)
       : []
   const [selectedImage, setSelectedImage] = useState(0)
 
   const selectedColor = productDetails?.stocks.find(
-    (s) => s.media?.url === stockImages[selectedImage],
-  )?.color?.name
+    (s) => s.group_media === stockImages[selectedImage],
+  )?.color
 
   const selectedStockSizes =
     !!productDetails && productDetails.stocks.length > 0
       ? productDetails.stocks
-          .filter((s) => s.media?.url === stockImages[selectedImage] && !!s.size)
+          .filter((s) => s.group_media === stockImages[selectedImage] && !!s.size)
           .map((s) => s.size)
       : []
   const [selectedSize, setSelectedSize] = useState(0)
 
   const quantityInStock = productDetails?.stocks.find(
     (s) =>
-      s.media?.url === stockImages[selectedImage] &&
+      s.group_media === stockImages[selectedImage] &&
       (!s.size || s.size === selectedStockSizes[selectedSize]),
-  )?.quantity_in_stock
-
+  )?.quantity
   const selectedStockId =
     productDetails?.stocks.find(
-      (s) => s.color?.name === selectedColor && s.size === selectedStockSizes[selectedSize],
+      (s) => s.color === selectedColor && s.size === selectedStockSizes[selectedSize],
     )?.id ?? ''
 
   if (!!productDetails && productDetails.stocks.length <= 0) {
@@ -60,9 +59,9 @@ function StocksPage({}: Props) {
     <ContentCard>
       <div className='flex max-w-[620px] flex-col-reverse gap-3 sm:flex-row sm:gap-5'>
         <div className='flex max-w-[90px] flex-row gap-3 sm:flex-col sm:gap-5'>
-          {stockImages.map((url, index) => (
+          {stockImages.map((item, index) => (
             <Card
-              key={url}
+              key={item?.id}
               className='relative h-16 w-[90px] cursor-pointer rounded-2xl sm:h-20'
               onClick={() => setSelectedImage(index)}
             >
@@ -83,7 +82,7 @@ function StocksPage({}: Props) {
                   <Image
                     objectFit='cover'
                     fill
-                    src={url}
+                    src={item?.media_list[0]?.url ?? ''}
                     alt=''
                     className='h-16 w-[90px] rounded-2xl sm:h-20'
                   />
@@ -112,7 +111,7 @@ function StocksPage({}: Props) {
                 <Image
                   objectFit='cover'
                   fill
-                  src={stockImages[selectedImage]}
+                  src={stockImages[selectedImage]?.media_list[0]?.url ?? ''}
                   alt=''
                   className='h-96 w-full rounded-2xl sm:h-[480px]'
                 />

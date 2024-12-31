@@ -1,4 +1,10 @@
-import { ORDER_STATUS, PAYMENT_TYPE, SIZE } from '@/configs/enum'
+import { ORDER_STATUS, PAYMENT_TYPE } from '@/configs/enum'
+import { IEmployee } from '../employee'
+import { ICustomer } from '../customer'
+import { IVoucher } from '../voucher'
+import { IStock } from '../stock'
+import { IGroupMedia } from '../media'
+import { IShipment } from '../shipment'
 
 export interface IOrderCreateRequest {
   account_id?: string
@@ -26,97 +32,34 @@ export interface IOrderUpdateRequest {
   buy_in_app: boolean
 }
 
-export interface IOrderDetailUpdateRequest {
-  order_details: {
-    product_stock_id: string
-    quantity: number
-  }[]
-}
-
-export interface IOrderResponse {
+export interface IOrder {
   id: string
-  order_no: string
-  account_id: string
+  order_code: string
   customer_id: string
-  confirmed_employee_id: string
+  confirming_employee_id?: string
   voucher_id?: string
-  product_total_price: string
+  group_media_id?: string
+  product_total_price: number
   order_date: Date
   status: ORDER_STATUS
-  buy_in_app: boolean
-  note?: string
-  voucher?: {
-    code: string
-    sale_percent: number
-  }
-  order_details: {
-    stock: {
-      id: string
-      product_id: string
-      color_id?: string
-      media_id?: string
-      size?: SIZE
-      quantity_in_stock: number
-      product: {
-        id: string
-        event_id: string
-        name: string
-        description?: string
-        status: boolean
-        list_price: string
-        selling_price: string
-      }
-      media?: {
-        url: string
-      }
-      color?: {
-        name: string
-      }
-    }
-    quantity: number
-  }[]
-  shipment: {
-    id: string
-    shipment_no: string
-    order_id: string
-    address_id?: string
-    shipped: boolean
-    shipped_date?: Date
-    completed_date?: Date
-    shipping_price: string
-    shipment_tracking?: string
-    address?: {
-      id: string
-      account_id: string
-      street: string
-      ward: string
-      district: string
-      city: string
-    }
-  }
+  payment_type: PAYMENT_TYPE
+  payment_time?: Date
+  review_star: number
+  review_content?: string
+  confirmed_employee?: IEmployee
+  customer: ICustomer
+  group_media?: IGroupMedia
+  voucher?: IVoucher
+  ordered_products: IOrderedProduct[]
+  shipment?: IShipment
   total: number
 }
 
-export interface IOrderStockResponse {
-  id: string
-  product_id: string
-  color_id?: string
-  media_id?: string
-  size?: SIZE
-  quantity_in_stock: number
-  product: {
-    id: string
-    event_id: string
-    name: string
-    description?: string
-    status: boolean
-    list_price: string
-    selling_price: string
-  }
-  media?: {
-    url: string
-  }
-  color?: {
-    name: string
-  }
+export interface IOrderedProduct {
+  order_id: string
+  stock_id: string
+  quantity: number
+  order: IOrder
+  stock: IStock
+  total: number
 }

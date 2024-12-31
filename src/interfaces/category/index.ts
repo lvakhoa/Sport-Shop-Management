@@ -1,21 +1,18 @@
-import { GENDER } from '@/configs/enum'
+import { CONSUMER_TYPE } from '@/configs/enum'
+import { IProduct } from '../product'
 
-export interface ICategoryResponse {
+export interface ICategory {
   id: string
-  media_id?: string
+  parent_id?: string
   name: string
-  type: string
-  gender: string
+  consumer_type: CONSUMER_TYPE
   description?: string
-  media?: {
-    url: string
-  }
-  product_list: {
-    product: {
-      id: string
-      name: string
-    }
-  }[]
+  image_url?: string
+  is_active: boolean
+  parent_category?: ICategory
+  child_categories: ICategory[]
+  products: IProduct[]
+  total: number
 }
 
 export interface ICategoryRequest {
