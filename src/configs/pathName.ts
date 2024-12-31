@@ -23,6 +23,7 @@ export const PATH_NAME = {
     SHIPPING_SETUP: '/shipping-setup',
   },
   ORDER_DETAILS: '/order-details',
+  PLACE_ORDER: '/place-order',
 }
 
 export const AUTH_PATH_NAME = [
@@ -54,4 +55,4 @@ export const PUBLIC_PATH_NAME = [
 
 export const MANAGER_PATH_NAME = [...PUBLIC_PATH_NAME, PATH_NAME.EMPLOYEE]
 
-export const ADMIN_PATH_NAME = [...PUBLIC_PATH_NAME, PATH_NAME.EMPLOYEE]
+export const ADMIN_PATH_NAME = [...PUBLIC_PATH_NAME, PATH_NAME.EMPLOYEE, PATH_NAME.PLACE_ORDER]

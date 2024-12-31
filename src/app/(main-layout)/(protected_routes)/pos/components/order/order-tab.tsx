@@ -115,7 +115,7 @@ export function PosTab({
                 variant='default'
                 className='gap-[5px] rounded-full'
                 onClick={() => {
-                  router.push(PATH_NAME.ORDER)
+                  router.push(PATH_NAME.PLACE_ORDER)
                 }}
               >
                 Order

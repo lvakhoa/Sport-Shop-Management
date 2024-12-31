@@ -11,6 +11,7 @@ import {
   PackageOpen,
   TicketPercent,
   BadgeCheck,
+  Package,
 } from 'lucide-react'
 
 export interface ISidebarItem {
@@ -75,6 +76,11 @@ export const adminSidebarItems: ISidebarItem[] = [
         icon: <ReceiptText strokeWidth={1.5} />,
         describe: 'POS',
         link: PATH_NAME.POS,
+      },
+      {
+        icon: <Package strokeWidth={1.5} />,
+        describe: 'Orders',
+        link: PATH_NAME.ORDER,
       },
       {
         icon: <ShoppingCart strokeWidth={1.5} />,
@@ -165,6 +171,11 @@ export const managerSidebarItems: ISidebarItem[] = [
         link: PATH_NAME.POS,
       },
       {
+        icon: <Package strokeWidth={1.5} />,
+        describe: 'Orders',
+        link: PATH_NAME.ORDER,
+      },
+      {
         icon: <ShoppingCart strokeWidth={1.5} />,
         describe: 'Order Details',
         link: PATH_NAME.ORDER_DETAILS,
@@ -251,6 +262,11 @@ export const employeeSidebarItems: ISidebarItem[] = [
         icon: <ReceiptText strokeWidth={1.5} />,
         describe: 'POS',
         link: PATH_NAME.POS,
+      },
+      {
+        icon: <Package strokeWidth={1.5} />,
+        describe: 'Orders',
+        link: PATH_NAME.ORDER,
       },
       {
         icon: <ShoppingCart strokeWidth={1.5} />,
