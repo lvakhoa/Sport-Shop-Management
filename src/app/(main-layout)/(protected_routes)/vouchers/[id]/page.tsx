@@ -3,8 +3,6 @@
 import { productApi, voucherApi } from '@/apis'
 import { ContentCard } from '@/components/shared'
 import { queryKeys } from '@/configs'
-import { STATUS } from '@/configs/enum'
-import { colorFormatter, currencyFormatter } from '@/helpers'
 import { useQuery } from '@tanstack/react-query'
 import { notFound, useParams } from 'next/navigation'
 import styles from '@/components/shared/ContentCard/ContentCard.module.css'
@@ -40,9 +38,9 @@ function InformationPage() {
   const details: IVoucherInfo = {
     title: data?.title ?? '',
     code: data?.code ?? '',
-    sale_percent: data?.sale_percent ?? 0,
-    quantity: data?.quantity ?? 0,
-    expired_date: data?.expired_date ?? new Date(),
+    sale_percent: data?.voucher_value ?? 0,
+    quantity: data?.total_quantity ?? 0,
+    expired_date: data?.ending_date ?? new Date(),
   }
 
   return (

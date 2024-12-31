@@ -19,9 +19,7 @@ interface IStockInfo {
     list_price: string
     selling_price: string
   }
-  media: {
-    url: string
-  }
+  media_url: string
   size: SIZE
   color: string
   quantity_in_stock: number
@@ -49,12 +47,10 @@ export default function StockDetailPage() {
       list_price: currencyFormatter(Number(data?.product?.list_price ?? 0)),
       selling_price: currencyFormatter(Number(data?.product?.selling_price ?? 0)),
     },
-    media: {
-      url: data?.media?.url ?? '',
-    },
+    media_url: data?.group_media?.media_list[0]?.url ?? '',
     size: data?.size ?? SIZE.S,
-    color: colorFormatter(data?.color.name ?? ''),
-    quantity_in_stock: data?.quantity_in_stock ?? 0,
+    color: colorFormatter(data?.color ?? ''),
+    quantity_in_stock: data?.quantity ?? 0,
   }
   return (
     <div className='mx-6 my-4'>
@@ -83,7 +79,7 @@ export default function StockDetailPage() {
                   width={100}
                   height={100}
                   src={
-                    details.media?.url ||
+                    details.media_url ||
                     'https://res.cloudinary.com/dbpvh14wj/image/upload/f_auto,q_auto/pzi7bjxajmsgraesmjt2'
                   }
                 />

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { GENDER } from '@/configs/enum'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
-import { employeeAccountApi, employeeApi, positionApi } from '@/apis'
+import { employeeApi } from '@/apis'
 import {
   Select,
   SelectContent,

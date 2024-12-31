@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { ADMIN_PATH_NAME, AUTH_PATH_NAME, PATH_NAME } from './configs'
 import { jwtDecode } from 'jwt-decode'
-import { ROLE_TITLE } from './configs/enum'
 import { MANAGER_PATH_NAME, PUBLIC_PATH_NAME } from './configs/pathName'
+import { ROLE_NAME } from './configs/enum'
 
 export default function middleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname
@@ -20,17 +20,17 @@ export default function middleware(request: NextRequest) {
 
     const user = jwtDecode<any>(token)
     if (
-      user.roleName === ROLE_TITLE.ADMIN &&
+      user.roleName === ROLE_NAME.ADMIN &&
       (ADMIN_PATH_NAME.includes(mainPathWithoutQuery) || ADMIN_PATH_NAME.includes(pathName))
     )
       return NextResponse.next()
+    // else if (
+    //   user.roleName === ROLE_NAME. &&
+    //   (MANAGER_PATH_NAME.includes(mainPathWithoutQuery) || MANAGER_PATH_NAME.includes(pathName))
+    // )
+    //   return NextResponse.next()
     else if (
-      user.roleName === ROLE_TITLE.MANAGER &&
-      (MANAGER_PATH_NAME.includes(mainPathWithoutQuery) || MANAGER_PATH_NAME.includes(pathName))
-    )
-      return NextResponse.next()
-    else if (
-      user.roleName === ROLE_TITLE.EMPLOYEE &&
+      user.roleName === ROLE_NAME.EMPLOYEE &&
       (PUBLIC_PATH_NAME.includes(mainPathWithoutQuery) || PUBLIC_PATH_NAME.includes(pathName))
     )
       return NextResponse.next()

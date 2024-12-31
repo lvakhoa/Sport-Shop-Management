@@ -1,5 +1,4 @@
 export { stockColumns } from './stock-columns'
-export type { IStock } from './stock-columns'
 export { default as EditStockForm } from './edit-stock'
 export { default as CreateStockForm } from './create-stock'
 export { default as CsvFormDialog } from './csv-form-dialog'

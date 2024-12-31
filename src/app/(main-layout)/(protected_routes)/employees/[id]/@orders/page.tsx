@@ -18,7 +18,7 @@ function OrderPage() {
     queryFn: () => orderApi.getAllOrders(),
   })
 
-  const orders = ordersData?.filter((order) => order.confirmed_employee_id === userId) ?? []
+  const orders = ordersData?.filter((order) => order.confirming_employee_id === userId) ?? []
 
   return (
     <ContentCard title='Orders'>

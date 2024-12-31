@@ -26,7 +26,7 @@ export function SelectCategory({ onValueChange }: { onValueChange: (value: strin
         <SelectGroup>
           {categories?.map((category) => (
             <SelectItem key={category.id} value={category.id}>
-              {category.name} - {category.gender}
+              {category.name}
             </SelectItem>
           ))}
         </SelectGroup>

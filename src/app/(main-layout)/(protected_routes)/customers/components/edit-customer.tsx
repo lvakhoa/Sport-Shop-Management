@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { GENDER } from '@/configs/enum'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
-import { customerAccountApi, customerApi } from '@/apis'
+import { customerApi } from '@/apis'
 import { ICustomerRequest } from '@/interfaces/customer'
 import { toast } from 'react-toastify'
 
@@ -24,10 +24,6 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
   const { data: customerData } = useQuery({
     queryKey: queryKeys.customerDetails.gen(customerId),
     queryFn: () => customerApi.getCustomerById(customerId),
-  })
-  const { data: accounts } = useQuery({
-    queryKey: queryKeys.customerAccount,
-    queryFn: () => customerAccountApi.getAllCustomerAccounts(),
   })
 
   const form = useForm<z.infer<typeof customerSchema>>({
@@ -60,8 +56,6 @@ export default function EditCustomerForm({ customerId }: { customerId: string })
       await queryClient.invalidateQueries({ queryKey: queryKeys.employeeDetails.gen(customerId) })
     },
   })
-
-  const account = accounts?.find((acc) => acc?.customer?.id === customerId)
 
   function onSubmit(data: z.infer<typeof customerSchema>) {
     editCustomer({

@@ -1,3 +1,5 @@
+import { ICustomer } from '../customer'
+
 export interface IAddressRequest {
   street?: string
   ward?: string
@@ -6,11 +8,12 @@ export interface IAddressRequest {
   account_id?: string
 }
 
-export interface IAddressResponse {
+export interface IAddress {
   id: string
-  account_id: string
+  customer_id: string
   street: string
   ward: string
   district: string
   city: string
+  customer: ICustomer
 }

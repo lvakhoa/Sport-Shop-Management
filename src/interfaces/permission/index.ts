@@ -1,28 +1,22 @@
-import { HTTP_METHOD } from '@/configs/enum'
+import { METHOD } from '@/configs/enum'
+import { IGroupUser } from '../groupUser'
 
 export interface IPermissionRequest {
   title?: string
   description?: string
   api?: string
-  method?: HTTP_METHOD
+  method?: METHOD
   role_list?: {
     role_id: string
   }[]
 }
 
-export interface IPermissionResponse {
+export interface IPermission {
   id: string
   title: string
   description?: string
   api: string
-  method: HTTP_METHOD
-  created_at: Date
-  updated_at: Date
-  grant_permissions: {
-    role: {
-      id: string
-      title: string
-    }
-  }[]
+  method: METHOD
+  granted_groups: IGroupUser[]
   total: number
 }

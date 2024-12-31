@@ -62,7 +62,7 @@ export default function CreateCategoryPage() {
     queryFn: () => categoryApi.getAllCategories(),
   })
 
-  const typeList = Array.from(new Set(categoriesData?.map((category) => category.type)))
+  const typeList = Array.from(new Set(categoriesData?.map((category) => category.consumer_type)))
 
   const queryClient = useQueryClient()
 

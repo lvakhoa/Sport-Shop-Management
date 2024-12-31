@@ -1,4 +1,4 @@
-import { IAddressResponse } from '@/interfaces/address'
+import { IAddress } from '@/interfaces/address'
 import BaseApi from './base'
 import { handleResponse } from '@/helpers'
 import { httpClient } from '@/services'
@@ -9,18 +9,18 @@ class AddressApi extends BaseApi {
   }
 
   async getAllAddress(count?: number, page?: number) {
-    return super.getAll<IAddressResponse>(count, page)
+    return super.getAll<IAddress>(count, page)
   }
 
   async getAddressById(id: string) {
-    return super.getById<IAddressResponse>(id)
+    return super.getById<IAddress>(id)
   }
 
   async getAddressOfAccount(count?: number, page?: number) {
     const countQuery = !!count ? `?count=${count}` : ''
     const pageQuery = !!page ? `&page=${page}` : ''
-    const data = await handleResponse<IAddressResponse[]>(() =>
-      httpClient.get<IAddressResponse[]>('/addresses/account/' + countQuery + pageQuery),
+    const data = await handleResponse<IAddress[]>(() =>
+      httpClient.get<IAddress[]>('/addresses/account/' + countQuery + pageQuery),
     )
     return data
   }

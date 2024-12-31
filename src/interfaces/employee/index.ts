@@ -1,4 +1,6 @@
 import { GENDER } from '@/configs/enum'
+import { IUser } from '../users'
+import { IOrder } from '../order'
 
 export interface IEmployeeRequest {
   fullname?: string
@@ -8,13 +10,12 @@ export interface IEmployeeRequest {
   group_user_id?: string
 }
 
-export interface IEmployeeResponse {
+export interface IEmployee {
   id: string
   fullname: string
   phone?: string
   gender?: GENDER
-  avatar_url?: string
-  created_at: Date
-  updated_at?: Date
+  user: IUser
+  confirmed_orders: IOrder[]
   total: number
 }

@@ -1,4 +1,4 @@
-import { IVoucherRequest, IVoucherResponse } from '@/interfaces/voucher'
+import { IVoucherRequest, IVoucher } from '@/interfaces/voucher'
 import BaseApi from './base'
 
 class VoucherApi extends BaseApi {
@@ -7,11 +7,11 @@ class VoucherApi extends BaseApi {
   }
 
   async getAllVouchers(count?: number, page?: number) {
-    return super.getAll<IVoucherResponse>(count, page)
+    return super.getAll<IVoucher>(count, page)
   }
 
   async getVoucherById(id: string) {
-    return super.getById<IVoucherResponse>(id)
+    return super.getById<IVoucher>(id)
   }
 
   async createVoucher(voucher: IVoucherRequest) {

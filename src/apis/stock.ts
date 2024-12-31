@@ -1,4 +1,4 @@
-import { IStockRequest, IStockResponse, IBestSellerStock } from '@/interfaces/stock'
+import { IStockRequest, IStock, IBestSellerStock } from '@/interfaces/stock'
 import BaseApi from './base'
 import { handleResponse } from '@/helpers'
 import { httpClient } from '@/services'
@@ -17,11 +17,11 @@ class StockApi extends BaseApi {
   }
 
   async getAllStock(count?: number, page?: number) {
-    return super.getAll<IStockResponse>(count, page)
+    return super.getAll<IStock>(count, page)
   }
 
   async getStockById(id: string) {
-    return super.getById<IStockResponse>(id)
+    return super.getById<IStock>(id)
   }
 
   async createStockByCsv(file: File) {

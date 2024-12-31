@@ -1,6 +1,6 @@
 'use client'
 
-import { colorApi, productApi, stockApi } from '@/apis'
+import { productApi, stockApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -62,12 +62,6 @@ export default function CreateStockForm() {
     queryFn: () => productApi.getAllProduct(),
   })
 
-  const { data: colorData } = useQuery({
-    queryKey: queryKeys.allColors,
-    queryFn: () => colorApi.getAllColors(),
-  })
-
-  const colors: IColor[] = colorData?.map((c) => ({ id: c.id, name: c.name })) ?? []
   const products: IProduct[] = productData?.map((p) => ({ id: p.id, name: p.name })) ?? []
 
   const [selectedColorId, setSelectedColorId] = useState<string>()
@@ -152,7 +146,7 @@ export default function CreateStockForm() {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name='color_id'
           render={({ field }) => (
@@ -186,7 +180,7 @@ export default function CreateStockForm() {
               <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
-        />
+        /> */}
 
         <FormField
           control={form.control}

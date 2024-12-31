@@ -119,7 +119,7 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
       },
       {
         queryKey: queryKeys.allOrders.gen(
-          ORDER_STATUS.SUCCESS,
+          ORDER_STATUS.DELIVERED,
           fromDate ? moment(fromDate).unix() : undefined,
           toDate ? moment(toDate).unix() : undefined,
         ),
@@ -129,7 +129,7 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
             undefined,
             fromDate ? moment(fromDate).unix() : undefined,
             toDate ? moment(toDate).unix() : undefined,
-            ORDER_STATUS.SUCCESS,
+            ORDER_STATUS.DELIVERED,
           ),
         enabled: !!accessToken,
       },
@@ -154,10 +154,10 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
   })
 
   const ongoingOrders = !!totalOrdersConfirmed
-    ? totalOrdersConfirmed.filter((item) => !item.shipment.shipped)
+    ? totalOrdersConfirmed.filter((item) => !item.shipment?.completed_date)
     : []
   const shippedOrders = !!totalOrdersConfirmed
-    ? totalOrdersConfirmed.filter((item) => item.shipment.shipped)
+    ? totalOrdersConfirmed.filter((item) => !!item.shipment?.completed_date)
     : []
 
   return (

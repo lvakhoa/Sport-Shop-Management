@@ -1,23 +1,15 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { ROLE_TITLE, SIZE } from '@/configs/enum'
+import { ROLE_NAME, SIZE } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
 import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import { stockApi } from '@/apis'
 import EditStockForm from './edit-stock'
+import { IStock } from '@/interfaces/stock'
 
-export interface IStock {
-  id: string
-  product_name: string
-  size?: SIZE
-  color: string
-  quantity_in_stock: number
-  total: number
-}
-
-export const stockColumns = (accountRole: ROLE_TITLE): ColumnDef<IStock>[] => [
+export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStock>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -122,7 +114,7 @@ export const stockColumns = (accountRole: ROLE_TITLE): ColumnDef<IStock>[] => [
       const stockId = row.getValue('id') as string
       return (
         <ActionButtonShow
-          viewOnly={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
+          viewOnly={accountRole !== ROLE_NAME.ADMIN}
           path={PATH_NAME.STOCK}
           id={stockId}
           editContentElement={<EditStockForm stockId={stockId} />}

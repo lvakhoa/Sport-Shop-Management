@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react'
 import { IProductRequest } from '@/interfaces/product'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/shared/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
-import { ROLE_TITLE } from '@/configs/enum'
+import { ROLE_NAME } from '@/configs/enum'
 
 const categorySchema = z.object({
   category_id: z.string().min(1, {
@@ -129,9 +129,7 @@ function UpdateCategoryInProduct({
                                     : handleRemoveCategory(category.id)
                                 }
                               />
-                              <span className='text-sm leading-none'>
-                                {category.name} - {category.gender}
-                              </span>
+                              <span className='text-sm leading-none'>{category.name}</span>
                             </div>
                             <Separator className='my-2' />
                           </div>
@@ -157,7 +155,7 @@ function UpdateCategoryInProduct({
   )
 }
 
-function CategoryCard({ accountRole }: { accountRole: ROLE_TITLE }) {
+function CategoryCard({ accountRole }: { accountRole: ROLE_NAME }) {
   const router = useRouter()
   const { id: productId } = useParams<{ id: string }>()
   const { data: productDetails } = useQuery({
@@ -167,8 +165,8 @@ function CategoryCard({ accountRole }: { accountRole: ROLE_TITLE }) {
   const queryClient = useQueryClient()
 
   const categoryList = !!productDetails
-    ? productDetails.category_list.map((c) => ({
-        category_id: c.category.id,
+    ? productDetails.categories.map((c) => ({
+        category_id: c.id,
       }))
     : []
 
@@ -193,21 +191,19 @@ function CategoryCard({ accountRole }: { accountRole: ROLE_TITLE }) {
   return (
     <ContentCard
       title='Categories'
-      hasButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
+      hasButton={accountRole === ROLE_NAME.ADMIN}
       buttonName='Update Categories'
       addContentSidebar={
         <UpdateCategoryInProduct productId={productId} categoriesOfProduct={categoryList} />
       }
     >
       <div className='flex flex-col rounded-sm border border-gray-200'>
-        {productDetails?.category_list.map(({ category }, index) => (
+        {productDetails?.categories.map((category, index) => (
           <div
             key={category.id}
             className={cn(
               'flex items-center justify-between p-4',
-              index !== productDetails?.category_list.length - 1
-                ? 'border-b border-b-gray-200'
-                : '',
+              index !== productDetails?.categories.length - 1 ? 'border-b border-b-gray-200' : '',
             )}
           >
             <span className='text-lg font-medium text-content'>{category.name}</span>
@@ -219,7 +215,7 @@ function CategoryCard({ accountRole }: { accountRole: ROLE_TITLE }) {
                 <Eye color='#336AEA' width={20} height={20} />
               </Button> */}
               <AlertPopup
-                hidden={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
+                hidden={accountRole !== ROLE_NAME.ADMIN}
                 title='Delete?'
                 description='Are you sure?'
                 action={() => updateCategoryInProduct(category.id)}

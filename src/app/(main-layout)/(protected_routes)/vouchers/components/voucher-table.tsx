@@ -1,7 +1,7 @@
 'use client'
 
-import { FILTER_INPUT_TYPE, ROLE_TITLE } from '@/configs/enum'
-import { voucherColumns, IVoucher } from './voucher-columns'
+import { FILTER_INPUT_TYPE, ROLE_NAME } from '@/configs/enum'
+import { voucherColumns } from './voucher-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { voucherApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
+import { IVoucher } from '@/interfaces/voucher'
 import { PaginationState } from '@tanstack/react-table'
 import CreateVoucherForm from './create-voucher'
 import moment from 'moment'
@@ -36,7 +37,7 @@ const voucherFilterInput: IFilterInput[] = [
   },
 ]
 
-function VoucherTable({ accountRole }: { accountRole: ROLE_TITLE }) {
+function VoucherTable({ accountRole }: { accountRole: ROLE_NAME }) {
   const { isBrowser } = useBrowser()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -52,11 +53,22 @@ function VoucherTable({ accountRole }: { accountRole: ROLE_TITLE }) {
     queryData?.map((item) => {
       return {
         id: item.id,
+        group_voucher_id: item.group_voucher_id,
         title: item.title,
         code: item.code,
-        sale_percent: item.sale_percent.toString(),
-        quantity: item.quantity.toString(),
-        expired_date: moment(item.expired_date).toString(),
+        campaign_name: item.campaign_name,
+        voucher_type: item.voucher_type,
+        voucher_value: item.voucher_value,
+        is_active: item.is_active,
+        starting_date: item.starting_date,
+        ending_date: item.ending_date,
+        total_quantity: item.total_quantity,
+        quantity_per_user: item.quantity_per_user,
+        minimum_price: item.minimum_price,
+        applicable_type: item.applicable_type,
+        orders: item.orders,
+        group_voucher: item.group_voucher,
+        voucher_usages: item.voucher_usages,
         total: item.total,
       }
     }) ?? []
@@ -75,15 +87,7 @@ function VoucherTable({ accountRole }: { accountRole: ROLE_TITLE }) {
           filterInput={voucherFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
-          showAddButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
-          showRestoreButton={accountRole === ROLE_TITLE.ADMIN || accountRole === ROLE_TITLE.MANAGER}
-          restore7daysFn={() =>
-            voucherApi.restoreVoucher(moment().subtract(7, 'days').utc().unix().valueOf())
-          }
-          restore30daysFn={() =>
-            voucherApi.restoreVoucher(moment().subtract(30, 'days').utc().unix().valueOf())
-          }
-          restoreAllFn={() => voucherApi.restoreVoucher()}
+          showAddButton={accountRole === ROLE_NAME.ADMIN}
         />
       )}
     </>

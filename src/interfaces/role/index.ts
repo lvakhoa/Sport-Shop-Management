@@ -1,7 +1,7 @@
-import { ROLE_TITLE } from '@/configs/enum'
+import { ROLE_NAME } from '@/configs/enum'
 
 export interface IRoleRequest {
-  title?: ROLE_TITLE
+  title?: ROLE_NAME
   description?: string
   permission_list?: {
     permission_id: string
@@ -10,7 +10,7 @@ export interface IRoleRequest {
 
 export interface IRoleResponse {
   id: string
-  title: ROLE_TITLE
+  title: ROLE_NAME
   description?: string
   created_at: Date
   updated_at: Date

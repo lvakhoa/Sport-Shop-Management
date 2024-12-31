@@ -1,6 +1,6 @@
 'use client'
 
-import { colorApi, productApi, stockApi } from '@/apis'
+import { productApi, stockApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
@@ -69,15 +69,9 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
     queryFn: () => productApi.getAllProduct(),
   })
 
-  const { data: colorData } = useQuery({
-    queryKey: queryKeys.allColors,
-    queryFn: () => colorApi.getAllColors(),
-  })
-
-  const colors: IColor[] = colorData?.map((c) => ({ id: c.id, name: c.name })) ?? []
   const products: IProduct[] = productData?.map((p) => ({ id: p.id, name: p.name })) ?? []
 
-  const [selectedColorId, setSelectedColorId] = useState<string>()
+  const [selectedColor, setSelectedColor] = useState<string>()
   const [selectedProductId, setSelectedProductId] = useState<string>()
 
   const { mutate: editStock } = useMutation({
@@ -122,9 +116,9 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
 
   useEffect(() => {
     if (!!stock) {
-      setSelectedColorId(stock.color_id)
+      setSelectedColor(stock.color)
       setSelectedProductId(stock.product_id)
-      form.setValue('quantity_in_stock', stock.quantity_in_stock.toString())
+      form.setValue('quantity_in_stock', stock.quantity.toString())
     }
   }, [stock])
 
@@ -175,7 +169,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name='color_id'
           render={({ field }) => (
@@ -211,7 +205,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
               <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
-        />
+        /> */}
 
         <FormField
           control={form.control}
@@ -275,7 +269,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
                   <FormLabel>Quantity</FormLabel>
                   <Input
                     id='quantity'
-                    placeholder={stock?.quantity_in_stock.toString()}
+                    placeholder={stock?.quantity.toString()}
                     className='col-span-3'
                     {...field}
                   />

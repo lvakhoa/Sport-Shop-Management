@@ -5,15 +5,7 @@ import { FILTER_INPUT_TYPE } from '@/configs/enum'
 import { Button, Checkbox } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import { IFilterInput } from '@/interfaces'
-
-export interface IAddress {
-  id: string
-  accountId: string
-  street: string
-  ward: string
-  district: string
-  city: string
-}
+import { IAddress } from '@/interfaces/address'
 
 export const addressFilterInput: IFilterInput[] = [
   {

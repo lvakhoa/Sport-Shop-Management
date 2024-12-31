@@ -1,27 +1,18 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { FILTER_INPUT_TYPE, ROLE_TITLE, STATUS } from '@/configs/enum'
+import { FILTER_INPUT_TYPE, ROLE_NAME } from '@/configs/enum'
 import { PATH_NAME } from '@/configs'
 import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import { IFilterInput } from '@/interfaces'
 import { productApi } from '@/apis'
 import EditProductForm from './edit-product'
-
-export interface IProduct {
-  id: string
-  name: string
-  category: string
-  listPrice: string
-  sellingPrice: string
-  status: React.ReactNode
-  total: number
-}
+import { IProduct } from '@/interfaces/product'
 
 // const status: string[] = [STATUS.ACTIVE, STATUS.INACTIVE]
 
-export const productColumns = (accountRole: ROLE_TITLE): ColumnDef<IProduct>[] => [
+export const productColumns = (accountRole: ROLE_NAME): ColumnDef<IProduct>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -138,13 +129,6 @@ export const productColumns = (accountRole: ROLE_TITLE): ColumnDef<IProduct>[] =
     },
   },
   {
-    accessorKey: 'status',
-    header: () => {
-      return <div className='font-medium'>Status</div>
-    },
-    cell: ({ row }) => <div>{row.getValue('status')}</div>,
-  },
-  {
     id: 'actions',
     header: () => {
       return <div className='font-medium'>Actions</div>
@@ -154,7 +138,7 @@ export const productColumns = (accountRole: ROLE_TITLE): ColumnDef<IProduct>[] =
       const productId = row.getValue('id') as string
       return (
         <ActionButtonShow
-          viewOnly={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
+          viewOnly={accountRole !== ROLE_NAME.ADMIN}
           path={PATH_NAME.PRODUCT}
           id={productId}
           editContentElement={<EditProductForm productId={productId} />}

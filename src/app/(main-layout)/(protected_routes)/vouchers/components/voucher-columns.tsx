@@ -1,22 +1,14 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { PATH_NAME } from '@/configs'
 import { Button, Checkbox, ActionButtonShow } from '@/components/shared'
-import { ArrowUpDown, Edit } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import { voucherApi } from '@/apis'
 import EditVoucherForm from './edit-voucher'
 import moment from 'moment'
-import { ROLE_TITLE } from '@/configs/enum'
+import { ROLE_NAME } from '@/configs/enum'
+import { IVoucher } from '@/interfaces/voucher'
 
-export interface IVoucher {
-  id: string
-  title: string
-  sale_percent: string
-  quantity: string
-  expired_date: string
-  total: number
-}
-
-export const voucherColumns = (accountRole: ROLE_TITLE): ColumnDef<IVoucher>[] => [
+export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -159,7 +151,7 @@ export const voucherColumns = (accountRole: ROLE_TITLE): ColumnDef<IVoucher>[] =
       const voucherId = row.getValue('id') as string
       return (
         <ActionButtonShow
-          viewOnly={accountRole !== ROLE_TITLE.ADMIN && accountRole !== ROLE_TITLE.MANAGER}
+          viewOnly={accountRole !== ROLE_NAME.ADMIN}
           path={PATH_NAME.VOUCHER}
           id={voucherId}
           editContentElement={<EditVoucherForm voucherId={voucherId} />}

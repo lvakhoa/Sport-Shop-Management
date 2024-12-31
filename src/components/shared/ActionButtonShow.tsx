@@ -6,7 +6,6 @@ import ComboBox from './ComboBox'
 import { Button } from './button'
 import ActionButton from './ActionButton'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
-import { GENDER, STATUS } from '@/configs/enum'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function ActionButtonShow({

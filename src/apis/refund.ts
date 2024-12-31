@@ -1,4 +1,4 @@
-import { IProductRequest, IProductResponse } from '@/interfaces/product'
+import { IProductRequest, IProduct } from '@/interfaces/product'
 import BaseApi from './base'
 import { handleResponse } from '@/helpers'
 import { httpClient } from '@/services'
@@ -14,11 +14,11 @@ class ProductApi extends BaseApi {
         ? `&category_id=${categoryId}`
         : `?category_id=${categoryId}`
       : ''
-    return super.getAll<IProductResponse>(count, page, categoryQuery)
+    return super.getAll<IProduct>(count, page, categoryQuery)
   }
 
   async getProductById(id: string) {
-    return super.getById<IProductResponse>(id)
+    return super.getById<IProduct>(id)
   }
 
   async createProduct(product: IProductRequest) {
@@ -40,8 +40,8 @@ class ProductApi extends BaseApi {
   async searchProduct(text: string, count?: number, page?: number) {
     const countQuery = !!count ? `&count=${count}` : ''
     const pageQuery = !!page ? `&page=${page}` : ''
-    const data = await handleResponse<IProductResponse[]>(() =>
-      httpClient.get<IProductResponse[]>(`/products/search?text=${text}` + countQuery + pageQuery),
+    const data = await handleResponse<IProduct[]>(() =>
+      httpClient.get<IProduct[]>(`/products/search?text=${text}` + countQuery + pageQuery),
     )
     return data
   }

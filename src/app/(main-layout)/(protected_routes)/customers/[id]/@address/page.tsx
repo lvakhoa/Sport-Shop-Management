@@ -1,7 +1,7 @@
 'use client'
 
 import { GENDER } from '@/configs/enum'
-import { columns, addressFilterInput, IAddress } from './component'
+import { columns, addressFilterInput } from './component'
 import { DataTable, ContentCard } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'

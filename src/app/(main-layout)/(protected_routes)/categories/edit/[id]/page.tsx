@@ -70,7 +70,7 @@ export default function EditCategoryPage() {
     queryFn: () => categoryApi.getAllCategories(),
   })
 
-  const typeList = Array.from(new Set(categoriesData?.map((category) => category.type)))
+  const typeList = Array.from(new Set(categoriesData?.map((category) => category.consumer_type)))
 
   const queryClient = useQueryClient()
 
@@ -139,13 +139,11 @@ export default function EditCategoryPage() {
     if (!!categoryData) {
       form.setValue(
         'product_list',
-        categoryData.product_list.map((item) => ({
-          product_id: item.product.id,
+        categoryData.products.map((item) => ({
+          product_id: item.id,
         })) ?? [],
       )
-      setSelectedProducts(
-        categoryData.product_list.map((item) => ({ product_id: item.product.id })) ?? [],
-      )
+      setSelectedProducts(categoryData.products.map((item) => ({ product_id: item.id })) ?? [])
     }
   }, [categoryData, form])
 
@@ -192,7 +190,7 @@ export default function EditCategoryPage() {
                         <div className='flex gap-2'>
                           <Input
                             id='type'
-                            placeholder={categoryData ? categoryData.type : ''}
+                            placeholder={categoryData ? categoryData.consumer_type : ''}
                             className='col-span-3'
                             {...field}
                             onChange={(e) => {
@@ -250,30 +248,6 @@ export default function EditCategoryPage() {
                             onChange(event.target.files && event.target.files[0])
                           }
                         />
-                      </div>
-                    </FormControl>
-                    <FormMessage className='text-[14px] font-normal' />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='gender'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className='flex flex-col gap-4'>
-                        <FormLabel>Gender</FormLabel>
-                        <div className='col-span-3'>
-                          <ComboBox
-                            key='gender'
-                            defaultValue={field.value}
-                            placeholder={categoryData ? categoryData.gender : 'MALE'}
-                            items={gender}
-                            onValueChange={field.onChange}
-                          />
-                        </div>
                       </div>
                     </FormControl>
                     <FormMessage className='text-[14px] font-normal' />

@@ -75,9 +75,9 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
   useEffect(() => {
     if (!!voucher) {
       form.setValue('title', voucher.title ?? '')
-      form.setValue('sale_percent', voucher.sale_percent.toString())
-      form.setValue('quantity', voucher.quantity.toString())
-      form.setValue('expired_date', moment(voucher.expired_date).toString())
+      form.setValue('sale_percent', voucher.voucher_value.toString())
+      form.setValue('quantity', voucher.total_quantity.toString())
+      form.setValue('expired_date', moment(voucher.ending_date).toString())
     }
   }, [voucher, form])
 

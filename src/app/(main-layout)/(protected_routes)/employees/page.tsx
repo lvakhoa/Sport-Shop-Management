@@ -1,6 +1,6 @@
 'use client'
 
-import { columns, CreateEmployeeForm, employeeFilterInput, IEmployee } from './components'
+import { columns, CreateEmployeeForm, employeeFilterInput } from './components'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ import { PaginationState } from '@tanstack/react-table'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { employeeApi } from '@/apis'
+import { IEmployee } from '@/interfaces/employee'
 
 export default function EmployeesManagementPage() {
   const { isBrowser } = useBrowser()
@@ -21,16 +22,7 @@ export default function EmployeesManagementPage() {
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IEmployee[] =
-    queryData?.map((item) => {
-      return {
-        id: item.id,
-        fullname: item.fullname,
-        phone: item.phone,
-        gender: item.gender,
-        total: item.total,
-      }
-    }) ?? []
+  const data: IEmployee[] = queryData || []
 
   return (
     <div className='container mx-auto py-10'>

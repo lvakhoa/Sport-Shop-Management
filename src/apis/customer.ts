@@ -1,4 +1,4 @@
-import { ICustomerRequest, ICustomerResponse } from '@/interfaces/customer'
+import { ICustomerRequest, ICustomer } from '@/interfaces/customer'
 import BaseApi from './base'
 
 class CustomerApi extends BaseApi {
@@ -7,11 +7,11 @@ class CustomerApi extends BaseApi {
   }
 
   async getAllCustomers(count?: number, page?: number) {
-    return super.getAll<ICustomerResponse>(count, page)
+    return super.getAll<ICustomer>(count, page)
   }
 
   async getCustomerById(id: string) {
-    return super.getById<ICustomerResponse>(id)
+    return super.getById<ICustomer>(id)
   }
 
   async createCustomer(customer: ICustomerRequest) {
