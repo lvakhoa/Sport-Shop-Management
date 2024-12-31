@@ -6,6 +6,8 @@ import { Button, Checkbox } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import moment from 'moment'
 import { IOrder } from '@/interfaces/order'
+import { ICustomer } from '@/interfaces/customer'
+import { IEmployee } from '@/interfaces/employee'
 
 export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
   {
@@ -48,23 +50,6 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
       )
     },
     cell: ({ row }) => <div>{row.getValue('order_code')}</div>,
-  },
-  {
-    accessorKey: 'product_total_price',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Product Total Price
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('product_total_price')}</div>,
   },
   {
     accessorKey: 'order_date',
@@ -118,6 +103,23 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
     cell: ({ row }) => <div>{row.getValue('payment_type')}</div>,
   },
   {
+    accessorKey: 'product_total_price',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Product Total Price
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div>{row.getValue('product_total_price')}</div>,
+  },
+  {
     accessorKey: 'review_star',
     header: ({ column }) => {
       return (
@@ -149,10 +151,10 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('customer')}</div>,
+    cell: ({ row }) => <div>{(row.getValue('customer') as ICustomer).fullname}</div>,
   },
   {
-    accessorKey: 'order_details',
+    accessorKey: 'confirmed_employee',
     header: ({ column }) => {
       return (
         <Button
@@ -161,28 +163,13 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
           style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Order Details
+          Confirmed Employee
           <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('order_details')}</div>,
-  },
-  {
-    accessorKey: 'total',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Total
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('total')}</div>,
+    cell: ({ row }) => (
+      <div>{(row.getValue('confirmed_employee') as IEmployee)?.fullname ?? 'N/A'}</div>
+    ),
   },
 ]
