@@ -9,81 +9,28 @@ import { cn } from '@/lib/utils'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shared/tabs'
 import { CategoryItem, ICategoryItem } from './category-item'
 import { useRouter } from 'next/navigation'
-import { CirclePlus, RotateCcw } from 'lucide-react'
-import { RestorePopup } from '@/components/shared'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { Id, toast } from 'react-toastify'
-import moment from 'moment'
-import { ROLE_NAME } from '@/configs/enum'
+import { CONSUMER_TYPE, ROLE_NAME } from '@/configs/enum'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/shared/accordion'
 
-const gender: string[] = ['MALE', 'FEMALE']
+const consumerType = Object.values(CONSUMER_TYPE)
 
 export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME }) {
   const toastId = useRef<Id | undefined>()
   const router = useRouter()
+  const [currentType, setCurrentType] = useState<CONSUMER_TYPE | undefined>(consumerType[0])
   const { isPending, data: categoriesData } = useQuery({
     queryKey: queryKeys.allCategories,
-    queryFn: () => categoryApi.getAllCategories(),
+    queryFn: () => categoryApi.getAllCategories(undefined, undefined, currentType?.toString()),
   })
 
   const queryClient = useQueryClient()
-
-  const { mutate: restore7daysData } = useMutation({
-    mutationFn: () =>
-      categoryApi.restoreCategory(moment().subtract(7, 'days').utc().unix().valueOf()),
-    onSuccess: () => {
-      toast.success('Data restored successfully')
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === 'all-categories',
-      })
-    },
-  })
-
-  const { mutate: restore30daysData } = useMutation({
-    mutationFn: () =>
-      categoryApi.restoreCategory(moment().subtract(30, 'days').utc().unix().valueOf()),
-    onSuccess: () => {
-      toast.success('Data restored successfully')
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === 'all-categories',
-      })
-    },
-  })
-
-  const { mutate: restoreAllData } = useMutation({
-    mutationFn: () => categoryApi.restoreCategory(),
-    onSuccess: () => {
-      toast.success('Data restored successfully')
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] === 'all-categories',
-      })
-    },
-  })
-
-  const [typeList, setTypeList] = useState<string[]>([])
-
-  useEffect(() => {
-    const newtypeList = Array.from(
-      new Set(categoriesData?.map((category) => category.consumer_type)),
-    )
-    setTypeList(newtypeList)
-    setCurrentType(newtypeList[0])
-  }, [categoriesData])
 
   useEffect(() => {
     if (isPending) toastId.current = toast.loading('Loading...')
@@ -93,118 +40,122 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
     }
   }, [isPending])
 
-  const [currentType, setCurrentType] = useState<string>(typeList[0])
+  const [currentCategory, setCurrentCategory] = useState<ICategoryItem>()
 
-  const onTypeChange = (type: string) => setCurrentType(type)
+  const onCategoryChange = (type: ICategoryItem) => {
+    setCurrentCategory(type)
+    setCurrentType(type.consumer_type)
+  }
 
   const categories: ICategoryItem[] =
     categoriesData?.map((category) => ({
       id: category.id,
       name: category.name,
-      type: category.consumer_type,
-      gender: category.consumer_type,
-      image: category.image_url ?? '',
+      image_url: category.image_url,
+      is_active: category.is_active,
+      consumer_type: category.consumer_type,
+      child_categories: category.child_categories,
     })) ?? []
 
   return (
-    <div className='mx-[10px] flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 '>
-      <div className='grid w-auto grid-cols-2 sm:w-1/5 sm:grid-cols-1 sm:self-start'>
-        {typeList.map((item, index) => (
-          <Button
-            key={index}
-            onClick={() => onTypeChange(item)}
-            variant='ghost'
-            className={cn(
-              item === currentType
-                ? 'bg-blue-50 hover:bg-blue-50'
-                : 'bg-transparent hover:bg-muted',
-              'justify-start sm:w-full',
-            )}
-          >
-            {item}
-          </Button>
-        ))}
-      </div>
+    <>
       {!isPending && (
-        <div className='flex-1 sm:max-w-full'>
-          <Tabs defaultValue={gender[0]}>
-            <div className='flex items-center justify-between px-[10px]'>
-              <TabsList>
-                {gender.map((item, index) => (
-                  <TabsTrigger key={index} value={item}>
-                    {item.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase())}
+        <div className='mx-[10px] flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 '>
+          <div className='flex flex-col sm:w-1/5 sm:self-start'>
+            <Tabs defaultValue={consumerType[0]}>
+              <TabsList className='grid w-full grid-cols-3'>
+                {consumerType.map((type) => (
+                  <TabsTrigger
+                    key={type}
+                    value={type}
+                    onClick={() => setCurrentType(type)}
+                    className='px-4 py-2 text-center'
+                  >
+                    {type}
                   </TabsTrigger>
                 ))}
-                <TabsTrigger value='All'>All</TabsTrigger>
               </TabsList>
-
-              {!isPending && (
-                <div
-                  className={cn(
-                    'top-[calc(var(--header-height) + 20px)] flex gap-4',
-                    accountRole !== ROLE_NAME.ADMIN ? 'hidden' : '',
-                  )}
-                >
-                  <RestorePopup
-                    title='Restore'
-                    description='Select the duration to restore'
-                    option1={restore7daysData}
-                    option2={restore30daysData}
-                    option3={restoreAllData}
-                  >
-                    <Button className='rounded-full bg-blue-500 px-4 py-2 font-normal text-white-100 hover:bg-blue-700'>
-                      <RotateCcw size={22} className='sm:mr-2' />
-                      <span className='hidden sm:inline'>Restore</span>
-                    </Button>
-                  </RestorePopup>
-                  <Button
-                    onClick={() => router.push(`${PATH_NAME.CATEGORY}/create`)}
-                    className='rounded-full bg-blue-500 px-4 py-2 font-normal text-white-100 hover:bg-blue-700 '
-                  >
-                    <CirclePlus size={22} className='sm:mr-2' />
-                    <span className='hidden sm:inline'>New Category</span>
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            {gender.map((item, index) => (
-              <TabsContent key={index} value={item} className='grid grid-cols-3 gap-10 px-[10px]'>
+              {consumerType.map((type) => (
+                <TabsContent key={type} value={type}>
+                  <Accordion type='single' collapsible={true}>
+                    {categories
+                      .filter(
+                        (category) =>
+                          category.child_categories.length > 0 && category.consumer_type === type,
+                      )
+                      .map((category) => (
+                        <AccordionItem key={category.id} value={category.id}>
+                          <AccordionTrigger onClick={() => onCategoryChange(category)}>
+                            <div className='flex items-center justify-between'>
+                              <div className='flex items-center space-x-2'>
+                                <p>{category.name}</p>
+                              </div>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className='flex flex-col space-y-2'>
+                              {category.child_categories.map((childCategory) => (
+                                <div
+                                  key={childCategory.id}
+                                  className={cn(
+                                    'flex cursor-pointer items-center rounded-lg px-[8px] py-[10px] sm:px-[10px] sm:py-[14px]',
+                                    currentCategory?.id === childCategory.id
+                                      ? 'bg-blue-50'
+                                      : 'bg-white hover:bg-blue-50',
+                                  )}
+                                  onClick={() => onCategoryChange(childCategory)}
+                                >
+                                  <a
+                                    // href={link}
+                                    className={cn(
+                                      'flex h-full w-full items-center gap-[10px] max-[468px]:gap-[5px]',
+                                      currentCategory?.id === childCategory.id
+                                        ? 'text-primary'
+                                        : 'text-content',
+                                    )}
+                                  >
+                                    <span className='text-[16px] font-medium'>
+                                      {childCategory.name}
+                                    </span>
+                                  </a>
+                                </div>
+                              ))}
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                  </Accordion>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
+          <div className='flex flex-col sm:w-4/5'>
+            {!isPending && currentCategory && (
+              <div className='grid grid-cols-3 gap-10 px-[10px] sm:max-w-full'>
                 {categories
-                  .filter((it) => it.type === currentType && it.gender === item)
+                  .filter(
+                    (category) =>
+                      currentCategory?.name === category.name &&
+                      category.consumer_type === currentType,
+                  )
                   .map((category) => (
                     <CategoryItem
                       key={category.id}
                       id={category.id}
                       name={category.name}
-                      type={category.type}
-                      gender={category.gender}
-                      image={category.image}
+                      consumer_type={category.consumer_type}
+                      image_url={category.image_url}
+                      child_categories={category.child_categories}
+                      is_active={category.is_active}
                       onClick={() => router.push(`${PATH_NAME.CATEGORY}/edit/${category.id}`)}
                       canEdit={accountRole === ROLE_NAME.ADMIN}
                     />
                   ))}
-              </TabsContent>
-            ))}
-            <TabsContent value='All' className='grid grid-cols-3 gap-10 px-[10px]'>
-              {categories
-                .filter((it) => it.type === currentType)
-                .map((category, index) => (
-                  <CategoryItem
-                    key={index}
-                    id={category.id}
-                    name={category.name}
-                    type={category.type}
-                    gender={category.gender}
-                    image={category.image}
-                    onClick={() => router.push(`${PATH_NAME.CATEGORY}/edit/${category.id}`)}
-                    canEdit={accountRole === ROLE_NAME.ADMIN}
-                  />
-                ))}
-            </TabsContent>
-          </Tabs>
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
