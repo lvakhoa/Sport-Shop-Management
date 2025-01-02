@@ -8,12 +8,19 @@ export default class BaseApi {
     this.route = route
   }
 
-  async getAll<T>(count?: number, page?: number, optionalQuery?: string) {
+  async getAll<T>(
+    count?: number,
+    page?: number,
+    optionalQuery?: Record<string, string | number | undefined>,
+  ) {
     const data = await handleResponse<T[]>(() => {
-      const countQuery = !!count ? `?count=${count}` : ''
-      const pageQuery = !!page ? (!!count ? `&page=${page}` : `?page=${page}`) : ''
-      const url = this.route + countQuery + pageQuery + (!!optionalQuery ? optionalQuery : '')
-      return httpClient.get<T[]>(url)
+      return httpClient.get<T[]>(this.route, {
+        params: {
+          count,
+          page,
+          ...optionalQuery,
+        },
+      })
     })
     return data
   }

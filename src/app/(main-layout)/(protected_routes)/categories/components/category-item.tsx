@@ -9,13 +9,16 @@ import { categoryApi } from '@/apis'
 import { AlertPopup } from '@/components/shared'
 import { SyntheticEvent, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import { CONSUMER_TYPE } from '@/configs/enum'
+import { ICategory } from '@/interfaces/category'
 
 export interface ICategoryItem {
   id: string
   name: string
-  type: string
-  gender: string
-  image: string
+  image_url?: string
+  is_active: boolean
+  consumer_type: CONSUMER_TYPE
+  child_categories: ICategory[]
   onClick?: () => void
   canEdit?: boolean
 }
@@ -23,9 +26,9 @@ export interface ICategoryItem {
 export function CategoryItem({
   id,
   name,
-  type,
-  gender,
-  image,
+  image_url,
+  consumer_type,
+  child_categories,
   onClick,
   canEdit = false,
 }: ICategoryItem) {
@@ -58,10 +61,7 @@ export function CategoryItem({
   return (
     <Card
       onClick={canEdit ? onClick : () => {}}
-      className={cn(
-        'group flex flex-col justify-between rounded-none shadow-md',
-        canEdit ? 'cursor-pointer' : '',
-      )}
+      className={cn('group flex flex-col rounded-lg shadow-md', canEdit ? 'cursor-pointer' : '')}
     >
       <CardHeader className='relative overflow-hidden p-0'>
         {canEdit && (
@@ -86,7 +86,7 @@ export function CategoryItem({
         <Image
           className='!mt-0 pb-[16px]'
           src={
-            image ||
+            image_url ||
             'https://res.cloudinary.com/dbpvh14wj/image/upload/f_auto,q_auto/pzi7bjxajmsgraesmjt2'
           }
           alt={name}
@@ -99,7 +99,7 @@ export function CategoryItem({
         <div className='flex flex-col'>
           <CardTitle className='text-md sm:text-lg'>{name}</CardTitle>
           <CardDescription>
-            {type} - {gender}{' '}
+            {name} - {consumer_type}
           </CardDescription>
         </div>
       </CardContent>

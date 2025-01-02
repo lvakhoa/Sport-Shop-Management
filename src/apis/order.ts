@@ -30,7 +30,11 @@ class OrderApi extends BaseApi {
           ? `&status=${orderStatus}`
           : `?status=${orderStatus}`
       : dateRangeQuery
-    return super.getAll<IOrder>(count, page, optionalQuery)
+    return super.getAll<IOrder>(count, page, {
+      fromDate,
+      toDate,
+      orderStatus,
+    })
   }
 
   async getOrderById(id: string) {

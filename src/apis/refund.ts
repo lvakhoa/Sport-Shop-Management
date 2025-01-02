@@ -14,7 +14,9 @@ class ProductApi extends BaseApi {
         ? `&category_id=${categoryId}`
         : `?category_id=${categoryId}`
       : ''
-    return super.getAll<IProduct>(count, page, categoryQuery)
+    return super.getAll<IProduct>(count, page, {
+      categoryId,
+    })
   }
 
   async getProductById(id: string) {

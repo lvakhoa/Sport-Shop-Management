@@ -6,8 +6,16 @@ class CategoryApi extends BaseApi {
     super('/categories')
   }
 
-  async getAllCategories(count?: number, page?: number) {
-    return super.getAll<ICategory>(count, page)
+  async getAllCategories(
+    count?: number,
+    page?: number,
+    consumer_type?: string,
+    parent_category_id?: string,
+  ) {
+    return super.getAll<ICategory>(count, page, {
+      consumer_type,
+      parent_category_id,
+    })
   }
 
   async getCategoryById(id: string) {
