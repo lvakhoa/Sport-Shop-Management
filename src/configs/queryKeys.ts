@@ -35,6 +35,16 @@ export const queryKeys = {
   categories: {
     gen: (page: number) => ['categories', page],
   },
+  // BRAND
+  allBrands: ['all-brands'],
+  brandDetails: {
+    gen: (id: string) => ['brandDetails', id],
+  },
+  // SPORT
+  allSports: ['all-sports'],
+  sportDetails: {
+    gen: (id: string) => ['sportDetails', id],
+  },
   // EVENT
   allEvents: ['all-events'],
   events: {

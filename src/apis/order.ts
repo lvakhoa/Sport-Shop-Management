@@ -1,4 +1,11 @@
-import { IOrderCreateRequest, IOrderUpdateRequest, IOrder } from '@/interfaces/order'
+import {
+  IOrderCreateRequest,
+  IOrderUpdateRequest,
+  IOrder,
+  IShipmentTracking,
+  ICalcOrderFeeRequest,
+  ICalcOrderFeeResponse,
+} from '@/interfaces/order'
 import BaseApi from './base'
 import { ORDER_STATUS } from '@/configs/enum'
 import { httpClient } from '@/services'
@@ -39,7 +46,7 @@ class OrderApi extends BaseApi {
 
   async createOrder(order: IOrderCreateRequest) {
     const data = await handleResponse<{ message: string; order_id: string }>(() =>
-      httpClient.post<{ message: string; order_id: string }>(this.route, order as object),
+      httpClient.post<{ message: string; order_id: string }>(this.route + '/employee', order),
     )
     return data
   }
@@ -54,6 +61,20 @@ class OrderApi extends BaseApi {
 
   async deleteAllOrders() {
     return super.deleteAll()
+  }
+
+  async getShipmentTracking(orderCode: string) {
+    const data = await handleResponse<IShipmentTracking>(() =>
+      httpClient.get<IShipmentTracking>(this.route + `/${orderCode}/shipment-tracking`),
+    )
+    return data
+  }
+
+  async calculateShippingFee(body: ICalcOrderFeeRequest) {
+    const data = await handleResponse<ICalcOrderFeeResponse>(() =>
+      httpClient.post<ICalcOrderFeeResponse>(this.route + '/shipping-fee', body),
+    )
+    return data?.fee
   }
 }
 

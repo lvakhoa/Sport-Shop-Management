@@ -7,20 +7,17 @@ import { IGroupMedia } from '../media'
 import { IShipment } from '../shipment'
 
 export interface IOrderCreateRequest {
-  account_id?: string
-  customer_id?: string
-  product_total_price?: number
-  status?: ORDER_STATUS
-  buy_in_app?: boolean
-  note?: string
-  order_details?: {
-    product_stock_id: string
+  customer_id: string
+  product_total_price: number
+  order_details: {
+    stock_id: string
     quantity: number
   }[]
-  address_id?: string
-  shipping_price?: number
   payment_type?: PAYMENT_TYPE
-  voucher_id?: string
+  shipment: {
+    shipping_fee: number
+    shipping_address: string
+  }
 }
 
 export interface IOrderUpdateRequest {
@@ -62,4 +59,38 @@ export interface IOrderedProduct {
   order: IOrder
   stock: IStock
   total: number
+}
+
+export interface IShipmentTracking {
+  tracking_logs: {
+    order_code: string
+    status: string
+    status_name: string
+    location: {
+      address: string
+      ward_code: string
+      district_id: number
+      warehouse_id: number
+    }
+    executor: {
+      client_id: number
+      name: string
+      phone: string
+    }
+    action_at: string
+    sync_data_at: string | null
+  }[]
+}
+
+export interface ICalcOrderFeeRequest {
+  to_ward_code: string
+  to_district_id: string
+  order_details: {
+    stock_id: string
+    quantity: number
+  }[]
+}
+
+export interface ICalcOrderFeeResponse {
+  fee: number
 }

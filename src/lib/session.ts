@@ -12,5 +12,5 @@ export async function verifySession() {
   }
   const user = jwtDecode<any>(token)
 
-  return { isAuth: true, role: user.roleName as ROLE_NAME }
+  return { isAuth: true, role: user.sub.role as ROLE_NAME }
 }

@@ -36,17 +36,13 @@ import { IOrderCreateRequest } from '@/interfaces/order'
 import { ORDER_STATUS, PAYMENT_TYPE } from '@/configs/enum'
 
 const orderDetailSchema = z.object({
-  product_stock_id: z.string(),
+  stock_id: z.string(),
   quantity: z.number(),
 })
 
 const formSchema = z.object({
-  account_id: z.string().optional(),
-  customer_id: z.string().optional(),
+  customer_id: z.string(),
   product_total_price: z.number({ required_error: 'Missing total price' }),
-  status: z.nativeEnum(ORDER_STATUS).optional(),
-  buy_in_app: z.boolean({ required_error: 'Missing buy in app' }),
-  note: z.string().optional(),
   order_details: z.array(orderDetailSchema),
   address_id: z.string().optional(),
   shipping_price: z.string().optional(),
@@ -81,12 +77,8 @@ export default function OrderPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      account_id: undefined,
       customer_id: undefined,
       product_total_price: total,
-      status: ORDER_STATUS.PENDING,
-      buy_in_app: false,
-      note: undefined,
       order_details: orderDetail?.map((order) => ({
         product_stock_id: order.stock_id,
         quantity: order.quantity,
@@ -101,17 +93,14 @@ export default function OrderPage() {
   const { mutate: createOrder } = useMutation({
     mutationFn: (data: IOrderCreateRequest) =>
       orderApi.createOrder({
-        account_id: data.account_id,
         customer_id: data.customer_id,
         product_total_price: data.product_total_price,
-        status: data.status,
-        buy_in_app: data.buy_in_app,
-        note: data.note,
         order_details: data.order_details,
-        address_id: data.address_id,
-        shipping_price: data.shipping_price,
         payment_type: data.payment_type,
-        voucher_id: data.voucher_id,
+        shipment: {
+          shipping_address: data.shipment.shipping_address,
+          shipping_fee: data.shipment.shipping_fee,
+        },
       }),
     onSuccess: (response) => {
       toast.success('Order created successfully')
@@ -126,17 +115,14 @@ export default function OrderPage() {
 
   function handleSubmit(data: z.infer<typeof formSchema>) {
     createOrder({
-      account_id: data.account_id,
-      customer_id: data.customer_id,
       product_total_price: data.product_total_price,
-      status: ORDER_STATUS[data.status ?? ORDER_STATUS.PENDING],
-      buy_in_app: data.buy_in_app,
-      note: data.note,
       order_details: data.order_details,
-      address_id: data.address_id,
-      shipping_price: parseInt(data.shipping_price!),
       payment_type: PAYMENT_TYPE[data.payment_type],
-      voucher_id: data.voucher_id,
+      customer_id: '',
+      shipment: {
+        shipping_fee: 0,
+        shipping_address: '',
+      },
     })
   }
 
@@ -286,18 +272,6 @@ export default function OrderPage() {
               )}
             ></FormField>
 
-            <FormField
-              control={form.control}
-              name='note'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Note</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder='Note something...' className='resize-none' {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            ></FormField>
             <Button
               type='submit'
               className='w-full'
@@ -334,9 +308,11 @@ export default function OrderPage() {
               <div className='flex grow flex-col justify-between'>
                 <div className='flex flex-col'>
                   <span className='text-[20px] font-semibold text-gray-500'>{product.name}</span>
-                  <span className='text-[14px] font-light'>
-                    {product.color?.replace(/\b\w/g, (s) => s.toUpperCase())} | {product.size}
-                  </span>
+                  <div className='flex items-center gap-2'>
+                    <div className='size-4' style={{ background: product.color }}></div>
+                    <span className='text-xl font-light'>|</span>
+                    <span className='text-[14px] font-light'>{product.size}</span>
+                  </div>
                 </div>
                 <div className='flex flex-row justify-between'>
                   <span className='text-[16px] font-semibold'>{product.price} đ</span>

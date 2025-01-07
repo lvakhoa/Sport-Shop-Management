@@ -60,7 +60,7 @@ function Invoice({ order }: { order: IOrder }) {
                 {currencyFormatter(BigInt(order.stock.product.selling_price))}
               </td>
               <td className='p-[5px] text-center'>
-                {currencyFormatter(order.stock.product.selling_price * order.quantity)}
+                {currencyFormatter(Number(order.stock.product.selling_price) * order.quantity)}
               </td>
             </tr>
           ))}

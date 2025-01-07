@@ -72,11 +72,11 @@ export const adminSidebarItems: ISidebarItem[] = [
   {
     title: 'Pos & Orders',
     items: [
-      {
-        icon: <ReceiptText strokeWidth={1.5} />,
-        describe: 'POS',
-        link: PATH_NAME.POS,
-      },
+      // {
+      //   icon: <ReceiptText strokeWidth={1.5} />,
+      //   describe: 'POS',
+      //   link: PATH_NAME.POS,
+      // },
       {
         icon: <Package strokeWidth={1.5} />,
         describe: 'Orders',
@@ -258,11 +258,11 @@ export const employeeSidebarItems: ISidebarItem[] = [
   {
     title: 'Pos & Orders',
     items: [
-      {
-        icon: <ReceiptText strokeWidth={1.5} />,
-        describe: 'POS',
-        link: PATH_NAME.POS,
-      },
+      // {
+      //   icon: <ReceiptText strokeWidth={1.5} />,
+      //   describe: 'POS',
+      //   link: PATH_NAME.POS,
+      // },
       {
         icon: <Package strokeWidth={1.5} />,
         describe: 'Orders',

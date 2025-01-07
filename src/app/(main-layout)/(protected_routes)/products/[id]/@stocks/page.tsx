@@ -61,7 +61,7 @@ function StocksPage({}: Props) {
         <div className='flex max-w-[90px] flex-row gap-3 sm:flex-col sm:gap-5'>
           {stockImages.map((item, index) => (
             <Card
-              key={item?.id}
+              key={item?.media_list[0].url}
               className='relative h-16 w-[90px] cursor-pointer rounded-2xl sm:h-20'
               onClick={() => setSelectedImage(index)}
             >
@@ -122,9 +122,7 @@ function StocksPage({}: Props) {
           <div className='flex flex-col gap-5'>
             <div className='flex flex-col items-start gap-2 sm:flex-row sm:items-center'>
               <span className='text-sm font-semibold uppercase sm:text-base'>Color</span>
-              <span className='text-sm font-medium text-heading'>
-                {selectedColor?.replace(selectedColor[0], selectedColor[0].toUpperCase()) ?? ''}
-              </span>
+              <div className='size-6 rounded-sm' style={{ backgroundColor: selectedColor }} />
             </div>
 
             {selectedStockSizes.length > 0 && (

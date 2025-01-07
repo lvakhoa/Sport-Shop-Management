@@ -41,7 +41,7 @@ export default function StockDetailPage() {
 
   const details: IStockInfo = {
     id: data?.id ?? '',
-    product_id: data?.product_id ?? '',
+    product_id: data?.product.id ?? '',
     product: {
       name: data?.product.name ?? '',
       list_price: currencyFormatter(Number(data?.product?.list_price ?? 0)),

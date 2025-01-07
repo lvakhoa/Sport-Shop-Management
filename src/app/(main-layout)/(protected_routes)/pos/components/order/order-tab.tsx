@@ -59,9 +59,11 @@ export function PosTab({
                 <div className='flex grow flex-col justify-between'>
                   <div className='flex flex-col'>
                     <span className='text-[20px] font-semibold text-gray-500'>{product.name}</span>
-                    <span className='text-[14px] font-light'>
-                      {product.color?.replace(/\b\w/g, (s) => s.toUpperCase())} | {product.size}
-                    </span>
+                    <div className='flex items-center gap-2'>
+                      <div className='size-4' style={{ background: product.color }}></div>
+                      <span className='text-xl font-light'>|</span>
+                      <span className='text-[14px] font-light'>{product.size}</span>
+                    </div>
                   </div>
                   <span className='text-[16px] font-semibold'>{product.price} đ</span>
                   <div className='flex flex-row items-center justify-between'>

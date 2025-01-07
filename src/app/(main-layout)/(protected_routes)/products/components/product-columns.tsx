@@ -8,11 +8,11 @@ import { ArrowUpDown } from 'lucide-react'
 import { IFilterInput } from '@/interfaces'
 import { productApi } from '@/apis'
 import EditProductForm from './edit-product'
-import { IProduct } from '@/interfaces/product'
+import { IProduct, IProductDisplay } from '@/interfaces/product'
 
 // const status: string[] = [STATUS.ACTIVE, STATUS.INACTIVE]
 
-export const productColumns = (accountRole: ROLE_NAME): ColumnDef<IProduct>[] => [
+export const productColumns = (accountRole: ROLE_NAME): ColumnDef<IProductDisplay>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -65,6 +65,39 @@ export const productColumns = (accountRole: ROLE_NAME): ColumnDef<IProduct>[] =>
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Category
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: 'sport',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Sport
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+  },
+
+  {
+    accessorKey: 'brand',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Brand
           <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
@@ -129,6 +162,19 @@ export const productColumns = (accountRole: ROLE_NAME): ColumnDef<IProduct>[] =>
     },
   },
   {
+    accessorKey: 'isActive',
+    header: () => {
+      return <div className='font-medium'>Status</div>
+    },
+    cell: ({ row }) => {
+      return row.getValue('isActive') === true ? (
+        <div className='rounded-sm bg-green-300 p-1 text-center text-green-600'>Active</div>
+      ) : (
+        <div className='rounded-sm bg-red-300 p-1 text-center text-red-600'>Inactive</div>
+      )
+    },
+  },
+  {
     id: 'actions',
     header: () => {
       return <div className='font-medium'>Actions</div>
@@ -138,7 +184,7 @@ export const productColumns = (accountRole: ROLE_NAME): ColumnDef<IProduct>[] =>
       const productId = row.getValue('id') as string
       return (
         <ActionButtonShow
-          viewOnly={accountRole !== ROLE_NAME.ADMIN}
+          viewOnly={accountRole === ROLE_NAME.CUSTOMER}
           path={PATH_NAME.PRODUCT}
           id={productId}
           editContentElement={<EditProductForm productId={productId} />}
