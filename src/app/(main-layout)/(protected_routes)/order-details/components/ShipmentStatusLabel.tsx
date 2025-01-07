@@ -10,7 +10,7 @@ function DeliveredLabel() {
   )
 }
 
-function SuccessLabel() {
+function UndeliveredLabel() {
   return (
     <div className='inline-flex items-center space-x-[5px] rounded-full border-2 border-[#30C365] bg-[#F2FDF5] px-2 py-1 text-[14px] text-[#30C365]'>
       <BadgeCheck width={18} height={18} />
@@ -46,7 +46,7 @@ function CancelledLabel() {
   )
 }
 
-function FailedLabel() {
+function ReturnedLabel() {
   return (
     <div className='inline-flex space-x-[5px] rounded-full border-2 border-[#FF5353] bg-[#F9D5D5] px-2 py-1 text-[14px] text-[#FF5353]'>
       <Image src='/assets/icons/truck-red.svg' alt='' width='18' height='18' />
@@ -55,7 +55,7 @@ function FailedLabel() {
   )
 }
 
-function ConfirmLabel() {
+function PackagingLabel() {
   return (
     <div className='inline-flex items-center space-x-[5px] rounded-full border-2 border-[#30C365] bg-[#F2FDF5] px-2 py-1 text-[14px] text-[#30C365]'>
       <BadgeCheck width={18} height={18} />
@@ -65,11 +65,11 @@ function ConfirmLabel() {
 }
 
 export {
-  DeliveredLabel,
-  InTransitLabel,
   PendingLabel,
+  PackagingLabel,
+  InTransitLabel,
   CancelledLabel,
-  FailedLabel,
-  ConfirmLabel,
-  SuccessLabel,
+  DeliveredLabel,
+  ReturnedLabel,
+  UndeliveredLabel,
 }

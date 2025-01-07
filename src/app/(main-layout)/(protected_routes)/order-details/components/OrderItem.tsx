@@ -1,12 +1,13 @@
 'use client'
-import { IOrder } from '@/interfaces/order'
+import { IOrder, IOrderByIdResponse } from '@/interfaces/order'
+import { ORDER_STATUS } from '@/configs/enum'
 import { PaidLabel, CODLabel } from './PaymentStatusLabel'
 import {
   CancelledLabel,
   DeliveredLabel,
   InTransitLabel,
   PendingLabel,
-  SuccessLabel,
+  UndeliveredLabel,
 } from './ShipmentStatusLabel'
 import { queryKeys } from '@/configs'
 import { employeeApi } from '@/apis'
@@ -14,21 +15,35 @@ import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import moment from 'moment'
 
-function OrderItem({ order, onClick }: { order: IOrder; onClick: (order: IOrder) => void }) {
+function OrderItem({
+  order,
+  onClick,
+}: {
+  order: IOrderByIdResponse
+  onClick: (order: IOrderByIdResponse) => void
+}) {
   const { data: employeeData, isLoading } = useQuery({
-    queryKey: queryKeys.employeeDetails.gen(order.confirming_employee_id ?? ''),
-    queryFn: () => employeeApi.getEmployeesById(order.confirming_employee_id ?? ''),
-    enabled: !!order.confirming_employee_id,
+    queryKey: queryKeys.employeeDetails.gen(order.confirmed_employee.id ?? ''),
+    queryFn: () => employeeApi.getEmployeesById(order.confirmed_employee.id ?? ''),
+    enabled: !!order.confirmed_employee.id,
   })
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'PENDING':
+      case ORDER_STATUS.PENDING:
         return <PendingLabel />
-      case 'SUCCESS':
-        return <SuccessLabel />
-      case 'CANCELLED':
+      case ORDER_STATUS.PACKAGING:
+        return <InTransitLabel />
+      case ORDER_STATUS.IN_TRANSIT:
+        return <InTransitLabel />
+      case ORDER_STATUS.CANCELLED:
         return <CancelledLabel />
+      case ORDER_STATUS.DELIVERED:
+        return <DeliveredLabel />
+      case ORDER_STATUS.RETURNED:
+        return <UndeliveredLabel />
+      case ORDER_STATUS.UNDELIVERED:
+        return <UndeliveredLabel />
       default:
         return null
     }

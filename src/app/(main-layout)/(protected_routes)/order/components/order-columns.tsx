@@ -9,7 +9,25 @@ import { IOrder } from '@/interfaces/order'
 import { ICustomer } from '@/interfaces/customer'
 import { IEmployee } from '@/interfaces/employee'
 
-export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
+const data = [
+  {
+    id: 'order1',
+    customer: {
+      id: 'cust1',
+      fullname: 'John Doe',
+    },
+    confirmed_employee: {
+      id: 'emp1',
+      fullname: 'Jane Doe',
+    },
+    product_total_price: 100,
+    order_date: new Date(),
+    status: ORDER_STATUS.PENDING,
+    total: 150,
+  },
+]
+
+export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder | any>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -33,23 +51,6 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
     accessorKey: 'id',
     header: 'ID',
     enableHiding: true,
-  },
-  {
-    accessorKey: 'order_code',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Order code
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('order_code')}</div>,
   },
   {
     accessorKey: 'order_date',
@@ -86,23 +87,6 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
     cell: ({ row }) => <div>{row.getValue('status')}</div>,
   },
   {
-    accessorKey: 'payment_type',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Payment Type
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('payment_type')}</div>,
-  },
-  {
     accessorKey: 'product_total_price',
     header: ({ column }) => {
       return (
@@ -120,23 +104,6 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
     cell: ({ row }) => <div>{row.getValue('product_total_price')}</div>,
   },
   {
-    accessorKey: 'review_star',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Review Star
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('review_star')}</div>,
-  },
-  {
     accessorKey: 'customer',
     header: ({ column }) => {
       return (
@@ -151,7 +118,7 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{(row.getValue('customer') as ICustomer).fullname}</div>,
+    cell: ({ row }) => <div>{row.getValue('customer')}</div>,
   },
   {
     accessorKey: 'confirmed_employee',
@@ -168,8 +135,6 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder>[] => [
         </Button>
       )
     },
-    cell: ({ row }) => (
-      <div>{(row.getValue('confirmed_employee') as IEmployee)?.fullname ?? 'N/A'}</div>
-    ),
+    cell: ({ row }) => <div>{row.getValue('confirmed_employee')}</div>,
   },
 ]

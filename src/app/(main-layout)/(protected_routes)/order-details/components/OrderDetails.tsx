@@ -1,32 +1,45 @@
 import { customerApi } from '@/apis'
 import { queryKeys } from '@/configs'
 import { currencyFormatter } from '@/helpers'
-import { IOrder } from '@/interfaces/order'
+import { IOrder, IOrderByIdResponse } from '@/interfaces/order'
 import { IStock } from '@/interfaces/stock'
 import { useQueries, useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
 import moment from 'moment'
 import { StickyNote } from 'lucide-react'
 
-function OrderDetails({ order }: { order: IOrder }) {
+function OrderDetails({ order }: { order: IOrderByIdResponse }) {
   return (
     <div className='space-y-[15px] px-[10px]'>
       {/* <div>
         <span className='px-[10px] py-[15px]'>Seller: Kien</span>
       </div> */}
       <div className='space-y-[5px] overflow-hidden px-[10px]'>
-        {order.ordered_products.map((item) => (
-          <Item key={item.stock.id} stock={item.stock} quantity={item.quantity} />
+        {order.order_details.map((item) => (
+          <Item
+            key={item.stock.id}
+            stock={{
+              ...item.stock,
+              name: item.stock.product.name,
+              quantity: item.quantity,
+              total: order.order_details.length,
+              product: {
+                ...item.stock.product,
+                list_price: '',
+              },
+            }}
+            quantity={item.quantity}
+          />
         ))}
       </div>
     </div>
   )
 }
 
-function ShipmentInfo({ order }: { order: IOrder }) {
+function ShipmentInfo({ order }: { order: IOrderByIdResponse }) {
   const { data: customerData } = useQuery({
-    queryKey: queryKeys.customerDetails.gen(order.customer_id),
-    queryFn: () => customerApi.getCustomerById(order.customer_id),
+    queryKey: queryKeys.customerDetails.gen(order.customer.id),
+    queryFn: () => customerApi.getCustomerById(order.customer.id),
   })
   return (
     <div className='flex flex-col space-y-[10px]'>
@@ -62,16 +75,13 @@ function ShipmentInfo({ order }: { order: IOrder }) {
         <div className='flex w-full flex-row justify-between'>
           <div className='flex flex-row space-x-[5px]'>
             <span>Total</span>
-            <div className='rounded-[2px] bg-[#E6E7EA] px-[5px]'>
-              <span className='text-[#797979]'>{order.ordered_products.length} item</span>
-            </div>
           </div>
           <span>{currencyFormatter(BigInt(order.product_total_price))}</span>
         </div>
-        <div className='flex w-full flex-row justify-between'>
+        {/* <div className='flex w-full flex-row justify-between'>
           <span>Shipping Fee</span>
-          <span>{currencyFormatter(BigInt(order.shipment?.shipping_fee || '0'))}</span>
-        </div>
+          <span>{currencyFormatter(BigInt(order.shipment?. || '0'))}</span>
+        </div> */}
         <div className='flex w-full flex-row justify-between'>
           <span>Discount</span>
           <span>
@@ -86,8 +96,7 @@ function ShipmentInfo({ order }: { order: IOrder }) {
           <span>Customer Paid</span>
           <span>
             {currencyFormatter(
-              order.product_total_price * (order.voucher ? order.voucher.voucher_value : 0) +
-                -(order.shipment ? order.shipment.shipping_fee : 0),
+              order.product_total_price * (order.voucher ? order.voucher.voucher_value : 0),
             )}
           </span>
         </div>
@@ -95,8 +104,7 @@ function ShipmentInfo({ order }: { order: IOrder }) {
           <span className='font-semibold'>Sub Total</span>
           <span className='font-semibold'>
             {currencyFormatter(
-              order.product_total_price * (order.voucher ? order.voucher.voucher_value : 0) +
-                -(order.shipment ? order.shipment.shipping_fee : 0),
+              order.product_total_price * (order.voucher ? order.voucher.voucher_value : 0),
             )}
           </span>
         </div>
@@ -108,9 +116,9 @@ function ShipmentInfo({ order }: { order: IOrder }) {
 function Item({ stock, quantity }: { stock: IStock; quantity: number }) {
   return (
     <div className='flex h-[100px] w-full flex-row items-center space-x-[20px] rounded-[5px] border border-[#E6E7EA] px-[15px] py-[10px]'>
-      <div className='relative size-[70px] items-center justify-center rounded-[5px] border border-[#E6E7EA]'>
-        <Image src={'assets/images/logo.png'} alt='' objectFit='cover' fill />
-      </div>
+      {/* <div className='relative size-[70px] items-center justify-center rounded-[5px] border border-[#E6E7EA]'>
+        <Image src={'assets/images/logo.png'} alt='' width={100} height={100} />
+      </div> */}
       <div className='flex w-full flex-col'>
         <div>
           <span className='font-semibold'>{stock.product.name}</span>

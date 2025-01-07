@@ -1,6 +1,6 @@
 'use client'
 
-import { IOrder } from '@/interfaces/order'
+import { IOrder, IOrderByIdResponse } from '@/interfaces/order'
 import moment from 'moment'
 import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
@@ -8,10 +8,10 @@ import { queryKeys } from '@/configs'
 import { customerApi } from '@/apis'
 import { currencyFormatter } from '@/helpers'
 
-function Invoice({ order }: { order: IOrder }) {
+function Invoice({ order }: { order: IOrderByIdResponse }) {
   const { data: customerData } = useQuery({
-    queryKey: queryKeys.customerDetails.gen(order.customer_id),
-    queryFn: () => customerApi.getCustomerById(order.customer_id),
+    queryKey: queryKeys.customerDetails.gen(order.customer.id),
+    queryFn: () => customerApi.getCustomerById(order.customer.id),
   })
   return (
     <div className='flex flex-col space-y-[10px]'>
@@ -23,7 +23,7 @@ function Invoice({ order }: { order: IOrder }) {
           <span>0911000222</span>
           <span>support@clothy.com</span>
         </div>
-        <Image alt='logo' src='/assets/images/logo.png' width={100} height={50} />
+        <Image alt='logo' src='' width={100} height={50} />
       </div>
       <hr />
       <div className='flex w-full justify-around'>
@@ -51,16 +51,16 @@ function Invoice({ order }: { order: IOrder }) {
           </tr>
         </thead>
         <tbody className='bg-white divide-y divide-gray-200'>
-          {order.ordered_products.map((order, index) => (
-            <tr key={order.stock.id}>
+          {order.order_details.map((detail, index) => (
+            <tr key={detail.stock.id}>
               <td className='p-[5px] text-center'>{index + 1}</td>
-              <td className='p-[5px] text-center'>{order.stock.product.name}</td>
-              <td className='p-[5px] text-center'>{order.quantity}</td>
+              <td className='p-[5px] text-center'>{detail.stock.product.name}</td>
+              <td className='p-[5px] text-center'>{detail.quantity}</td>
               <td className='p-[5px] text-center'>
-                {currencyFormatter(BigInt(order.stock.product.selling_price))}
+                {currencyFormatter(BigInt(detail.stock.product.selling_price))}
               </td>
               <td className='p-[5px] text-center'>
-                {currencyFormatter(Number(order.stock.product.selling_price) * order.quantity)}
+                {currencyFormatter(Number(detail.stock.product) * detail.quantity)}
               </td>
             </tr>
           ))}

@@ -1,6 +1,6 @@
 import { Button } from '@/components/shared'
-import { CancelledLabel, ConfirmLabel } from './ShipmentStatusLabel'
-import { IOrder, IOrderUpdateRequest } from '@/interfaces/order'
+import { CancelledLabel, DeliveredLabel } from './ShipmentStatusLabel'
+import { IOrder, IOrderByIdResponse, IOrderUpdateRequest } from '@/interfaces/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { orderApi, shipmentApi } from '@/apis'
 import { toast } from 'react-toastify'
@@ -14,7 +14,7 @@ import { Printer } from 'lucide-react'
 import { IShipmentUpdateRequest } from '@/interfaces/shipment'
 import moment from 'moment'
 
-function ActionBar({ order }: { order: IOrder }) {
+function ActionBar({ order }: { order: IOrderByIdResponse }) {
   const profile = useProfile()
   const queryClient = useQueryClient()
 
@@ -51,7 +51,7 @@ function ActionBar({ order }: { order: IOrder }) {
 
   const handleConfirm = () => {
     const updateData: Partial<IOrderUpdateRequest> = {
-      confirmed_employee_id: profile.data?.id || order.confirming_employee_id,
+      confirmed_employee_id: profile.data?.id || order.confirmed_employee.id,
       status: ORDER_STATUS.DELIVERED,
     }
     editOrder(updateData)
@@ -60,7 +60,7 @@ function ActionBar({ order }: { order: IOrder }) {
   const handleCancel = () => {
     const updateData: Partial<IOrderUpdateRequest> = {
       status: ORDER_STATUS.CANCELLED,
-      confirmed_employee_id: profile.data?.id || order.confirming_employee_id,
+      confirmed_employee_id: profile.data?.id || order.confirmed_employee.id,
     }
     editOrder(updateData)
   }
@@ -99,7 +99,7 @@ function ActionBar({ order }: { order: IOrder }) {
           ) : order.status === ORDER_STATUS.CANCELLED ? (
             <CancelledLabel />
           ) : (
-            <ConfirmLabel />
+            <DeliveredLabel />
           )}
         </div>
       </div>

@@ -5,6 +5,7 @@ import {
   IShipmentTracking,
   ICalcOrderFeeRequest,
   ICalcOrderFeeResponse,
+  IAllOrdersResponse,
 } from '@/interfaces/order'
 import BaseApi from './base'
 import { ORDER_STATUS } from '@/configs/enum'
@@ -37,7 +38,7 @@ class OrderApi extends BaseApi {
           ? `&status=${orderStatus}`
           : `?status=${orderStatus}`
       : dateRangeQuery
-    return super.getAll<IOrder>(count, page, {
+    return super.getAll<IAllOrdersResponse>(count, page, {
       fromDate,
       toDate,
       orderStatus,
