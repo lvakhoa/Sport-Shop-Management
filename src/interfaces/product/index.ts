@@ -4,6 +4,7 @@ import { ICategory } from '../category'
 import { ICustomer } from '../customer'
 import { IGroupVoucher } from '../voucher'
 import { IStock } from '../stock'
+import { MEDIA_TYPE, SIZE } from '@/configs/enum'
 
 export interface IProductRequest {
   name?: string
@@ -18,20 +19,50 @@ export interface IProductRequest {
 
 export interface IProduct {
   id: string
-  brand_id: string
-  sport_id: string
   name: string
   description?: string
   list_price: number
   selling_price: number
   weight: number
   is_active: boolean
-  brand: IBrand
-  sport: ISport
-  stocks: IStock[]
+  brand: {
+    id: string
+    name: string
+    logo_url: string
+  }
+  sport: {
+    id: string
+    name: string
+    logo_url: string
+  }
   categories: ICategory[]
-  liked_customers: ICustomer[]
-  group_vouchers: IGroupVoucher[]
+  stocks: {
+    id: string
+    color: string
+    name: string
+    size?: SIZE
+    quantity: number
+    group_media: {
+      id: true
+      media_list: {
+        id: string
+        type: MEDIA_TYPE
+        url: string
+      }[]
+    }
+  }[]
+  total: number
+}
+
+export interface IProductDisplay {
+  id: string
+  name: string
+  brand: string
+  sport: string
+  isActive: boolean
+  category: string
+  listPrice: number
+  sellingPrice: number
   total: number
 }
 

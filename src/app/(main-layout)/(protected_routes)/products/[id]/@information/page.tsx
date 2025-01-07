@@ -17,6 +17,8 @@ interface IProductInfo {
   size: string
   categories: string
   totalQuantity: number
+  brand: string
+  sport: string
 }
 
 function InformationPage() {
@@ -34,21 +36,15 @@ function InformationPage() {
     description: data?.description,
     listPrice: currencyFormatter(Number(data?.list_price ?? 0)),
     sellingPrice: currencyFormatter(Number(data?.selling_price ?? 0)),
-    color:
-      !!data && data.stocks.length > 0
-        ? data?.stocks
-            .map((item) => colorFormatter(item.color))
-            .filter((item, index, arr) => arr.indexOf(item) === index)
-        : [],
+    color: !!data && data.stocks.length > 0 ? data?.stocks.map((item) => item.color) : [],
     size:
       !!data && data.stocks.length > 0
-        ? data?.stocks
-            .map((item) => item.size ?? '')
-            .filter((item, index, arr) => arr.indexOf(item) === index)
-            .join(', ')
+        ? data?.stocks.map((item) => item.size ?? '').join(', ')
         : '',
+    brand: data?.brand.name ?? '',
+    sport: data?.sport.name ?? '',
     categories:
-      !!data && data.categories.length > 0
+      !!data && !!data.categories && data.categories.length > 0
         ? data.categories
             .map((item) => item.name ?? '')
             .slice(0, 2)

@@ -20,6 +20,9 @@ import {
   Separator,
 } from '@/components/shared'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
+import MultiSelect from '@/components/shared/multi-select'
+import brandApi from '@/apis/brand'
+import sportApi from '@/apis/sport'
 
 const categorySchema = z.object({
   category_id: z.string(),
@@ -33,6 +36,9 @@ const productSchema = z
     list_price: z.string().optional(),
     selling_price: z.string().optional(),
     category_list: z.array(categorySchema),
+    weight: z.number().gte(0),
+    brand_id: z.string(),
+    sport_id: z.string(),
   })
   .partial()
 
@@ -44,18 +50,28 @@ export default function EditProductForm({ productId }: { productId: string }) {
     queryFn: () => productApi.getProductById(productId),
   })
 
-  const { data: categories, isPending } = useQuery({
+  const { data: categories } = useQuery({
     queryKey: queryKeys.allCategories,
     queryFn: () => categoryApi.getAllCategories(),
   })
+  const allCategories =
+    categories?.map((item) => ({
+      value: item.id,
+      label: item.name,
+    })) ?? []
+  const [selectedCategories, setSelectedCategories] = useState<{ value: string; label: string }[]>(
+    [],
+  )
 
-  const [selectedCategories, setSelectedCategories] = useState<z.infer<typeof categorySchema>[]>([])
-  const handleAddCategory = (categoryId: string) => {
-    setSelectedCategories([...selectedCategories, { category_id: categoryId }])
-  }
-  const handleRemoveCategory = (categoryId: string) => {
-    setSelectedCategories(selectedCategories.filter((c) => c.category_id !== categoryId))
-  }
+  const { data: brands } = useQuery({
+    queryKey: queryKeys.allBrands,
+    queryFn: () => brandApi.getAllBrands(),
+  })
+
+  const { data: sports } = useQuery({
+    queryKey: queryKeys.allSports,
+    queryFn: () => sportApi.getAllSports(),
+  })
 
   const { mutate: editProduct } = useMutation({
     mutationFn: (data: IProductRequest) =>
@@ -95,14 +111,14 @@ export default function EditProductForm({ productId }: { productId: string }) {
       status: data.status,
       list_price: parseInt(data.list_price ?? '0'),
       selling_price: parseInt(data.selling_price ?? '0'),
-      category_list: selectedCategories,
+      category_list: selectedCategories.map((item) => ({ category_id: item.value })),
     })
   }
 
   useEffect(() => {
     if (!!product && !!product.categories) {
       const categoryIdList = product.categories.map((c) => ({ category_id: c.id }))
-      setSelectedCategories(categoryIdList)
+      setSelectedCategories(product.categories.map((c) => ({ value: c.id, label: c.name })))
       form.setValue('category_list', categoryIdList)
     }
   }, [product, form])
@@ -202,45 +218,20 @@ export default function EditProductForm({ productId }: { productId: string }) {
           name='category_list'
           render={({ field }) => (
             <FormItem>
-              <Popover>
-                <FormControl>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='category_list' className='text-left'>
-                      Categories
-                    </Label>
-                    <PopoverTrigger asChild>
-                      <Button variant='outline' className='col-span-3'>
-                        Select
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className='col-span-3' side='bottom'>
-                      <ScrollArea className='h-44 w-full'>
-                        {categories?.map((category) => (
-                          <div key={category.id}>
-                            <div className='flex items-center gap-2'>
-                              <Checkbox
-                                id={category.id}
-                                checked={
-                                  selectedCategories.findIndex(
-                                    (c) => c.category_id === category.id,
-                                  ) !== -1
-                                }
-                                onCheckedChange={(isChecked) =>
-                                  isChecked
-                                    ? handleAddCategory(category.id)
-                                    : handleRemoveCategory(category.id)
-                                }
-                              />
-                              <span className='text-sm leading-none'>{category.name}</span>
-                            </div>
-                            <Separator className='my-2' />
-                          </div>
-                        ))}
-                      </ScrollArea>
-                    </PopoverContent>
-                  </div>
-                </FormControl>
-              </Popover>
+              <FormControl>
+                <div className='flex items-center gap-4'>
+                  <Label htmlFor='category_list' className='text-left'>
+                    Categories
+                  </Label>
+                  <MultiSelect
+                    menuHeight={160}
+                    selectTitle='Select categories'
+                    allItems={allCategories}
+                    selectedItem={selectedCategories}
+                    changeSelectedItem={setSelectedCategories}
+                  />
+                </div>
+              </FormControl>
               <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}

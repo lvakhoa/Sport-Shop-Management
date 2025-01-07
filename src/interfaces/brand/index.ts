@@ -7,7 +7,19 @@ export interface IBrand {
   description?: string
   logo_url: string
   is_active: boolean
-  group_vouchers: IGroupVoucher[]
-  products: IProduct[]
+  products: {
+    id: string
+    name: string
+  }
   total: number
+}
+
+export interface IBrandCreate {
+  name: string
+  description?: string
+  file: File
+}
+
+export interface IBrandUpdate extends Partial<IBrandCreate> {
+  is_active?: boolean
 }

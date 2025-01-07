@@ -20,17 +20,17 @@ export default function middleware(request: NextRequest) {
 
     const user = jwtDecode<any>(token)
     if (
-      user.roleName === ROLE_NAME.ADMIN &&
+      user.sub.role === ROLE_NAME.ADMIN &&
       (ADMIN_PATH_NAME.includes(mainPathWithoutQuery) || ADMIN_PATH_NAME.includes(pathName))
     )
       return NextResponse.next()
     // else if (
-    //   user.roleName === ROLE_NAME. &&
+    //   user.sub.role === ROLE_NAME. &&
     //   (MANAGER_PATH_NAME.includes(mainPathWithoutQuery) || MANAGER_PATH_NAME.includes(pathName))
     // )
     //   return NextResponse.next()
     else if (
-      user.roleName === ROLE_NAME.EMPLOYEE &&
+      user.sub.role === ROLE_NAME.EMPLOYEE &&
       (PUBLIC_PATH_NAME.includes(mainPathWithoutQuery) || PUBLIC_PATH_NAME.includes(pathName))
     )
       return NextResponse.next()

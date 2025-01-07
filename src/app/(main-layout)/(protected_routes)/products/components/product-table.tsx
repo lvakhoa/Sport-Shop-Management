@@ -12,7 +12,7 @@ import { productApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
 import { currencyFormatter } from '@/helpers'
-import { IProduct } from '@/interfaces/product'
+import { IProduct, IProductDisplay } from '@/interfaces/product'
 import moment from 'moment'
 
 const productFilterInput: IFilterInput[] = [
@@ -50,23 +50,17 @@ export default function ProductTable({ accountRole }: { accountRole: ROLE_NAME }
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IProduct[] =
+  const data: IProductDisplay[] =
     queryData?.map((item) => {
       return {
         id: item.id,
         name: item.name,
-        brand: item.brand,
-        sport: item.sport,
-        weight: item.weight,
-        is_active: item.is_active,
-        stocks: item.stocks,
-        categories: item.categories,
-        liked_customers: item.liked_customers,
-        group_vouchers: item.group_vouchers,
-        brand_id: item.brand_id,
-        sport_id: item.sport_id,
-        list_price: item.list_price,
-        selling_price: item.selling_price,
+        brand: item.brand.name,
+        sport: item.sport.name,
+        isActive: item.is_active,
+        category: item.categories[0].name,
+        listPrice: item.list_price,
+        sellingPrice: item.selling_price,
         total: item.total,
       }
     }) ?? []
@@ -85,8 +79,8 @@ export default function ProductTable({ accountRole }: { accountRole: ROLE_NAME }
           filterInput={productFilterInput}
           isPending={isPending}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
-          showAddButton={accountRole === ROLE_NAME.ADMIN}
-          showRestoreButton={accountRole === ROLE_NAME.ADMIN}
+          showAddButton={accountRole !== ROLE_NAME.CUSTOMER}
+          showRestoreButton={false}
           restore7daysFn={() =>
             productApi.restoreProduct(moment().subtract(7, 'days').utc().unix().valueOf())
           }

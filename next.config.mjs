@@ -7,6 +7,8 @@ const nextConfig = {
   poweredByHeader: false,
   env: {
     API_BASE_URL: process.env.API_BASE_URL,
+    GHN_BASE_URL: process.env.GHN_BASE_URL,
+    GHN_TOKEN_API: process.env.GHN_TOKEN_API,
   },
   images: {
     remotePatterns: [

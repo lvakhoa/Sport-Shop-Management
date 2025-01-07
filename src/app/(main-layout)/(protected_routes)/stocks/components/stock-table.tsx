@@ -54,14 +54,12 @@ export default function StockTable({ accountRole }: { accountRole: ROLE_NAME }) 
     queryData?.map((item) => {
       return {
         id: item.id,
-        product_id: item.product_id,
+        product_id: item.product.id,
         size: item.size,
         color: item.color,
         quantity: item.quantity,
         is_active: item.is_active,
-        ordered_product: item.ordered_product,
         name: item.name,
-        selected_product: item.selected_product,
         product: item.product,
         total: item.total,
       }

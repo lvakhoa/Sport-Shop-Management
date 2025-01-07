@@ -9,7 +9,7 @@ import { Card } from '@/components/shared/card'
 import { PosTab } from './components'
 import { IProductItem } from './components/product/product-item'
 import { cn } from '@/lib/utils'
-import { SIZE } from '@/configs/enum'
+import { MEDIA_TYPE, SIZE } from '@/configs/enum'
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { categoryApi, productApi, stockApi } from '@/apis'
@@ -31,13 +31,17 @@ export interface IProductItem1 {
   price: number
   image?: string
   stocks: {
-    media?: {
-      url: string
+    group_media: {
+      id: true
+      media_list: {
+        id: string
+        type: MEDIA_TYPE
+        url: string
+      }[]
     }
     color?: string
     size?: SIZE
   }[]
-  category_list: ICategory[]
 }
 
 interface IPaginationState {
@@ -99,9 +103,8 @@ export default function PosPage() {
           id: item.id,
           name: item.name,
           price: item.selling_price,
-          image: '',
+          image: item.stocks[0].group_media.media_list[0].url,
           stocks: item.stocks,
-          category_list: item.categories,
         }
       }) || []
 
@@ -132,7 +135,7 @@ export default function PosPage() {
             (stock) =>
               stock.size === size &&
               stock.color === color &&
-              stock.product_id === currentProduct.id,
+              stock.product.id === currentProduct.id,
           )?.id,
           name: currentProduct.name,
           price: currentProduct.price,

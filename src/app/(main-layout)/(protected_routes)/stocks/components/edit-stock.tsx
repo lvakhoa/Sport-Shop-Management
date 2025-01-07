@@ -117,10 +117,10 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
   useEffect(() => {
     if (!!stock) {
       setSelectedColor(stock.color)
-      setSelectedProductId(stock.product_id)
+      setSelectedProductId(stock.product.id)
       form.setValue('quantity_in_stock', stock.quantity.toString())
     }
-  }, [stock])
+  }, [form, stock])
 
   return (
     <Form {...form}>

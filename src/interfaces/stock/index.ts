@@ -13,17 +13,22 @@ export interface IStockRequest {
 
 export interface IStock {
   id: string
-  product_id: string
-  group_media_id?: string
   name: string
   color: string
   size?: SIZE
   quantity: number
-  is_active: boolean
-  ordered_product: IOrderedProduct[]
-  selected_product: ISelectedProduct[]
-  group_media?: IGroupMedia
-  product: IProduct
+  is_active?: boolean
+  group_media?: {
+    media_list: {
+      url: string
+    }[]
+  }
+  product: {
+    id: string
+    name: string
+    list_price: string
+    selling_price: string
+  }
   total: number
 }
 

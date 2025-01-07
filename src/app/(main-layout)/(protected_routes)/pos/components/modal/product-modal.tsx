@@ -42,7 +42,11 @@ export function ProductModal({
   const colors = Array.from(new Set(product.stocks?.map((stock) => stock.color).filter(Boolean)))
   const sizes = Array.from(new Set(product.stocks?.map((stock) => stock.size).filter(Boolean)))
   const images = Array.from(
-    new Set(product.stocks?.map((stock) => stock.media?.url).filter(Boolean)),
+    new Set(
+      product.stocks
+        ?.map((stock) => stock.group_media.media_list.map((media) => media.url))
+        .filter(Boolean),
+    ),
   )
 
   const [currentItem, setcurrentItem] = useState(0)
@@ -83,7 +87,7 @@ export function ProductModal({
                     <div>
                       <Image
                         className='flex aspect-square cursor-pointer items-center justify-center rounded-lg'
-                        src={item!}
+                        src={item[0]}
                         alt=''
                         layout='responsive'
                         width={50}
@@ -105,7 +109,7 @@ export function ProductModal({
                     <div>
                       <Image
                         className={`flex aspect-square cursor-pointer items-center justify-center rounded-lg ${currentItem === index ? 'border-[3px] border-blue-500' : ''}`}
-                        src={item!}
+                        src={item[0]}
                         alt=''
                         layout='responsive'
                         width={50}
@@ -134,7 +138,7 @@ export function ProductModal({
                       onClick={() => setColor(color)}
                       className='rounded-xl'
                     >
-                      {color!.replace(/\b\w/g, (s) => s.toUpperCase())}
+                      <div className='size-4' style={{ background: color }}></div>
                     </ToggleGroupItem>
                   ))}
                 </ToggleGroup>
