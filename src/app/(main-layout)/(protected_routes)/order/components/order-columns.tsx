@@ -5,7 +5,6 @@ import { ORDER_STATUS, PAYMENT_TYPE, ROLE_NAME } from '@/configs/enum'
 import { Button, Checkbox } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import moment from 'moment'
-import { IEmployee } from '@/interfaces/employee'
 
 export interface IOrderCol {
   id: string
@@ -127,6 +126,6 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrderCol>[] => 
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('confirmed_employee')}</div>,
+    cell: ({ row }) => <div>{row.getValue('confirmed_employee') ?? 'N/A'}</div>,
   },
 ]

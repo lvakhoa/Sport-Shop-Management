@@ -10,6 +10,8 @@ import { queryKeys } from '@/configs'
 import { orderApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
 import { PaginationState } from '@tanstack/react-table'
+import { IAllOrdersResponse, IOrder } from '@/interfaces/order'
+import moment from 'moment'
 
 const filterInput: IFilterInput[] = [
   {
@@ -32,11 +34,15 @@ export default function OrderTable({ accountRole }: { accountRole: ROLE_NAME }) 
   })
   const { isPending, data: queryData } = useQuery({
     queryKey: queryKeys.orders.gen(pagination.pageIndex),
-    queryFn: () => orderApi.getAllOrders(pagination.pageSize, pagination.pageIndex + 1),
+    queryFn: () =>
+      orderApi.getAllOrders({
+        count: pagination.pageSize,
+        page: pagination.pageIndex + 1,
+      }),
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IOrderCol[] = queryData?.map((item: IOrder) => {
+  const data: IOrderCol[] = queryData?.map((item: IAllOrdersResponse) => {
     return {
       id: item.id,
       order_code: item.order_code,
@@ -61,7 +67,7 @@ export default function OrderTable({ accountRole }: { accountRole: ROLE_NAME }) 
           pagination={pagination}
           setPagination={setPagination}
           pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
-          filterInput={eventFilterInput}
+          filterInput={filterInput}
           showAddButton={false}
         />
       )}
