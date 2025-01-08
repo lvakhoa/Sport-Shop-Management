@@ -4,10 +4,11 @@ import { IOrderedProduct } from '../order'
 import { IGroupMedia } from '../media'
 
 export interface IStockRequest {
-  product_id?: string
-  color_id?: string
+  name: string
+  product_id: string
+  color: string
   size?: SIZE
-  quantity_in_stock?: string
+  quantity?: number
   file?: File
 }
 

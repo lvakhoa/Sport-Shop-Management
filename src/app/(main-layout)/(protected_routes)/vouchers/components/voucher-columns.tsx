@@ -207,10 +207,7 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucherTable>
   },
   {
     id: 'actions',
-    header: () => {
-      return <div className='font-medium'>Actions</div>
-    },
-
+    header: () => <div className='font-medium'>Actions</div>,
     cell: ({ row }) => {
       const voucherId = row.getValue('id') as string
       return (

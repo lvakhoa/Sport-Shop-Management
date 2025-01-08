@@ -7,7 +7,7 @@ import { stockApi } from '@/apis'
 import { SIZE } from '@/configs/enum'
 import { ContentCard, Breadcrumb, Button, Skeleton } from '@/components/shared'
 import styles from '@/components/shared/ContentCard/ContentCard.module.css'
-import { currencyFormatter, colorFormatter } from '@/helpers'
+import { currencyFormatter } from '@/helpers'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
@@ -49,7 +49,7 @@ export default function StockDetailPage() {
     },
     media_url: data?.group_media?.media_list[0]?.url ?? '',
     size: data?.size ?? SIZE.S,
-    color: colorFormatter(data?.color ?? ''),
+    color: data?.color ?? '',
     quantity_in_stock: data?.quantity ?? 0,
   }
   return (

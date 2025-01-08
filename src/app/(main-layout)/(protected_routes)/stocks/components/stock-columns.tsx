@@ -8,8 +8,19 @@ import { ArrowUpDown } from 'lucide-react'
 import { stockApi } from '@/apis'
 import EditStockForm from './edit-stock'
 import { IStock } from '@/interfaces/stock'
+import { IProduct } from '@/interfaces/product'
 
-export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStock>[] => [
+export interface IStockCol {
+  id: string
+  name: string
+  color: string
+  size?: SIZE
+  quantity: number
+  productName: string
+  total: number
+}
+
+export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStockCol>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -35,7 +46,7 @@ export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStock>[] => [
     enableHiding: true,
   },
   {
-    accessorKey: 'product_name',
+    accessorKey: 'productName',
     header: ({ column }) => {
       return (
         <Button
@@ -49,7 +60,7 @@ export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStock>[] => [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('product_name')}</div>,
+    cell: ({ row }) => <div>{row.getValue('productName')}</div>,
   },
   {
     accessorKey: 'size',
@@ -88,7 +99,7 @@ export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStock>[] => [
     ),
   },
   {
-    accessorKey: 'quantity_in_stock',
+    accessorKey: 'quantity',
     header: ({ column }) => {
       return (
         <Button
@@ -102,7 +113,7 @@ export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStock>[] => [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('quantity_in_stock')}</div>,
+    cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
   },
   {
     id: 'actions',

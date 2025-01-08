@@ -1,7 +1,7 @@
 'use client'
 
 import { FILTER_INPUT_TYPE, ROLE_NAME } from '@/configs/enum'
-import { stockColumns } from './stock-columns'
+import { IStockCol, stockColumns } from './stock-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -50,17 +50,15 @@ export default function StockTable({ accountRole }: { accountRole: ROLE_NAME }) 
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IStock[] =
+  const data: IStockCol[] =
     queryData?.map((item) => {
       return {
         id: item.id,
-        product_id: item.product.id,
+        name: item.name,
         size: item.size,
         color: item.color,
         quantity: item.quantity,
-        is_active: item.is_active,
-        name: item.name,
-        product: item.product,
+        productName: item.product.name,
         total: item.total,
       }
     }) ?? []
@@ -82,14 +80,6 @@ export default function StockTable({ accountRole }: { accountRole: ROLE_NAME }) 
           csvFormDialog={<CsvFormDialog />}
           showImportButton={accountRole === ROLE_NAME.ADMIN}
           showAddButton={accountRole === ROLE_NAME.ADMIN}
-          showRestoreButton={accountRole === ROLE_NAME.ADMIN}
-          restore7daysFn={() =>
-            stockApi.restoreStock(moment().subtract(7, 'days').utc().unix().valueOf())
-          }
-          restore30daysFn={() =>
-            stockApi.restoreStock(moment().subtract(30, 'days').utc().unix().valueOf())
-          }
-          restoreAllFn={() => stockApi.restoreStock()}
         />
       )}
     </>

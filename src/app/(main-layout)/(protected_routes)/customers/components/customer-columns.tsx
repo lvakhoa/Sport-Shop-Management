@@ -12,7 +12,7 @@ import { ICustomer } from '@/interfaces/customer'
 
 export const customerFilterInput: IFilterInput[] = [
   {
-    key: 'name',
+    key: 'fullname',
     title: 'Name',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
@@ -31,7 +31,7 @@ export const customerFilterInput: IFilterInput[] = [
 
 export const columns: ColumnDef<ICustomer>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'fullname',
     header: ({ column }) => {
       return (
         <Button
@@ -45,24 +45,7 @@ export const columns: ColumnDef<ICustomer>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('name')}</div>,
-  },
-  {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button
-          className='pl-0'
-          variant='ghost'
-          style={{ backgroundColor: 'transparent' }}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
+    cell: ({ row }) => <div>{row.getValue('fullname')}</div>,
   },
   {
     accessorKey: 'phone',

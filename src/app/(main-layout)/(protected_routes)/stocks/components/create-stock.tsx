@@ -25,17 +25,16 @@ import {
 } from '@/components/shared/select'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Checkbox, ComboBox, Input, Label, ScrollArea } from '@/components/shared'
+import { Button, ComboBox, Input } from '@/components/shared'
 import { SIZE } from '@/configs/enum'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
 import { IStockRequest } from '@/interfaces/stock'
 
-const sizes: string[] = ['S', 'M', 'L', 'XL']
 const stockSchema = z.object({
+  name: z.string({ required_error: 'Name is required' }),
   product_id: z.string({ required_error: 'Product is required' }),
-  color_id: z.string({ required_error: 'Color is required' }),
-  size: z.enum(['S', 'M', 'L', 'XL'], { message: 'Size is required' }),
-  quantity_in_stock: z.string({ required_error: 'Quantity is required' }),
+  color: z.string({ required_error: 'Color is required' }),
+  size: z.nativeEnum(SIZE),
+  quantity: z.string({ required_error: 'Quantity is required' }),
   file: z
     .instanceof(File)
     .refine((file) => file.size < 7000000, {
@@ -43,11 +42,6 @@ const stockSchema = z.object({
     })
     .optional(),
 })
-
-interface IColor {
-  id: string
-  name: string
-}
 
 interface IProduct {
   id: string
@@ -64,16 +58,16 @@ export default function CreateStockForm() {
 
   const products: IProduct[] = productData?.map((p) => ({ id: p.id, name: p.name })) ?? []
 
-  const [selectedColorId, setSelectedColorId] = useState<string>()
-  const [selectedProductId, setSelectedProductId] = useState<string>()
+  const [selectedProductId, setSelectedProductId] = useState<string>('')
 
   const { mutate: createStock } = useMutation({
     mutationFn: (data: IStockRequest) =>
       stockApi.createStock({
+        name: data.name,
         product_id: data.product_id,
-        color_id: data.color_id,
+        color: data.color,
         size: data.size,
-        quantity_in_stock: data.quantity_in_stock,
+        quantity: data.quantity,
         file: data.file,
       }),
     onSuccess: () => {
@@ -95,10 +89,11 @@ export default function CreateStockForm() {
 
   function onSubmit(data: z.infer<typeof stockSchema>) {
     createStock({
+      name: data.name,
       product_id: selectedProductId,
-      color_id: selectedColorId,
-      size: data.size as SIZE,
-      quantity_in_stock: data.quantity_in_stock,
+      color: data.color,
+      size: data.size,
+      quantity: parseInt(data.quantity),
       file: data.file,
     })
   }
@@ -146,41 +141,21 @@ export default function CreateStockForm() {
           )}
         />
 
-        {/* <FormField
+        <FormField
           control={form.control}
-          name='color_id'
+          name='color'
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <div className='grid grid-cols-4 items-center gap-4'>
                   <FormLabel>Color</FormLabel>
-                  <div className='col-span-3'>
-                    <Select
-                      onValueChange={(value) => {
-                        setSelectedColorId(value)
-                        form.setValue('color_id', value)
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select color' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {colors?.map((color) => (
-                            <SelectItem key={color.id} value={color.id}>
-                              {color.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Input id='color' className='col-span-3' {...field} />
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />
             </FormItem>
           )}
-        /> */}
+        />
 
         <FormField
           control={form.control}
@@ -195,7 +170,7 @@ export default function CreateStockForm() {
                       key='size'
                       defaultValue={field.value}
                       placeholder='Size'
-                      items={sizes}
+                      items={Object.values(SIZE)}
                       onValueChange={field.onChange}
                     />
                   </div>
@@ -230,7 +205,7 @@ export default function CreateStockForm() {
 
         <FormField
           control={form.control}
-          name='quantity_in_stock'
+          name='quantity'
           render={({ field }) => (
             <FormItem>
               <FormControl>
