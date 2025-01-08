@@ -10,7 +10,6 @@ import {
   LayoutGrid,
   PackageOpen,
   TicketPercent,
-  BadgeCheck,
   Package,
 } from 'lucide-react'
 
@@ -61,11 +60,6 @@ export const adminSidebarItems: ISidebarItem[] = [
         icon: <TicketPercent strokeWidth={1.5} />,
         describe: 'Vouchers',
         link: PATH_NAME.VOUCHER,
-      },
-      {
-        icon: <BadgeCheck strokeWidth={1.5} />,
-        describe: 'Events',
-        link: PATH_NAME.EVENT,
       },
     ],
   },
@@ -155,11 +149,6 @@ export const managerSidebarItems: ISidebarItem[] = [
         describe: 'Vouchers',
         link: PATH_NAME.VOUCHER,
       },
-      {
-        icon: <BadgeCheck strokeWidth={1.5} />,
-        describe: 'Events',
-        link: PATH_NAME.EVENT,
-      },
     ],
   },
   {
@@ -247,11 +236,6 @@ export const employeeSidebarItems: ISidebarItem[] = [
         icon: <TicketPercent strokeWidth={1.5} />,
         describe: 'Vouchers',
         link: PATH_NAME.VOUCHER,
-      },
-      {
-        icon: <BadgeCheck strokeWidth={1.5} />,
-        describe: 'Events',
-        link: PATH_NAME.EVENT,
       },
     ],
   },

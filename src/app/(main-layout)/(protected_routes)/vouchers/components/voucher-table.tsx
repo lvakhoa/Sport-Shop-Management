@@ -1,7 +1,7 @@
 'use client'
 
 import { FILTER_INPUT_TYPE, ROLE_NAME } from '@/configs/enum'
-import { voucherColumns } from './voucher-columns'
+import { IVoucherCol, voucherColumns } from './voucher-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -49,26 +49,20 @@ function VoucherTable({ accountRole }: { accountRole: ROLE_NAME }) {
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IVoucher[] =
+  const data: IVoucherCol[] =
     queryData?.map((item) => {
       return {
         id: item.id,
-        group_voucher_id: item.group_voucher_id,
-        title: item.title,
         code: item.code,
         campaign_name: item.campaign_name,
         voucher_type: item.voucher_type,
         voucher_value: item.voucher_value,
-        is_active: item.is_active,
         starting_date: item.starting_date,
         ending_date: item.ending_date,
         total_quantity: item.total_quantity,
         quantity_per_user: item.quantity_per_user,
         minimum_price: item.minimum_price,
         applicable_type: item.applicable_type,
-        orders: item.orders,
-        group_voucher: item.group_voucher,
-        voucher_usages: item.voucher_usages,
         total: item.total,
       }
     }) ?? []

@@ -1,7 +1,7 @@
 'use client'
 
 import { FILTER_INPUT_TYPE, ORDER_STATUS, PAYMENT_TYPE, ROLE_NAME } from '@/configs/enum'
-import { orderColumns } from './order-columns'
+import { IOrderCol, orderColumns } from './order-columns'
 import { DataTable } from '@/components/shared'
 import { useBrowser } from '@/hooks'
 import { useState } from 'react'
@@ -27,73 +27,29 @@ export default function OrderTable({ accountRole }: { accountRole: ROLE_NAME }) 
     pageIndex: 0,
     pageSize: 10,
   })
-  // const { isPending, data: queryData } = useQuery({
-  //   queryKey: queryKeys.orders.gen(pagination.pageIndex),
-  //   queryFn: () => orderApi.getAllOrders(pagination.pageSize, pagination.pageIndex + 1),
-  //   placeholderData: (previousData) => previousData,
-  // })
+  const { isPending, data: queryData } = useQuery({
+    queryKey: queryKeys.orders.gen(pagination.pageIndex),
+    queryFn: () => orderApi.getAllOrders(pagination.pageSize, pagination.pageIndex + 1),
+    placeholderData: (previousData) => previousData,
+  })
 
-  const data: IOrder[] = [
-    {
-      id: 'order1',
-      order_code: 'ORD001',
-      customer_id: 'cust1',
-      confirming_employee_id: undefined,
-      voucher_id: 'voucher1',
-      group_media_id: 'groupmedia1',
-      product_total_price: 100,
-      order_date: new Date(),
-      status: ORDER_STATUS.PENDING,
-      payment_type: PAYMENT_TYPE.BANK,
-      payment_time: new Date(),
-      review_star: 5,
-      review_content: 'Great service!',
-      confirmed_employee: undefined,
-      customer: {
-        id: 'cust1',
-        fullname: 'John Doe',
-        phone: '123456789',
-        gender: undefined,
-        avatar_url: undefined,
-        addresses: [],
-        user: {
-          id: 'user1',
-          group_user_id: 'group1',
-          role_name: ROLE_NAME.CUSTOMER,
-          email: 'john.doe@example.com',
-          password: 'password',
-          is_active: true,
-          customer: undefined,
-          employee: undefined,
-          sessions: [],
-          tokens: [],
-          group_user: {
-            id: 'group1',
-            title: 'Customer Group',
-            description: 'Group for all customers',
-            applied_role: ROLE_NAME.CUSTOMER,
-            users: [],
-            granted_permissions: [],
-          },
-          voucher_usages: [],
-        },
-        notifications: [],
-        orders: [],
-        selected_product: [],
-        favorite_products: [],
-        total: 1,
-      },
-      group_media: undefined,
-      voucher: undefined,
-      ordered_products: [],
-      shipment: undefined,
-      total: 150,
-    },
-  ]
+  const data: IOrderCol[] = queryData?.map((item: IOrder) => {
+    return {
+      id: item.id,
+      order_code: item.order_code,
+      order_date: moment(item.order_date).format('DD-MM-YYYY'),
+      status: item.status,
+      payment_type: item.payment_type,
+      product_total_price: item.product_total_price,
+      customer: item.customer.fullname,
+      confirmed_employee: item.confirmed_employee?.fullname,
+      total: item.total,
+    }
+  }) as IOrderCol[]
 
   return (
     <>
-      {!!isBrowser && (
+      {!!isBrowser && !isPending && (
         <DataTable
           columns={orderColumns(accountRole)}
           data={data}
@@ -101,6 +57,7 @@ export default function OrderTable({ accountRole }: { accountRole: ROLE_NAME }) 
           queryKey='orders'
           pagination={pagination}
           setPagination={setPagination}
+          pageCount={data.length > 0 ? Math.ceil(data[0].total / pagination.pageSize) : 0}
           filterInput={eventFilterInput}
           showAddButton={false}
         />
