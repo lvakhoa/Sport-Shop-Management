@@ -17,9 +17,8 @@ export interface ISport {
 export interface ISportCreate {
   name: string
   description?: string
-  file: File
+  file: File | null | undefined
+  is_active: boolean
 }
 
-export interface ISportUpdate extends Partial<ISportCreate> {
-  is_active?: boolean
-}
+export interface ISportUpdate extends Partial<ISportCreate> {}

@@ -9,11 +9,6 @@ class ProductApi extends BaseApi {
   }
 
   async getAllProduct(count?: number, page?: number, categoryId?: string) {
-    const categoryQuery = !!categoryId
-      ? !!count || !!page
-        ? `&category_id=${categoryId}`
-        : `?category_id=${categoryId}`
-      : ''
     return super.getAll<IProduct>(count, page, {
       categoryId,
     })
@@ -40,10 +35,14 @@ class ProductApi extends BaseApi {
   }
 
   async searchProduct(text: string, count?: number, page?: number) {
-    const countQuery = !!count ? `&count=${count}` : ''
-    const pageQuery = !!page ? `&page=${page}` : ''
     const data = await handleResponse<IProduct[]>(() =>
-      httpClient.get<IProduct[]>(`/products/search?text=${text}` + countQuery + pageQuery),
+      httpClient.get<IProduct[]>('/products/search', {
+        params: {
+          text,
+          count,
+          page,
+        },
+      }),
     )
     return data
   }

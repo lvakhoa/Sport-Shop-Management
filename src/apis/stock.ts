@@ -9,9 +9,9 @@ class StockApi extends BaseApi {
   }
 
   async getBestSeller(count?: number) {
-    const data = await handleResponse<IBestSellerStock[]>(() => {
+    const data = await handleResponse<IStock[]>(() => {
       const url = !!count ? `/stocks/best-seller?count=${count}` : '/stocks/best-seller'
-      return httpClient.get<IBestSellerStock[]>(url)
+      return httpClient.get<IStock[]>(url)
     })
     return data
   }

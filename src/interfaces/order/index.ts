@@ -21,12 +21,12 @@ export interface IOrderCreateRequest {
 }
 
 export interface IOrderUpdateRequest {
-  account_id: string
-  customer_id: string
-  confirmed_employee_id: string
-  product_total_price: number
-  status: ORDER_STATUS
-  buy_in_app: boolean
+  product_total_price?: number
+  status?: ORDER_STATUS
+  shipment?: {
+    shipping_fee: number
+    shipping_address: string
+  }
 }
 
 export interface IAllOrdersResponse {
@@ -35,13 +35,21 @@ export interface IAllOrdersResponse {
     id: string
     fullname: string
   }
-  confirmed_employee: {
+  confirmed_employee?: {
     id: string
     fullname: string
   }
   product_total_price: number
   order_date: Date
   status: ORDER_STATUS
+  payment_type: PAYMENT_TYPE
+  order_code: string
+  shipment?: {
+    id: string
+    shipping_address: string
+    shipped_date?: string
+    completed_date?: string
+  }
   total: number
 }
 
@@ -52,46 +60,51 @@ export interface IOrderByIdResponse {
     id: string
     fullname: string
   }
-  confirmed_employee: {
+  confirmed_employee?: {
     id: string
     fullname: string
   }
-  voucher: {
+  voucher?: {
     id: string
     code: string
     voucher_value: number
   }
-  group_media: {
+  group_media?: {
     id: string
     media_list: {
       id: string
       type: MEDIA_TYPE
       url: string
-    }
+    }[]
   }
   product_total_price: number
   order_date: Date
   status: ORDER_STATUS
-  payment_time: Date
+  payment_time?: Date
   payment_type: PAYMENT_TYPE
-  review_content: string
-  review_star: number
-  shipment: {
+  review_content?: string
+  review_star?: number
+  shipment?: {
     id: string
     shipping_address: string
-    shipped_date: Date
-    completed_date: Date
+    shipped_date?: Date
+    completed_date?: Date
   }
   order_details: {
     stock: {
       id: string
-      size: SIZE
+      size?: SIZE
       color: string
       product: {
         id: string
         name: string
-        list_price?: string
-        selling_price: string
+        list_price: number
+        selling_price: number
+      }
+      group_media: {
+        media_list: {
+          url: string
+        }[]
       }
     }
     quantity: number

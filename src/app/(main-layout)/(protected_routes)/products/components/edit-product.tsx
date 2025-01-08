@@ -64,12 +64,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
   )
 
   const { data: brands } = useQuery({
-    queryKey: queryKeys.allBrands,
+    queryKey: queryKeys.brands.gen(),
     queryFn: () => brandApi.getAllBrands(),
   })
 
   const { data: sports } = useQuery({
-    queryKey: queryKeys.allSports,
+    queryKey: queryKeys.sports.gen(),
     queryFn: () => sportApi.getAllSports(),
   })
 
@@ -233,6 +233,56 @@ export default function EditProductForm({ productId }: { productId: string }) {
                 </div>
               </FormControl>
               <FormMessage className='text-[16px] font-normal' />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='brand_id'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className='grid grid-cols-4 items-center gap-4'>
+                  <Label htmlFor='brand_id' className='text-left'>
+                    Brand
+                  </Label>
+                  <div className='col-span-3'>
+                    <ComboBox
+                      key='brand_id'
+                      placeholder={brands?.find((b) => b.id === product?.brand.id)?.name ?? 'Brand'}
+                      defaultValue={product?.brand.id}
+                      items={brands?.map((b) => ({ value: b.id, label: b.name })) ?? []}
+                      onValueChange={field.onChange}
+                    />
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage className='text-[14px] font-normal' />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='sport_id'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className='grid grid-cols-4 items-center gap-4'>
+                  <Label htmlFor='sport_id' className='text-left'>
+                    Sport
+                  </Label>
+                  <ComboBox
+                    key='sport_id'
+                    className='col-span-3'
+                    placeholder={sports?.find((b) => b.id === product?.sport.id)?.name ?? 'Sport'}
+                    items={sports?.map((b) => ({ value: b.id, label: b.name })) ?? []}
+                    onValueChange={field.onChange}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage className='text-[14px] font-normal' />
             </FormItem>
           )}
         />

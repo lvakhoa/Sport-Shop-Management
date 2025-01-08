@@ -17,9 +17,8 @@ export interface IBrand {
 export interface IBrandCreate {
   name: string
   description?: string
-  file: File
+  file: File | null | undefined
+  is_active: boolean
 }
 
-export interface IBrandUpdate extends Partial<IBrandCreate> {
-  is_active?: boolean
-}
+export interface IBrandUpdate extends Partial<IBrandCreate> {}

@@ -13,7 +13,7 @@ import {
 interface IComboBox {
   defaultValue?: string
   placeholder: string
-  items: string[]
+  items: string[] | { value: string; label: string }[]
   className?: string
   onValueChange?: (selectedValue: string) => void
 }
@@ -52,11 +52,17 @@ export default function ComboBox({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {items.map((item) => (
-              <SelectItem key={item} value={item}>
-                {item.replace(item[0], item[0].toUpperCase())}
-              </SelectItem>
-            ))}
+            {items.map((item) =>
+              typeof item === 'string' ? (
+                <SelectItem key={item} value={item}>
+                  {item.replace(item[0], item[0].toUpperCase())}
+                </SelectItem>
+              ) : (
+                <SelectItem key={item.value} value={item.value}>
+                  {item.label}
+                </SelectItem>
+              ),
+            )}
           </SelectGroup>
         </SelectContent>
       </Select>

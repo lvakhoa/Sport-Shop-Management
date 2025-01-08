@@ -14,7 +14,7 @@ function UndeliveredLabel() {
   return (
     <div className='inline-flex items-center space-x-[5px] rounded-full border-2 border-[#30C365] bg-[#F2FDF5] px-2 py-1 text-[14px] text-[#30C365]'>
       <BadgeCheck width={18} height={18} />
-      <span>Success</span>
+      <span>Undelivered</span>
     </div>
   )
 }
@@ -50,7 +50,7 @@ function ReturnedLabel() {
   return (
     <div className='inline-flex space-x-[5px] rounded-full border-2 border-[#FF5353] bg-[#F9D5D5] px-2 py-1 text-[14px] text-[#FF5353]'>
       <Image src='/assets/icons/truck-red.svg' alt='' width='18' height='18' />
-      <span>Failed</span>
+      <span>Returned</span>
     </div>
   )
 }
@@ -59,7 +59,7 @@ function PackagingLabel() {
   return (
     <div className='inline-flex items-center space-x-[5px] rounded-full border-2 border-[#30C365] bg-[#F2FDF5] px-2 py-1 text-[14px] text-[#30C365]'>
       <BadgeCheck width={18} height={18} />
-      <span>Confirm</span>
+      <span>Packaging</span>
     </div>
   )
 }

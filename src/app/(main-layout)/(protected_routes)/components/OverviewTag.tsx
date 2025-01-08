@@ -68,7 +68,7 @@ function OverviewTag({}: Props) {
       },
       {
         queryKey: queryKeys.orders.gen(1),
-        queryFn: () => orderApi.getAllOrders(1, 1),
+        queryFn: () => orderApi.getAllOrders({ count: 1, page: 1 }),
         enabled: !!accessToken,
       },
       {

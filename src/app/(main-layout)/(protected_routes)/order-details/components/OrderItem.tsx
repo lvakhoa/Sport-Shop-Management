@@ -1,5 +1,5 @@
 'use client'
-import { IOrder, IOrderByIdResponse } from '@/interfaces/order'
+import { IAllOrdersResponse, IOrder, IOrderByIdResponse } from '@/interfaces/order'
 import { ORDER_STATUS } from '@/configs/enum'
 import { PaidLabel, CODLabel } from './PaymentStatusLabel'
 import {
@@ -14,18 +14,19 @@ import { employeeApi } from '@/apis'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import moment from 'moment'
+import { currencyFormatter } from '@/helpers'
 
 function OrderItem({
   order,
   onClick,
 }: {
-  order: IOrderByIdResponse
-  onClick: (order: IOrderByIdResponse) => void
+  order: IAllOrdersResponse
+  onClick: (order: IAllOrdersResponse) => void
 }) {
   const { data: employeeData, isLoading } = useQuery({
-    queryKey: queryKeys.employeeDetails.gen(order.confirmed_employee.id ?? ''),
-    queryFn: () => employeeApi.getEmployeesById(order.confirmed_employee.id ?? ''),
-    enabled: !!order.confirmed_employee.id,
+    queryKey: queryKeys.employeeDetails.gen(order.confirmed_employee?.id ?? ''),
+    queryFn: () => employeeApi.getEmployeesById(order.confirmed_employee?.id ?? ''),
+    enabled: !!order.confirmed_employee?.id,
   })
 
   const getStatusLabel = (status: string) => {
@@ -60,7 +61,9 @@ function OrderItem({
 
         <div className='flex flex-col items-end space-y-[5px]'>
           {getStatusLabel(order.status)}
-          {/* <span className='text-[16px] font-semibold'>{order.total}₫</span> */}
+          <span className='text-[16px] font-semibold'>
+            {currencyFormatter(order.product_total_price)}
+          </span>
         </div>
       </div>
       <span className='text-[14px]'>

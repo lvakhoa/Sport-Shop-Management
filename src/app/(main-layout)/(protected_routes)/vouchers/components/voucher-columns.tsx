@@ -6,9 +6,9 @@ import { voucherApi } from '@/apis'
 import EditVoucherForm from './edit-voucher'
 import moment from 'moment'
 import { ROLE_NAME } from '@/configs/enum'
-import { IVoucher } from '@/interfaces/voucher'
+import { IVoucher, IVoucherTable } from '@/interfaces/voucher'
 
-export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] => [
+export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucherTable>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -51,6 +51,40 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] =>
     cell: ({ row }) => <div>{row.getValue('title')}</div>,
   },
   {
+    accessorKey: 'campaign_name',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Campaign Name
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div>{row.getValue('campaign_name')}</div>,
+  },
+  {
+    accessorKey: 'group_voucher_name',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Group Voucher Name
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div>{row.getValue('group_voucher_name')}</div>,
+  },
+  {
     accessorKey: 'code',
     header: ({ column }) => {
       return (
@@ -67,7 +101,7 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] =>
     },
   },
   {
-    accessorKey: 'sale_percent',
+    accessorKey: 'voucher_value',
     header: ({ column }) => {
       return (
         <Button
@@ -81,10 +115,10 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] =>
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('sale_percent')}</div>,
+    cell: ({ row }) => <div>{row.getValue('voucher_value')}</div>,
     sortingFn: (rowA, rowB) => {
-      const valueA = parseFloat(rowA.getValue('sale_percent') as string)
-      const valueB = parseFloat(rowB.getValue('sale_percent') as string)
+      const valueA = parseFloat(rowA.getValue('voucher_value') as string)
+      const valueB = parseFloat(rowB.getValue('voucher_value') as string)
 
       if (valueA < valueB) {
         return -1
@@ -96,7 +130,7 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] =>
     },
   },
   {
-    accessorKey: 'quantity',
+    accessorKey: 'total_quantity',
     header: ({ column }) => {
       return (
         <Button
@@ -110,10 +144,10 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] =>
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
+    cell: ({ row }) => <div>{row.getValue('total_quantity')}</div>,
     sortingFn: (rowA, rowB) => {
-      const valueA = parseFloat(rowA.getValue('quantity') as string)
-      const valueB = parseFloat(rowB.getValue('quantity') as string)
+      const valueA = parseFloat(rowA.getValue('total_quantity') as string)
+      const valueB = parseFloat(rowB.getValue('total_quantity') as string)
 
       if (valueA < valueB) {
         return -1
@@ -125,7 +159,7 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] =>
     },
   },
   {
-    accessorKey: 'expired_date',
+    accessorKey: 'starting_date',
     header: ({ column }) => {
       return (
         <Button
@@ -134,12 +168,42 @@ export const voucherColumns = (accountRole: ROLE_NAME): ColumnDef<IVoucher>[] =>
           style={{ backgroundColor: 'transparent' }}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Expired Date
+          Starting Date
           <ArrowUpDown className='ml-2 size-4' />
         </Button>
       )
     },
-    cell: ({ row }) => <div>{moment(row.getValue('expired_date')).format('DD-MM-YYYY')}</div>,
+    cell: ({ row }) => <div>{moment(row.getValue('starting_date')).format('DD-MM-YYYY')}</div>,
+  },
+  {
+    accessorKey: 'ending_date',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='pl-0'
+          variant='ghost'
+          style={{ backgroundColor: 'transparent' }}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Ending Date
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div>{moment(row.getValue('ending_date')).format('DD-MM-YYYY')}</div>,
+  },
+  {
+    accessorKey: 'is_active',
+    header: () => {
+      return <div className='font-medium'>Status</div>
+    },
+    cell: ({ row }) => {
+      return row.getValue('is_active') === true ? (
+        <div className='rounded-sm bg-green-300 p-1 text-center text-green-600'>Active</div>
+      ) : (
+        <div className='rounded-sm bg-red-300 p-1 text-center text-red-600'>Inactive</div>
+      )
+    },
   },
   {
     id: 'actions',

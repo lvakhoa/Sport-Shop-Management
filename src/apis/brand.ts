@@ -17,8 +17,8 @@ class BrandApi extends BaseApi {
   async createBrand(brand: IBrandCreate) {
     const formData = new FormData()
     Object.entries(brand).forEach(([key, value]) => {
-      if (key === 'file') {
-        formData.append(key, value)
+      if (key === 'file' && brand.file) {
+        formData.append(key, brand.file, brand.file.name)
       } else {
         formData.append(key, value as string)
       }
@@ -34,8 +34,8 @@ class BrandApi extends BaseApi {
   async updateBrand(brand: IBrandUpdate, id: string) {
     const formData = new FormData()
     Object.entries(brand).forEach(([key, value]) => {
-      if (key === 'file') {
-        formData.append(key, value)
+      if (key === 'file' && brand.file) {
+        formData.append(key, brand.file, brand.file.name)
       } else {
         formData.append(key, value as string)
       }
