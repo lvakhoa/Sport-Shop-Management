@@ -33,16 +33,14 @@ import { IStockRequest } from '@/interfaces/stock'
 const sizes: string[] = ['S', 'M', 'L', 'XL']
 const stockSchema = z
   .object({
-    product_id: z.string().optional(),
-    color_id: z.string().optional(),
-    size: z.enum(['S', 'M', 'L', 'XL']).optional(),
-    quantity_in_stock: z.string().optional(),
-    file: z
-      .instanceof(File)
-      .refine((file) => file.type.startsWith('image/'), {
-        message: 'Media must be an image file',
-      })
-      .optional(),
+    name: z.string(),
+    product_id: z.string(),
+    color: z.string(),
+    size: z.nativeEnum(SIZE),
+    quantity: z.number(),
+    file: z.instanceof(File).refine((file) => file.size < 7000000, {
+      message: 'Your file must be less than 7MB.',
+    }),
   })
   .partial()
 
@@ -71,17 +69,18 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
 
   const products: IProduct[] = productData?.map((p) => ({ id: p.id, name: p.name })) ?? []
 
-  const [selectedColor, setSelectedColor] = useState<string>()
-  const [selectedProductId, setSelectedProductId] = useState<string>()
+  const [selectedColor, setSelectedColor] = useState<string>('')
+  const [selectedProductId, setSelectedProductId] = useState<string>('')
 
   const { mutate: editStock } = useMutation({
     mutationFn: (data: IStockRequest) =>
       stockApi.updateStock(
         {
+          name: data.name,
           product_id: data.product_id,
-          color_id: data.color_id,
-          size: data.size,
-          quantity_in_stock: data.quantity_in_stock,
+          color: data.color,
+          size: data.size as SIZE,
+          quantity: data.quantity,
           file: data.file,
         },
         stockId,
@@ -106,10 +105,11 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
 
   function onSubmit(data: z.infer<typeof stockSchema>) {
     editStock({
-      product_id: data.product_id,
-      color_id: data.color_id,
-      size: data.size as SIZE,
-      quantity_in_stock: data.quantity_in_stock,
+      name: data.name ?? '',
+      product_id: selectedProductId,
+      color: selectedColor,
+      size: data.size,
+      quantity: data.quantity,
       file: data.file,
     })
   }
@@ -118,7 +118,11 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
     if (!!stock) {
       setSelectedColor(stock.color)
       setSelectedProductId(stock.product.id)
-      form.setValue('quantity_in_stock', stock.quantity.toString())
+      form.setValue('quantity', stock.quantity)
+      form.setValue('size', stock.size)
+      form.setValue('product_id', stock.product.id)
+      form.setValue('color', stock.color)
+      form.setValue('name', stock.name)
     }
   }, [form, stock])
 
@@ -261,7 +265,7 @@ export default function EditStockForm({ stockId }: { stockId: string }) {
 
         <FormField
           control={form.control}
-          name='quantity_in_stock'
+          name='quantity'
           render={({ field }) => (
             <FormItem>
               <FormControl>
