@@ -12,7 +12,7 @@ import { IEmployee } from '@/interfaces/employee'
 
 export const employeeFilterInput: IFilterInput[] = [
   {
-    key: 'name',
+    key: 'fullname',
     title: 'Name',
     type: FILTER_INPUT_TYPE.TEXTBOX,
   },
@@ -45,13 +45,14 @@ export const columns: ColumnDef<IEmployee>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('name')}</div>,
+    cell: ({ row }) => <div>{row.getValue('fullname')}</div>,
   },
   {
     accessorKey: 'phone',
     header: () => {
       return <div className='font-medium'>Phone</div>
     },
+    cell: ({ row }) => <div>{row.getValue('phone') ?? 'N/A'}</div>,
   },
   {
     accessorKey: 'gender',

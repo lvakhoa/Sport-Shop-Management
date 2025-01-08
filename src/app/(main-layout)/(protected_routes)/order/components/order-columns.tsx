@@ -5,29 +5,21 @@ import { ORDER_STATUS, PAYMENT_TYPE, ROLE_NAME } from '@/configs/enum'
 import { Button, Checkbox } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import moment from 'moment'
-import { IOrder } from '@/interfaces/order'
-import { ICustomer } from '@/interfaces/customer'
 import { IEmployee } from '@/interfaces/employee'
 
-const data = [
-  {
-    id: 'order1',
-    customer: {
-      id: 'cust1',
-      fullname: 'John Doe',
-    },
-    confirmed_employee: {
-      id: 'emp1',
-      fullname: 'Jane Doe',
-    },
-    product_total_price: 100,
-    order_date: new Date(),
-    status: ORDER_STATUS.PENDING,
-    total: 150,
-  },
-]
+export interface IOrderCol {
+  id: string
+  order_code: string
+  order_date: string
+  status: ORDER_STATUS
+  payment_type: PAYMENT_TYPE
+  product_total_price: number
+  customer: string
+  confirmed_employee?: string
+  total: number
+}
 
-export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder | any>[] => [
+export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrderCol>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -118,6 +110,7 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrder | any>[] 
         </Button>
       )
     },
+    cell: ({ row }) => <div>{row.getValue('customer')}</div>,
     cell: ({ row }) => <div>{row.getValue('customer')}</div>,
   },
   {
