@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import ActionBar from '../components/OrderActionBar'
 import { OrderDetails, ShipmentInfo } from '../components/OrderDetails'
+import { MEDIA_TYPE, ORDER_STATUS, PAYMENT_TYPE, SIZE } from '@/configs/enum'
+import { IOrderByIdResponse } from '@/interfaces/order'
 
 function OrderDetailsPage() {
   const { id: orderId } = useParams<{ id: string }>()
@@ -18,7 +20,8 @@ function OrderDetailsPage() {
 
   return (
     <div className='flex h-auto grow-[3] flex-col'>
-      {!isLoading && !!ordersData && (
+      {/* {!isLoading && !!ordersData && ( */}
+      {!!ordersData && (
         <>
           <ActionBar order={ordersData} />
           <div className='grid grid-cols-1 sm:grid-cols-2'>

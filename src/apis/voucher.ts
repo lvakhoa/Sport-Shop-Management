@@ -1,5 +1,7 @@
-import { IVoucherRequest, IVoucher } from '@/interfaces/voucher'
+import { IVoucherRequest, IVoucher, IGroupVoucher } from '@/interfaces/voucher'
 import BaseApi from './base'
+import { handleResponse } from '@/helpers'
+import { httpClient } from '@/services'
 
 class VoucherApi extends BaseApi {
   constructor() {
@@ -14,11 +16,18 @@ class VoucherApi extends BaseApi {
     return super.getById<IVoucher>(id)
   }
 
+  async getAllGroupVouchers() {
+    const data = await handleResponse<IGroupVoucher[]>(() => {
+      return httpClient.get<IGroupVoucher[]>(this.route + '/groups')
+    })
+    return data
+  }
+
   async createVoucher(voucher: IVoucherRequest) {
     return super.create(voucher)
   }
 
-  async updateVoucher(voucher: IVoucherRequest, id: string) {
+  async updateVoucher(voucher: Partial<IVoucherRequest>, id: string) {
     return super.update(voucher, id)
   }
 

@@ -92,12 +92,12 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
           toDate ? moment(toDate).unix() : undefined,
         ),
         queryFn: () =>
-          orderApi.getAllOrders(
-            1,
-            1,
-            fromDate ? moment(fromDate).unix() : undefined,
-            toDate ? moment(toDate).unix() : undefined,
-          ),
+          orderApi.getAllOrders({
+            count: 1,
+            page: 1,
+            fromDate: fromDate ? moment(fromDate).unix() : undefined,
+            toDate: toDate ? moment(toDate).unix() : undefined,
+          }),
         enabled: !!accessToken,
       },
       {
@@ -108,13 +108,13 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
           toDate ? moment(toDate).unix() : undefined,
         ),
         queryFn: () =>
-          orderApi.getAllOrders(
-            1,
-            1,
-            fromDate ? moment(fromDate).unix() : undefined,
-            toDate ? moment(toDate).unix() : undefined,
-            ORDER_STATUS.PENDING,
-          ),
+          orderApi.getAllOrders({
+            count: 1,
+            page: 1,
+            fromDate: fromDate ? moment(fromDate).unix() : undefined,
+            toDate: toDate ? moment(toDate).unix() : undefined,
+            status: ORDER_STATUS.PENDING,
+          }),
         enabled: !!accessToken,
       },
       {
@@ -124,13 +124,11 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
           toDate ? moment(toDate).unix() : undefined,
         ),
         queryFn: () =>
-          orderApi.getAllOrders(
-            undefined,
-            undefined,
-            fromDate ? moment(fromDate).unix() : undefined,
-            toDate ? moment(toDate).unix() : undefined,
-            ORDER_STATUS.DELIVERED,
-          ),
+          orderApi.getAllOrders({
+            fromDate: fromDate ? moment(fromDate).unix() : undefined,
+            toDate: toDate ? moment(toDate).unix() : undefined,
+            status: ORDER_STATUS.DELIVERED,
+          }),
         enabled: !!accessToken,
       },
       {
@@ -141,13 +139,13 @@ function OrderStats({ fromDate, toDate }: OrderStatsProps) {
           toDate ? moment(toDate).unix() : undefined,
         ),
         queryFn: () =>
-          orderApi.getAllOrders(
-            1,
-            1,
-            fromDate ? moment(fromDate).unix() : undefined,
-            toDate ? moment(toDate).unix() : undefined,
-            ORDER_STATUS.CANCELLED,
-          ),
+          orderApi.getAllOrders({
+            count: 1,
+            page: 1,
+            fromDate: fromDate ? moment(fromDate).unix() : undefined,
+            toDate: toDate ? moment(toDate).unix() : undefined,
+            status: ORDER_STATUS.CANCELLED,
+          }),
         enabled: !!accessToken,
       },
     ],

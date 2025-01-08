@@ -4,7 +4,16 @@ import ComboBox from '@/components/shared/ComboBox'
 import { useState } from 'react'
 import { Search } from 'lucide-react'
 
-const Filter: string[] = ['All Order', 'Success', 'Cancelled', 'Pending']
+const Filter: string[] = [
+  'All Order',
+  'Delivered',
+  'In Transit',
+  'Packaging',
+  'Cancelled',
+  'Returned',
+  'Undelivered',
+  'Pending',
+]
 
 interface ISearchBar {
   onSearch: (query: string) => void

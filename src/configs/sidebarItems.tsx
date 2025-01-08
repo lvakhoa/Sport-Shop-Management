@@ -12,6 +12,8 @@ import {
   TicketPercent,
   BadgeCheck,
   Package,
+  Dumbbell,
+  Dices,
 } from 'lucide-react'
 
 export interface ISidebarItem {
@@ -37,6 +39,16 @@ export const adminSidebarItems: ISidebarItem[] = [
   {
     title: 'Product & Stock',
     items: [
+      {
+        icon: <Dumbbell strokeWidth={1.5} />,
+        describe: 'Sports',
+        link: PATH_NAME.SPORT,
+      },
+      {
+        icon: <Dices strokeWidth={1.5} />,
+        describe: 'Brands',
+        link: PATH_NAME.BRAND,
+      },
       {
         icon: <Shirt strokeWidth={1.5} />,
         describe: 'Products',
@@ -223,6 +235,16 @@ export const employeeSidebarItems: ISidebarItem[] = [
   {
     title: 'Product & Stock',
     items: [
+      {
+        icon: <Dumbbell strokeWidth={1.5} />,
+        describe: 'Sports',
+        link: PATH_NAME.SPORT,
+      },
+      {
+        icon: <Dices strokeWidth={1.5} />,
+        describe: 'Brands',
+        link: PATH_NAME.BRAND,
+      },
       {
         icon: <Shirt strokeWidth={1.5} />,
         describe: 'Products',

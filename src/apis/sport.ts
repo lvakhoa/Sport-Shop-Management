@@ -17,8 +17,8 @@ class SportApi extends BaseApi {
   async createSport(sport: ISportCreate) {
     const formData = new FormData()
     Object.entries(sport).forEach(([key, value]) => {
-      if (key === 'file') {
-        formData.append(key, value)
+      if (key === 'file' && sport.file) {
+        formData.append(key, sport.file, sport.file.name)
       } else {
         formData.append(key, value as string)
       }
@@ -34,8 +34,8 @@ class SportApi extends BaseApi {
   async updateSport(sport: ISportUpdate, id: string) {
     const formData = new FormData()
     Object.entries(sport).forEach(([key, value]) => {
-      if (key === 'file') {
-        formData.append(key, value)
+      if (key === 'file' && sport.file) {
+        formData.append(key, sport.file, sport.file.name)
       } else {
         formData.append(key, value as string)
       }

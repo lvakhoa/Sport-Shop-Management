@@ -54,8 +54,8 @@ export default function Home() {
         return {
           id: item.id,
           name: item.product.name,
-          price: parseInt(item.product.selling_price),
-          image: item.media?.url,
+          price: item.product.selling_price,
+          image: item.group_media?.media_list[0].url,
         }
       })
       .filter((item, index, arr) => arr.findIndex((t) => t.image === item.image) === index) || []

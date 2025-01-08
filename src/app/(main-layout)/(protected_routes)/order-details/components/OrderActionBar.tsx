@@ -1,26 +1,53 @@
-import { Button } from '@/components/shared'
-import { CancelledLabel, ConfirmLabel } from './ShipmentStatusLabel'
-import { IOrder, IOrderUpdateRequest } from '@/interfaces/order'
+import { Button, ComboBox } from '@/components/shared'
+import {
+  CancelledLabel,
+  DeliveredLabel,
+  InTransitLabel,
+  PackagingLabel,
+  PendingLabel,
+  ReturnedLabel,
+  UndeliveredLabel,
+} from './ShipmentStatusLabel'
+import { IOrder, IOrderByIdResponse, IOrderUpdateRequest } from '@/interfaces/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { orderApi, shipmentApi } from '@/apis'
 import { toast } from 'react-toastify'
 import { queryKeys } from '@/configs'
 import { useProfile } from '@/hooks'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Invoice from './Invoice'
-import { ORDER_STATUS } from '@/configs/enum'
-import { Printer } from 'lucide-react'
+import { ORDER_STATUS, orderStatusMapping } from '@/configs/enum'
+import { LoaderCircle, Printer } from 'lucide-react'
 import { IShipmentUpdateRequest } from '@/interfaces/shipment'
 import moment from 'moment'
 
-function ActionBar({ order }: { order: IOrder }) {
+function StatusLabel({ status }: { status: ORDER_STATUS }) {
+  switch (status) {
+    case ORDER_STATUS.DELIVERED:
+      return <DeliveredLabel />
+    case ORDER_STATUS.CANCELLED:
+      return <CancelledLabel />
+    case ORDER_STATUS.UNDELIVERED:
+      return <UndeliveredLabel />
+    case ORDER_STATUS.IN_TRANSIT:
+      return <InTransitLabel />
+    case ORDER_STATUS.RETURNED:
+      return <ReturnedLabel />
+    case ORDER_STATUS.PACKAGING:
+      return <PackagingLabel />
+    default:
+      return <PendingLabel />
+  }
+}
+
+function ActionBar({ order }: { order: IOrderByIdResponse }) {
   const profile = useProfile()
   const queryClient = useQueryClient()
 
   const printRef = useRef<HTMLDivElement>(null)
 
-  const { mutate: editOrder } = useMutation({
+  const { mutate: editOrder, isPending: editLoading } = useMutation({
     mutationFn: (data: Partial<IOrderUpdateRequest>) => orderApi.updateOrder(data, order.id),
     onSuccess: () => {
       toast.success('Updating order successfully')
@@ -34,59 +61,13 @@ function ActionBar({ order }: { order: IOrder }) {
     },
   })
 
-  const { mutate: confirmShipment } = useMutation({
-    mutationFn: (data: Partial<IShipmentUpdateRequest>) =>
-      shipmentApi.updateShipment(data, order.shipment?.id || ''),
-    onSuccess: () => {
-      toast.success('Confirm shipment successfully')
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.allOrders.gen() })
-      await queryClient.invalidateQueries({ queryKey: queryKeys.orderDetails.gen(order.id) })
-    },
-  })
+  const [status, setStatus] = useState(order.status)
 
-  const handleConfirm = () => {
+  const handleSave = () => {
     const updateData: Partial<IOrderUpdateRequest> = {
-      confirmed_employee_id: profile.data?.id || order.confirming_employee_id,
-      status: ORDER_STATUS.DELIVERED,
+      status,
     }
     editOrder(updateData)
-  }
-
-  const handleCancel = () => {
-    const updateData: Partial<IOrderUpdateRequest> = {
-      status: ORDER_STATUS.CANCELLED,
-      confirmed_employee_id: profile.data?.id || order.confirming_employee_id,
-    }
-    editOrder(updateData)
-  }
-
-  const handlePrint = () => {
-    if (printRef.current) {
-      const divElement = document.createElement('div')
-      divElement.classList.add('printContainer')
-      divElement.innerHTML = printRef.current.innerHTML
-      document.body.appendChild(divElement).classList.add('printingContent')
-      window.print()
-      divElement.remove()
-      document.body.classList.remove('printingContent')
-    }
-  }
-
-  const handleShipment = () => {
-    const updateData: Partial<IShipmentUpdateRequest> = {
-      order_id: order.id,
-      address_id: order.shipment?.shipping_address || '',
-      shipped: true,
-      shipped_date: moment().toDate(),
-      completed_date: moment().toDate(),
-      shipment_tracking: 'Da giao hang',
-    }
-    confirmShipment(updateData)
   }
 
   return (
@@ -94,28 +75,23 @@ function ActionBar({ order }: { order: IOrder }) {
       <div className='flex flex-col space-y-[5px]'>
         <span className='font-semibold'>Order {order.order_code}</span>
         <div className='flex flex-row space-x-[5px]'>
-          {order.status === ORDER_STATUS.PENDING ? (
-            <Button onClick={handleConfirm}>Confirm</Button>
-          ) : order.status === ORDER_STATUS.CANCELLED ? (
-            <CancelledLabel />
-          ) : (
-            <ConfirmLabel />
-          )}
+          <StatusLabel status={order.status} />
         </div>
       </div>
       <div className='flex flex-row space-x-[5px]'>
-        {order.status === ORDER_STATUS.DELIVERED && (
-          <Button
-            onClick={handlePrint}
-            className='flex gap-[5px] rounded-[5px] bg-[#D4E0FF] px-2 py-1 duration-300 hover:bg-[#dde6fa]'
-          >
-            <Printer color='#336AEA' width={22} height={22} />
-          </Button>
-        )}
-        {order.status === ORDER_STATUS.PENDING && <Button onClick={handleCancel}>Cancel</Button>}
-        {order.status !== ORDER_STATUS.CANCELLED && !!order.shipment?.completed_date && (
-          <Button onClick={handleShipment}>Confirm Shipment</Button>
-        )}
+        <ComboBox
+          className='w-[150px]'
+          placeholder={orderStatusMapping[order.status]}
+          items={Object.entries(orderStatusMapping).map(([key, value]) => ({
+            value: key,
+            label: value,
+          }))}
+          onValueChange={(value) => setStatus(value as ORDER_STATUS)}
+        />
+        <Button onClick={handleSave} variant='outline' disabled={editLoading}>
+          {editLoading && <LoaderCircle className='animate-spin' size={20} />}
+          Save
+        </Button>
       </div>
       {order.shipment &&
         createPortal(

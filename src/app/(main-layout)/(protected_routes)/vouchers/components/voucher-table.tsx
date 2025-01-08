@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/configs'
 import { voucherApi } from '@/apis'
 import { IFilterInput } from '@/interfaces'
-import { IVoucher } from '@/interfaces/voucher'
+import { IVoucher, IVoucherTable } from '@/interfaces/voucher'
 import { PaginationState } from '@tanstack/react-table'
 import CreateVoucherForm from './create-voucher'
 import moment from 'moment'
@@ -49,26 +49,19 @@ function VoucherTable({ accountRole }: { accountRole: ROLE_NAME }) {
     placeholderData: (previousData) => previousData,
   })
 
-  const data: IVoucher[] =
+  const data: IVoucherTable[] =
     queryData?.map((item) => {
       return {
         id: item.id,
-        group_voucher_id: item.group_voucher_id,
+        group_voucher_name: item.group_voucher.name,
         title: item.title,
         code: item.code,
         campaign_name: item.campaign_name,
-        voucher_type: item.voucher_type,
         voucher_value: item.voucher_value,
         is_active: item.is_active,
         starting_date: item.starting_date,
         ending_date: item.ending_date,
         total_quantity: item.total_quantity,
-        quantity_per_user: item.quantity_per_user,
-        minimum_price: item.minimum_price,
-        applicable_type: item.applicable_type,
-        orders: item.orders,
-        group_voucher: item.group_voucher,
-        voucher_usages: item.voucher_usages,
         total: item.total,
       }
     }) ?? []

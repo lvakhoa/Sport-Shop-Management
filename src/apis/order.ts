@@ -5,6 +5,8 @@ import {
   IShipmentTracking,
   ICalcOrderFeeRequest,
   ICalcOrderFeeResponse,
+  IAllOrdersResponse,
+  IOrderByIdResponse,
 } from '@/interfaces/order'
 import BaseApi from './base'
 import { ORDER_STATUS } from '@/configs/enum'
@@ -16,36 +18,29 @@ class OrderApi extends BaseApi {
     super('/orders')
   }
 
-  async getAllOrders(
-    count?: number,
-    page?: number,
-    fromDate?: number,
-    toDate?: number,
-    orderStatus?: ORDER_STATUS,
-  ) {
-    const dateRangeQuery =
-      !!fromDate && !!toDate
-        ? !!count || !!page
-          ? `&fromDate=${fromDate}&toDate=${toDate}`
-          : `?fromDate=${fromDate}&toDate=${toDate}`
-        : ''
+  async getAllOrders(params?: {
+    count?: number
+    page?: number
+    fromDate?: number
+    toDate?: number
+    status?: ORDER_STATUS
+    confirming_employee_id?: string
+  }) {
+    const { count, page, ...otherParams } = params || {}
+    return super.getAll<IAllOrdersResponse>(count, page, otherParams)
+  }
 
-    const optionalQuery = !!orderStatus
-      ? !!dateRangeQuery
-        ? `${dateRangeQuery}&status=${orderStatus}`
-        : !!count || !!page
-          ? `&status=${orderStatus}`
-          : `?status=${orderStatus}`
-      : dateRangeQuery
-    return super.getAll<IOrder>(count, page, {
-      fromDate,
-      toDate,
-      orderStatus,
+  async getAllOrdersOfCustomer(params?: { count?: number; page?: number; status?: ORDER_STATUS }) {
+    const data = await handleResponse<IAllOrdersResponse[]>(() => {
+      return httpClient.get<IAllOrdersResponse[]>(this.route + '/account', {
+        params,
+      })
     })
+    return data
   }
 
   async getOrderById(id: string) {
-    return super.getById<IOrder>(id)
+    return super.getById<IOrderByIdResponse>(id)
   }
 
   async createOrder(order: IOrderCreateRequest) {

@@ -15,10 +15,19 @@ export enum VOUCHER_APPLICABLE_TYPE {
   BRAND = 'BRAND',
   PRODUCT = 'PRODUCT',
 }
+export const voucherApplicableTypeMapping = {
+  [VOUCHER_APPLICABLE_TYPE.SPORT]: 'Sport',
+  [VOUCHER_APPLICABLE_TYPE.BRAND]: 'Brand',
+  [VOUCHER_APPLICABLE_TYPE.PRODUCT]: 'Product',
+}
 
 export enum VOUCHER_TYPE {
   FIXED_PRICE = 'FIXED_PRICE',
   PERCENT = 'PERCENT',
+}
+export const voucherTypeMapping = {
+  [VOUCHER_TYPE.FIXED_PRICE]: 'Fixed price',
+  [VOUCHER_TYPE.PERCENT]: 'Percent',
 }
 
 export enum PAYMENT_TYPE {
@@ -50,6 +59,16 @@ export enum ORDER_STATUS {
   DELIVERED = 'DELIVERED',
   RETURNED = 'RETURNED',
   UNDELIVERED = 'UNDELIVERED',
+}
+
+export const orderStatusMapping = {
+  [ORDER_STATUS.PENDING]: 'Pending',
+  [ORDER_STATUS.PACKAGING]: 'Packaging',
+  [ORDER_STATUS.IN_TRANSIT]: 'In transit',
+  [ORDER_STATUS.CANCELLED]: 'Cancelled',
+  [ORDER_STATUS.DELIVERED]: 'Delivered',
+  [ORDER_STATUS.RETURNED]: 'Returned',
+  [ORDER_STATUS.UNDELIVERED]: 'Undelivered',
 }
 
 export enum TRANSACTION_STATUS {

@@ -26,8 +26,8 @@ export interface IStock {
   product: {
     id: string
     name: string
-    list_price: string
-    selling_price: string
+    list_price: number
+    selling_price: number
   }
   total: number
 }
