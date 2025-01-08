@@ -111,7 +111,6 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrderCol>[] => 
       )
     },
     cell: ({ row }) => <div>{row.getValue('customer')}</div>,
-    cell: ({ row }) => <div>{row.getValue('customer')}</div>,
   },
   {
     accessorKey: 'confirmed_employee',
