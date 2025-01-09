@@ -18,6 +18,8 @@ function OrderDetailsPage() {
     enabled: !!orderId,
   })
 
+  console.log(ordersData)
+
   return (
     <div className='flex h-auto grow-[3] flex-col'>
       {/* {!isLoading && !!ordersData && ( */}
