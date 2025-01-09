@@ -82,13 +82,12 @@ function ActionBar({ order }: { order: IOrderByIdResponse }) {
         <ComboBox
           className='w-[150px]'
           placeholder={orderStatusMapping[order.status]}
-          items={Object.values(ORDER_STATUS).map(([key, value]) => ({
+          items={Object.entries(orderStatusMapping).map(([key, value]) => ({
             value: key,
             label: value,
           }))}
           onValueChange={(value) => {
             setStatus(value as ORDER_STATUS)
-            console.log(status)
           }}
         />
         <Button onClick={handleSave} variant='outline' disabled={editLoading}>
