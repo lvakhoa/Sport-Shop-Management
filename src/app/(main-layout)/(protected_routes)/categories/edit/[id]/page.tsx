@@ -24,6 +24,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/pop
 import { ICategoryRequest } from '@/interfaces/category'
 import { Trash2 } from 'lucide-react'
 import { CONSUMER_TYPE } from '@/configs/enum'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/shared/select'
 
 const productListSchema = z.object({
   product_id: z.string(),
@@ -71,6 +78,12 @@ export default function EditCategoryPage() {
     queryFn: () => categoryApi.getAllCategories(),
   })
 
+  const parentCategories = categoriesData?.filter(
+    (category) =>
+      category.child_categories.length === 0 &&
+      category.consumer_type === categoryData?.consumer_type,
+  )
+
   const typeList = Array.from(new Set(categoriesData?.map((category) => category.consumer_type)))
 
   const queryClient = useQueryClient()
@@ -84,6 +97,7 @@ export default function EditCategoryPage() {
       categoryApi.updateCategory(
         {
           name: data.name,
+          parent_id: data.parent_id,
           consumer_type: data.consumer_type,
           description: data.description,
           product_list: data.product_list,
@@ -117,6 +131,7 @@ export default function EditCategoryPage() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     editCategory({
       name: data.name,
+      parent_id: data.parent_id,
       consumer_type: data.consumer_type,
       description: data.description,
       product_list: selectedProducts,
@@ -284,6 +299,40 @@ export default function EditCategoryPage() {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name='parent_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className='flex flex-col gap-4'>
+                        <FormLabel>Parent Category</FormLabel>
+                        <Select
+                          {...field}
+                          onValueChange={(value) => form.setValue('parent_id', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                parentCategories?.find((category) => category.id === field.value)
+                                  ?.name
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {parentCategories?.map((category) => (
+                              <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </FormControl>
+                    <FormMessage className='text-[14px] font-normal' />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name='description'
