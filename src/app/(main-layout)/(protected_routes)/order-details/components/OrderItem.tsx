@@ -1,18 +1,18 @@
 'use client'
-import { IAllOrdersResponse, IOrder, IOrderByIdResponse } from '@/interfaces/order'
+import { IAllOrdersResponse } from '@/interfaces/order'
 import { ORDER_STATUS } from '@/configs/enum'
-import { PaidLabel, CODLabel } from './PaymentStatusLabel'
 import {
   CancelledLabel,
   DeliveredLabel,
   InTransitLabel,
+  PackagingLabel,
   PendingLabel,
+  ReturnedLabel,
   UndeliveredLabel,
 } from './ShipmentStatusLabel'
 import { queryKeys } from '@/configs'
 import { employeeApi } from '@/apis'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
 import moment from 'moment'
 import { currencyFormatter } from '@/helpers'
 
@@ -34,7 +34,7 @@ function OrderItem({
       case ORDER_STATUS.PENDING:
         return <PendingLabel />
       case ORDER_STATUS.PACKAGING:
-        return <InTransitLabel />
+        return <PackagingLabel />
       case ORDER_STATUS.IN_TRANSIT:
         return <InTransitLabel />
       case ORDER_STATUS.CANCELLED:
@@ -42,7 +42,7 @@ function OrderItem({
       case ORDER_STATUS.DELIVERED:
         return <DeliveredLabel />
       case ORDER_STATUS.RETURNED:
-        return <UndeliveredLabel />
+        return <ReturnedLabel />
       case ORDER_STATUS.UNDELIVERED:
         return <UndeliveredLabel />
       default:
