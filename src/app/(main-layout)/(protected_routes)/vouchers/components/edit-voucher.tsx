@@ -29,9 +29,10 @@ const voucherSchema = z
     voucher_type: z.nativeEnum(VOUCHER_TYPE, {
       invalid_type_error: 'Invalid voucher type',
     }),
-    voucher_value: z.number().refine(
+    voucher_value: z.string().refine(
       (value) => {
-        return value >= 0 && value <= 1
+        const newValue = parseFloat(value)
+        return newValue >= 0 && newValue <= 1
       },
       {
         message: 'Voucher value must be between 0 and 1',
@@ -40,15 +41,33 @@ const voucherSchema = z
     code: z.string(),
     starting_date: z.string().datetime(),
     ending_date: z.string().datetime(),
-    total_quantity: z.number().gt(0, {
-      message: 'Total quantity is a number greater than or equal to 0',
-    }),
-    quantity_per_user: z.number().gt(0, {
-      message: 'Quantity per user is a number greater than or equal to 0',
-    }),
-    minimum_price: z.number().gt(0, {
-      message: 'Minimum price is a number greater than or equal to 0',
-    }),
+    total_quantity: z.string().refine(
+      (value) => {
+        const newValue = parseFloat(value)
+        return newValue >= 0
+      },
+      {
+        message: 'Total quantity must be greater than 0',
+      },
+    ),
+    quantity_per_user: z.string().refine(
+      (value) => {
+        const newValue = parseFloat(value)
+        return newValue >= 0
+      },
+      {
+        message: 'Quantity per user must be greater than 0',
+      },
+    ),
+    minimum_price: z.string().refine(
+      (value) => {
+        const newValue = parseFloat(value)
+        return newValue >= 0
+      },
+      {
+        message: 'Minimum price must be greater than 0',
+      },
+    ),
     applicable_type: z.nativeEnum(VOUCHER_APPLICABLE_TYPE, {
       invalid_type_error: 'Invalid applicable type',
     }),
@@ -114,12 +133,12 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
       group_voucher_id: data.group_voucher_id,
       campaign_name: data.campaign_name,
       voucher_type: data.voucher_type,
-      voucher_value: data.voucher_value,
+      voucher_value: data.voucher_value ? parseFloat(data.voucher_value) : undefined,
       starting_date: data.starting_date,
       ending_date: data.ending_date,
-      total_quantity: data.total_quantity,
-      quantity_per_user: data.quantity_per_user,
-      minimum_price: data.minimum_price,
+      total_quantity: data.total_quantity ? parseInt(data.total_quantity) : undefined,
+      quantity_per_user: data.quantity_per_user ? parseInt(data.quantity_per_user) : undefined,
+      minimum_price: data.minimum_price ? parseInt(data.minimum_price) : undefined,
       applicable_type: data.applicable_type,
       is_active: data.is_active,
     })
@@ -214,7 +233,12 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
                   <Label htmlFor='campaign_name' className='text-left'>
                     Campaign Name
                   </Label>
-                  <Input id='campaign_name' className='col-span-3' {...field} />
+                  <Input
+                    placeholder={voucher?.campaign_name}
+                    id='campaign_name'
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -258,7 +282,13 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
                   <Label htmlFor='voucher_value' className='text-left'>
                     Voucher Value
                   </Label>
-                  <Input id='voucher_value' type='number' className='col-span-3' {...field} />
+                  <Input
+                    placeholder={voucher?.voucher_value.toString()}
+                    id='voucher_value'
+                    type='number'
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -326,7 +356,13 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
                   <Label htmlFor='total_quantity' className='text-left'>
                     Total Quantity
                   </Label>
-                  <Input id='total_quantity' type='number' className='col-span-3' {...field} />
+                  <Input
+                    placeholder={voucher?.total_quantity.toString()}
+                    id='total_quantity'
+                    type='number'
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -344,7 +380,13 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
                   <Label htmlFor='quantity_per_user' className='text-left'>
                     Quantity Per User
                   </Label>
-                  <Input id='quantity_per_user' type='number' className='col-span-3' {...field} />
+                  <Input
+                    placeholder={voucher?.quantity_per_user.toString()}
+                    id='quantity_per_user'
+                    type='number'
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
@@ -362,7 +404,13 @@ export default function EditVoucherForm({ voucherId }: { voucherId: string }) {
                   <Label htmlFor='minimum_price' className='text-left'>
                     Minimum Price
                   </Label>
-                  <Input id='minimum_price' type='number' className='col-span-3' {...field} />
+                  <Input
+                    placeholder={voucher?.minimum_price.toString()}
+                    id='minimum_price'
+                    type='number'
+                    className='col-span-3'
+                    {...field}
+                  />
                 </div>
               </FormControl>
               <FormMessage className='text-[14px] font-normal' />
