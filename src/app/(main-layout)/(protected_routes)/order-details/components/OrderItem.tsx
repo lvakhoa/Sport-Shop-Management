@@ -1,7 +1,6 @@
 'use client'
-import { IAllOrdersResponse, IOrder, IOrderByIdResponse } from '@/interfaces/order'
+import { IAllOrdersResponse } from '@/interfaces/order'
 import { ORDER_STATUS } from '@/configs/enum'
-import { PaidLabel, CODLabel } from './PaymentStatusLabel'
 import {
   CancelledLabel,
   DeliveredLabel,
@@ -14,7 +13,6 @@ import {
 import { queryKeys } from '@/configs'
 import { employeeApi } from '@/apis'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
 import moment from 'moment'
 import { currencyFormatter } from '@/helpers'
 

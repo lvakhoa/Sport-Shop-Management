@@ -16,11 +16,11 @@ export interface ICategory {
 }
 
 export interface ICategoryRequest {
-  name?: string
-  type?: string
-  gender?: 'MALE' | 'FEMALE'
+  name: string
+  consumer_type: CONSUMER_TYPE
+  parent_id?: string
   description?: string
-  product_list?: {
+  product_list: {
     product_id: string
   }[]
   file?: File

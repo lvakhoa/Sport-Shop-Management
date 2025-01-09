@@ -82,10 +82,7 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
                 <TabsContent key={type} value={type}>
                   <Accordion type='single' collapsible={true}>
                     {categories
-                      .filter(
-                        (category) =>
-                          category.child_categories.length > 0 && category.consumer_type === type,
-                      )
+                      .filter((category) => category.consumer_type === type)
                       .map((category) => (
                         <AccordionItem key={category.id} value={category.id}>
                           <AccordionTrigger onClick={() => onCategoryChange(category)}>

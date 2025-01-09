@@ -21,6 +21,7 @@ import {
 } from '@/components/shared/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
 import { ICategoryRequest } from '@/interfaces/category'
+import { CONSUMER_TYPE } from '@/configs/enum'
 
 const gender: string[] = ['MALE', 'FEMALE']
 
@@ -30,8 +31,8 @@ const productListSchema = z.object({
 
 const formSchema = z.object({
   name: z.string(),
-  type: z.string(),
-  gender: z.enum(['MALE', 'FEMALE']),
+  parent_id: z.string().optional(),
+  consumer_type: z.nativeEnum(CONSUMER_TYPE),
   description: z.string().optional(),
   product_list: z.array(productListSchema).nullable(),
   file: z
@@ -74,8 +75,8 @@ export default function CreateCategoryPage() {
     mutationFn: (data: ICategoryRequest) =>
       categoryApi.createCategory({
         name: data.name,
-        type: data.type,
-        gender: data.gender,
+        parent_id: data.parent_id,
+        consumer_type: data.consumer_type,
         description: data.description,
         product_list: data.product_list,
         file: data.file,
@@ -105,8 +106,8 @@ export default function CreateCategoryPage() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     createCategory({
       name: data.name,
-      type: data.type,
-      gender: data.gender,
+      parent_id: data.parent_id,
+      consumer_type: data.consumer_type,
       description: data.description,
       product_list: selectedProducts,
       file: data.file,
@@ -130,7 +131,7 @@ export default function CreateCategoryPage() {
   }, [selectedProducts, form])
 
   useEffect(() => {
-    setSelectedType(form.getValues('type'))
+    setSelectedType(form.getValues('consumer_type'))
   }, [form])
 
   return (
@@ -160,7 +161,7 @@ export default function CreateCategoryPage() {
 
               <FormField
                 control={form.control}
-                name='type'
+                name='consumer_type'
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -170,14 +171,14 @@ export default function CreateCategoryPage() {
                         </FormLabel>
                         <div className='flex gap-2'>
                           <Input
-                            id='type'
+                            id='consumer_type'
                             placeholder='Type'
                             className='col-span-3'
                             {...field}
                             onChange={(e) => {
                               field.onChange(e)
                               setSelectedType(e.target.value)
-                              form.setValue('type', e.target.value)
+                              form.setValue('consumer_type', e.target.value as CONSUMER_TYPE)
                             }}
                           />
                           <Popover>
@@ -194,7 +195,7 @@ export default function CreateCategoryPage() {
                                       } w-full cursor-pointer rounded-md px-2 py-1`}
                                       onClick={() => {
                                         setSelectedType(type)
-                                        form.setValue('type', type)
+                                        form.setValue('consumer_type', type)
                                       }}
                                     >
                                       {type}
@@ -229,32 +230,6 @@ export default function CreateCategoryPage() {
                             onChange(event.target.files && event.target.files[0])
                           }
                         />
-                      </div>
-                    </FormControl>
-                    <FormMessage className='text-[14px] font-normal' />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='gender'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className='flex flex-col gap-4'>
-                        <FormLabel>
-                          <span className='text-red-500'>*</span> Gender
-                        </FormLabel>
-                        <div className='col-span-3'>
-                          <ComboBox
-                            key='gender'
-                            defaultValue={field.value}
-                            placeholder='Gender'
-                            items={gender}
-                            onValueChange={field.onChange}
-                          />
-                        </div>
                       </div>
                     </FormControl>
                     <FormMessage className='text-[14px] font-normal' />

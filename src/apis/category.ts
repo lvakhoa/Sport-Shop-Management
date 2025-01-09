@@ -30,7 +30,7 @@ class CategoryApi extends BaseApi {
     })
   }
 
-  async updateCategory(category: ICategoryRequest, id: string) {
+  async updateCategory(category: Partial<ICategoryRequest>, id: string) {
     return super.update(category, id, {
       headers: {
         'Content-Type': 'multipart/form-data',

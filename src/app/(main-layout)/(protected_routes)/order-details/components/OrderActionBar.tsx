@@ -8,9 +8,9 @@ import {
   ReturnedLabel,
   UndeliveredLabel,
 } from './ShipmentStatusLabel'
-import { IOrder, IOrderByIdResponse, IOrderUpdateRequest } from '@/interfaces/order'
+import { IOrderByIdResponse, IOrderUpdateRequest } from '@/interfaces/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { orderApi, shipmentApi } from '@/apis'
+import { orderApi } from '@/apis'
 import { toast } from 'react-toastify'
 import { queryKeys } from '@/configs'
 import { useProfile } from '@/hooks'
@@ -18,11 +18,9 @@ import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Invoice from './Invoice'
 import { ORDER_STATUS, orderStatusMapping } from '@/configs/enum'
-import { LoaderCircle, Printer } from 'lucide-react'
-import { IShipmentUpdateRequest } from '@/interfaces/shipment'
-import moment from 'moment'
+import { LoaderCircle } from 'lucide-react'
 
-function StatusLabel({ status }: { status: ORDER_STATUS }) {
+export function StatusLabel({ status }: { status: ORDER_STATUS }) {
   switch (status) {
     case ORDER_STATUS.DELIVERED:
       return <DeliveredLabel />

@@ -23,26 +23,34 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/popover'
 import { ICategoryRequest } from '@/interfaces/category'
 import { Trash2 } from 'lucide-react'
-
-const gender: string[] = ['MALE', 'FEMALE']
+import { CONSUMER_TYPE } from '@/configs/enum'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/shared/select'
 
 const productListSchema = z.object({
   product_id: z.string(),
 })
 
-const formSchema = z.object({
-  name: z.string().optional(),
-  type: z.string().optional(),
-  gender: z.enum(['MALE', 'FEMALE']).optional(),
-  description: z.string().optional(),
-  product_list: z.array(productListSchema).nullable(),
-  file: z
-    .instanceof(File)
-    .refine((file) => file.size < 7000000, {
-      message: 'Your file must be less than 7MB.',
-    })
-    .optional(),
-})
+const formSchema = z
+  .object({
+    name: z.string().optional(),
+    consumer_type: z.nativeEnum(CONSUMER_TYPE).optional(),
+    parent_id: z.string().optional(),
+    description: z.string().optional(),
+    product_list: z.array(productListSchema).nullable(),
+    file: z
+      .instanceof(File)
+      .refine((file) => file.size < 7000000, {
+        message: 'Your file must be less than 7MB.',
+      })
+      .optional(),
+  })
+  .partial()
 
 const breadcrumbItems = [
   {
@@ -70,6 +78,12 @@ export default function EditCategoryPage() {
     queryFn: () => categoryApi.getAllCategories(),
   })
 
+  const parentCategories = categoriesData?.filter(
+    (category) =>
+      category.child_categories.length === 0 &&
+      category.consumer_type === categoryData?.consumer_type,
+  )
+
   const typeList = Array.from(new Set(categoriesData?.map((category) => category.consumer_type)))
 
   const queryClient = useQueryClient()
@@ -79,12 +93,12 @@ export default function EditCategoryPage() {
   })
 
   const { mutate: editCategory, isPending: isLoading } = useMutation({
-    mutationFn: (data: ICategoryRequest) =>
+    mutationFn: (data: Partial<ICategoryRequest>) =>
       categoryApi.updateCategory(
         {
           name: data.name,
-          type: data.type,
-          gender: data.gender,
+          parent_id: data.parent_id,
+          consumer_type: data.consumer_type,
           description: data.description,
           product_list: data.product_list,
           file: data.file,
@@ -117,8 +131,8 @@ export default function EditCategoryPage() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     editCategory({
       name: data.name,
-      type: data.type,
-      gender: data.gender,
+      parent_id: data.parent_id,
+      consumer_type: data.consumer_type,
       description: data.description,
       product_list: selectedProducts,
       file: data.file,
@@ -136,19 +150,7 @@ export default function EditCategoryPage() {
   }
 
   useEffect(() => {
-    if (!!categoryData) {
-      form.setValue(
-        'product_list',
-        categoryData.products.map((item) => ({
-          product_id: item.id,
-        })) ?? [],
-      )
-      setSelectedProducts(categoryData.products.map((item) => ({ product_id: item.id })) ?? [])
-    }
-  }, [categoryData, form])
-
-  useEffect(() => {
-    setSelectedType(form.getValues('type'))
+    setSelectedType(form.getValues('consumer_type'))
   }, [form])
 
   return (
@@ -181,7 +183,7 @@ export default function EditCategoryPage() {
 
               <FormField
                 control={form.control}
-                name='type'
+                name='consumer_type'
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -189,14 +191,14 @@ export default function EditCategoryPage() {
                         <FormLabel>Type</FormLabel>
                         <div className='flex gap-2'>
                           <Input
-                            id='type'
+                            id='consumer_type'
                             placeholder={categoryData ? categoryData.consumer_type : ''}
                             className='col-span-3'
                             {...field}
                             onChange={(e) => {
                               field.onChange(e)
                               setSelectedType(e.target.value)
-                              form.setValue('type', e.target.value)
+                              form.setValue('consumer_type', e.target.value as CONSUMER_TYPE)
                             }}
                           />
                           <Popover>
@@ -213,7 +215,7 @@ export default function EditCategoryPage() {
                                       } w-full cursor-pointer rounded-md px-2 py-1`}
                                       onClick={() => {
                                         setSelectedType(type)
-                                        form.setValue('type', type)
+                                        form.setValue('consumer_type', type)
                                       }}
                                     >
                                       {type}
@@ -297,6 +299,40 @@ export default function EditCategoryPage() {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name='parent_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className='flex flex-col gap-4'>
+                        <FormLabel>Parent Category</FormLabel>
+                        <Select
+                          {...field}
+                          onValueChange={(value) => form.setValue('parent_id', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                parentCategories?.find((category) => category.id === field.value)
+                                  ?.name
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {parentCategories?.map((category) => (
+                              <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </FormControl>
+                    <FormMessage className='text-[14px] font-normal' />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name='description'

@@ -5,6 +5,7 @@ import { ORDER_STATUS, PAYMENT_TYPE, ROLE_NAME } from '@/configs/enum'
 import { Button, Checkbox } from '@/components/shared'
 import { ArrowUpDown } from 'lucide-react'
 import moment from 'moment'
+import { StatusLabel } from '../../order-details/components/OrderActionBar'
 
 export interface IOrderCol {
   id: string
@@ -75,7 +76,7 @@ export const orderColumns = (accountRole: ROLE_NAME): ColumnDef<IOrderCol>[] => 
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('status')}</div>,
+    cell: ({ row }) => <StatusLabel status={row.getValue('status')} />,
   },
   {
     accessorKey: 'product_total_price',
