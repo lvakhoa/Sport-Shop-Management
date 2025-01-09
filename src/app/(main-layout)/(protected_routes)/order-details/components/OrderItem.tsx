@@ -6,7 +6,9 @@ import {
   CancelledLabel,
   DeliveredLabel,
   InTransitLabel,
+  PackagingLabel,
   PendingLabel,
+  ReturnedLabel,
   UndeliveredLabel,
 } from './ShipmentStatusLabel'
 import { queryKeys } from '@/configs'
@@ -34,7 +36,7 @@ function OrderItem({
       case ORDER_STATUS.PENDING:
         return <PendingLabel />
       case ORDER_STATUS.PACKAGING:
-        return <InTransitLabel />
+        return <PackagingLabel />
       case ORDER_STATUS.IN_TRANSIT:
         return <InTransitLabel />
       case ORDER_STATUS.CANCELLED:
@@ -42,11 +44,11 @@ function OrderItem({
       case ORDER_STATUS.DELIVERED:
         return <DeliveredLabel />
       case ORDER_STATUS.RETURNED:
-        return <UndeliveredLabel />
+        return <ReturnedLabel />
       case ORDER_STATUS.UNDELIVERED:
         return <UndeliveredLabel />
       default:
-        return null
+        return <PendingLabel />
     }
   }
 

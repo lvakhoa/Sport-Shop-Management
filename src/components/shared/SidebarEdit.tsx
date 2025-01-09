@@ -27,7 +27,7 @@ export default function SidebarEdit({ title, description, children, content }: I
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>
         </SheetHeader>
-        <div className='max-h-screend overflow-y-auto'>{content}</div>
+        <div className='max-h-screen overflow-y-auto'>{content}</div>
         <SheetFooter>
           {/* <SheetClose asChild>
             <Button
