@@ -95,7 +95,12 @@ export const stockColumns = (accountRole: ROLE_NAME): ColumnDef<IStockCol>[] => 
       )
     },
     cell: ({ row }) => (
-      <div>{(row.getValue('color') as string).replace(/\b\w/g, (s) => s.toUpperCase())}</div>
+      <div
+        className='size-6 rounded-sm'
+        style={{
+          backgroundColor: row.getValue('color'),
+        }}
+      />
     ),
   },
   {

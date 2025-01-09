@@ -58,7 +58,7 @@ export default function ProductTable({ accountRole }: { accountRole: ROLE_NAME }
         brand: item.brand.name,
         sport: item.sport.name,
         isActive: item.is_active,
-        category: item.categories[0].name,
+        category: item.categories.map((category) => category.name).join(', ') || 'N/A',
         listPrice: item.list_price,
         sellingPrice: item.selling_price,
         total: item.total,

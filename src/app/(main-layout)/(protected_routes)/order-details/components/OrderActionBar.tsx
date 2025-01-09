@@ -82,11 +82,14 @@ function ActionBar({ order }: { order: IOrderByIdResponse }) {
         <ComboBox
           className='w-[150px]'
           placeholder={orderStatusMapping[order.status]}
-          items={Object.entries(orderStatusMapping).map(([key, value]) => ({
+          items={Object.values(ORDER_STATUS).map(([key, value]) => ({
             value: key,
             label: value,
           }))}
-          onValueChange={(value) => setStatus(value as ORDER_STATUS)}
+          onValueChange={(value) => {
+            setStatus(value as ORDER_STATUS)
+            console.log(status)
+          }}
         />
         <Button onClick={handleSave} variant='outline' disabled={editLoading}>
           {editLoading && <LoaderCircle className='animate-spin' size={20} />}

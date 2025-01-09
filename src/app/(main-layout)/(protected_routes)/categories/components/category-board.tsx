@@ -18,6 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/shared/accordion'
+import { set } from 'zod'
 
 const consumerType = Object.values(CONSUMER_TYPE)
 
@@ -25,6 +26,7 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
   const toastId = useRef<Id | undefined>()
   const router = useRouter()
   const [currentType, setCurrentType] = useState<CONSUMER_TYPE | undefined>(consumerType[0])
+  const [currentCategoryName, setCurrentCategoryName] = useState<string | undefined>()
   const { isPending, data: categoriesData } = useQuery({
     queryKey: queryKeys.allCategories,
     queryFn: () => categoryApi.getAllCategories(undefined, undefined, currentType?.toString()),
@@ -40,10 +42,9 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
     }
   }, [isPending])
 
-  const [currentCategory, setCurrentCategory] = useState<ICategoryItem>()
-
   const onCategoryChange = (type: ICategoryItem) => {
-    setCurrentCategory(type)
+    setCurrentCategoryName(type.name)
+    setCurrentCategoryItem(type)
     setCurrentType(type.consumer_type)
   }
 
@@ -56,6 +57,8 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
       consumer_type: category.consumer_type,
       child_categories: category.child_categories,
     })) ?? []
+
+  const [currentCategoryItem, setCurrentCategoryItem] = useState<ICategoryItem>(categories[0])
 
   return (
     <>
@@ -99,7 +102,7 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
                                   key={childCategory.id}
                                   className={cn(
                                     'flex cursor-pointer items-center rounded-lg px-[8px] py-[10px] sm:px-[10px] sm:py-[14px]',
-                                    currentCategory?.id === childCategory.id
+                                    currentCategoryItem?.id === childCategory.id
                                       ? 'bg-blue-50'
                                       : 'bg-white hover:bg-blue-50',
                                   )}
@@ -109,7 +112,7 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
                                     // href={link}
                                     className={cn(
                                       'flex h-full w-full items-center gap-[10px] max-[468px]:gap-[5px]',
-                                      currentCategory?.id === childCategory.id
+                                      currentCategoryItem?.id === childCategory.id
                                         ? 'text-primary'
                                         : 'text-content',
                                     )}
@@ -130,12 +133,12 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
             </Tabs>
           </div>
           <div className='flex flex-col sm:w-4/5'>
-            {!isPending && currentCategory && (
+            {!isPending && currentCategoryItem && (
               <div className='grid grid-cols-3 gap-10 px-[10px] sm:max-w-full'>
                 {categories
                   .filter(
                     (category) =>
-                      currentCategory?.name === category.name &&
+                      currentCategoryItem?.name === category.name &&
                       category.consumer_type === currentType,
                   )
                   .map((category) => (
@@ -151,6 +154,29 @@ export default function CategoryBoard({ accountRole }: { accountRole: ROLE_NAME 
                       canEdit={accountRole === ROLE_NAME.ADMIN}
                     />
                   ))}
+                {categories
+                  .filter(
+                    (category) =>
+                      currentCategoryItem?.name === category.name &&
+                      category.consumer_type === currentType,
+                  )
+                  .map((category) =>
+                    category.child_categories.map((childCategory) => (
+                      <CategoryItem
+                        key={childCategory.id}
+                        id={childCategory.id}
+                        name={childCategory.name}
+                        consumer_type={childCategory.consumer_type}
+                        image_url={childCategory.image_url}
+                        child_categories={childCategory.child_categories}
+                        is_active={childCategory.is_active}
+                        onClick={() =>
+                          router.push(`${PATH_NAME.CATEGORY}/edit/${childCategory.id}`)
+                        }
+                        canEdit={accountRole === ROLE_NAME.ADMIN}
+                      />
+                    )),
+                  )}
               </div>
             )}
           </div>
